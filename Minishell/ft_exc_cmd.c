@@ -2,7 +2,6 @@
 
 void ft_fork_pipe(int **fd, int *id, int i, t_node **gc)
 {
-    printf("pipe(fd[%d])\n", i);
     if (pipe(fd[i]) == -1)
     {
         perror("pipe failed");
