@@ -30,8 +30,9 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("$");
 		if (line != NULL)
 		{
-			// split_pipe(line, &ev, &gc);
-			tokenisation(line, &lexer);
+			input_validation(line);
+			split_pipe(line, &ev, &gc);
+			// tokenisation(line, &lexer);
 		}
 		// char *tab[6];
 		// tab[0] = "PIPE";
@@ -45,11 +46,6 @@ int	main(int argc, char **argv, char **envp)
 		// 	printf("value = %s    | %s\n", lexer->value, tab[lexer->type]);
 		// 	lexer = lexer->next;
 		// }
-	}
-	while (temp)
-	{
-		printf("Type: %d, Value: %s\n", temp->type, temp->value);
-		temp = temp->next;
 	}
 
 	return (0);

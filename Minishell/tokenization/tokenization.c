@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:40:39 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/05/20 09:57:29 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/05/23 10:12:58 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,82 +31,195 @@ while (TRUE)
 }
  */
 
+// int	count_len(char *s)
+// {
+// 	int	len;
+// 	int	i;
 
-int	count_len(char *s)
+// 	len = 0;
+// 	i = 0;
+// 	while(s[i])
+// 	{
+// 		while (s[i] != '|' && s[i] != '<' && s[i] != '>')
+// 		{
+// 			len++;
+// 		}
+// 		i++;
+// 	}
+// 	return (len);
+// }
+
+char *ft_strcpy(char *s1, char *s2, int len)
 {
-	int	len;
-	int	i;
+	int i;
 
-	len = 0;
 	i = 0;
-	while(s[i])
-	{	
-		while (s[i] != '|' && s[i] != '<' && s[i] != '>')
-		{
-			len++;
-		}
+	while (s2[i] && len > 0)
+	{
+		s1[i] = s2[i];
 		i++;
+		len--;
 	}
-	return (len);
+	s1[i] = '\0';
+	return s1;
 }
 
-void	tokenisation(char *line, t_token **lexer)
+void tokenisation(void *line, t_node **gc)
 {
-	t_token *new;
+	t_cmd token;
+	t_node *node;
+	token.infile = NULL;
+	token.outfile = NULL;
+	token.heredoc = NULL;
+	token.append = NULL;
+	token.cmd = NULL;
 	int i = 0;
-	int start;
-	int len;
+	int j = 0;
+	int cmd_count = 0;
+	int k = 0;
 	char *word;
+	char *line1 = (char *)line;
 
-	*lexer = NULL;
-	while (line[i])
+	while (line1[i])
 	{
-		while (line[i] == ' ' || line[i] == '\t')
+		while (line1[i] == ' ' || line1[i] == '\t')
 			i++;
-
-		if (line[i] == '|')
+		if (line1[i] == '>' && line1[i + 1] == '>')
 		{
-			new = new_token(PIPE, NULL);
-			add_back(lexer, new);
+			i += 2;
+			while (line1[i] == ' ' || line1[i] == '\t')
+				i++;
+			if (line1[i] != '>' && line1[i] != '<' && line1[i])
+			{
+				j = i;
+				while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+					i++;
+				word = gc_malloc(gc, i - j + 1);
+				ft_strcpy(word, &line1[j], i - j);
+				ft_lstadd_back(&token.append, ft_lstnew(word));
+			}
+		}
+		else if (line1[i] == '>')
+		{
 			i++;
-		}
-		else if (line[i] == '>')
-		{
-			if (line[i + 1] == '>')
-			{
-				new = new_token(APPEND, NULL);
-				i += 2;
-			}
-			else
-			{
-				new = new_token(REDOUT, NULL);
+			while (line1[i] == ' ' || line1[i] == '\t')
 				i++;
+			if (line1[i] != '>' && line1[i] != '<' && line1[i])
+			{
+				j = i;
+				while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+					i++;
+				word = gc_malloc(gc, i - j + 1);
+				ft_strcpy(word, &line1[j], i - j);
+				ft_lstadd_back(&token.outfile, ft_lstnew(word));
 			}
-			add_back(lexer, new);
 		}
-		else if (line[i] == '<')
+		else if (line1[i] == '<' && line1[i + 1] == '<')
 		{
-			if (line[i + 1] == '<')
-			{
-				new = new_token(HERDOC, NULL);
-				i += 2;
-			}
-			else
-			{
-				new = new_token(REDIN, NULL);
+			i += 2;
+			while (line1[i] == ' ' || line1[i] == '\t')
 				i++;
+			if (line1[i] != '>' && line1[i] != '<' && line1[i])
+			{
+				j = i;
+				while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+					i++;
+				word = gc_malloc(gc, i - j + 1);
+				ft_strcpy(word, &line1[j], i - j);
+				ft_lstadd_back(&token.heredoc, ft_lstnew(word));
 			}
-			add_back(lexer, new);
+				}
+		else if (line1[i] == '<')
+		{
+			i++;
+			while (line1[i] == ' ' || line1[i] == '\t')
+				i++;
+			if (line1[i] != '>' && line1[i] != '<' && line1[i])
+			{
+				j = i;
+				while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+					i++;
+				word = gc_malloc(gc, i - j + 1);
+				ft_strcpy(word, &line1[j], i - j);
+				ft_lstadd_back(&token.infile, ft_lstnew(word));
+			}
 		}
 		else
 		{
-			while (line[i] && line[i] != '|' && line[i] != '>' && line[i] != '<')
-			{
-				len = count_len(line);
-			}
-			word = malloc(len + 1);
-			new = new_token(WORD, word);
-			add_back(lexer, new);
+			j = i;
+			while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+				i++;
+			cmd_count++;
+			// token.cmd[k] = gc_malloc(gc, i - j + 1);
+			// ft_strcpy(word, &line1[j], i - j);
+			// ft_lstadd_back(&token.cmd, ft_lstnew(word));
 		}
 	}
+	token.cmd = gc_malloc(gc, (cmd_count + 1) * sizeof(char *));
+	i = 0;
+        while (line1[i])
+    {
+        while (line1[i] == ' ' || line1[i] == '\t')
+            i++;
+        if (line1[i] == '>' && line1[i + 1] == '>')
+        {
+            i += 2;
+            while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
+            if (line1[i] != '>' && line1[i] != '<' && line1[i])
+            {
+                while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+                    i++;
+            }
+        }
+        else if (line1[i] == '>')
+        {
+            i++;
+            while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
+            if (line1[i] != '>' && line1[i] != '<' && line1[i])
+            {
+                while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+                    i++;
+            }
+        }
+        else if (line1[i] == '<' && line1[i + 1] == '<')
+        {
+            i += 2;
+            while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
+            if (line1[i] != '>' && line1[i] != '<' && line1[i])
+            {
+                while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+                    i++;
+            }
+        }
+        else if (line1[i] == '<')
+        {
+            i++;
+            while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
+            if (line1[i] != '>' && line1[i] != '<' && line1[i])
+            {
+                while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+                    i++;
+            }
+        }
+        else
+        {
+            j = i;
+            while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
+                i++;
+            token.cmd[k] = gc_malloc(gc, i - j + 1);
+            ft_strcpy(token.cmd[k], &line1[j], i - j);
+            k++;
+        }
+    }
+    token.cmd[k] = NULL;
+	// k = 0;
+	// while(token.cmd[k])
+	// {
+	// 	printf("cmd = %s\n", token.cmd[k]);
+	// 	k++;
+	// }
 }

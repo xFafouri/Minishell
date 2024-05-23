@@ -51,6 +51,8 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
     int i;
 
     i = 0;
+
+    printf("line = %s\n", (char *)line->data);
     count = count_cmd(line);
     // malloc_fd_id(&id, fd, count, gc);
     int n;
@@ -65,6 +67,8 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
     }
     while (line != NULL)
     {
+        tokenisation(line->data, gc);
+        ft_pwd(line->data);
         ft_fork_pipe(fd, id, i, gc);
         if (id[i] == 0)
         {
@@ -72,10 +76,6 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
                 ft_first_child((char *)line->data, fd, i, gc, env);
             else
                 ft_last_child((char *)line->data, fd, i, gc, env);
-            // else if(i + 1 == count)
-            //     last_child(fd, i, env);
-            // else
-            //     middle_child(fd, i, env);
         }
         else
         {

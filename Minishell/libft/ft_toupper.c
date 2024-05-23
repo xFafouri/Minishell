@@ -1,12 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/19 16:00:55 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/05/20 14:42:38 by hfafouri         ###   ########.fr       */
+/*   Created: 2023/11/02 14:09:35 by hfafouri          #+#    #+#             */
+/*   Updated: 2023/11/11 00:38:18 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
+int	ft_toupper(int c)
+{
+	if (c >= 97 && c <= 122)
+		return (c - 32);
+	return (c);
+}
+/*#include <stdio.h>
+int main ()
+{
+	int	c = 'b';
+	printf ("%d",ft_toupper(c));
+}*/
