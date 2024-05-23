@@ -96,8 +96,6 @@ char *ft_check_path(char *str, t_node **gc, t_cmd *env)
     i = 0;
     ft_empty(str);
     cmd = ft_check_space(str, gc);
-    printf("my string is cmd =  %s\n\n", cmd);
-    printf("first string is str = %s\n\n", str);
     if (cmd == NULL)
         return (NULL);
     if (ft_strchr(str, '/') != NULL || str[0] == '.')
