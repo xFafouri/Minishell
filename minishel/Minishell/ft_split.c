@@ -30,13 +30,13 @@ static int	ft_count(char *s, char c)
 	i = 0;
 	while (s[i])
 	{
-		if ((s[i] != c))
+		if (s[i] != c)
 		{
 			count++;
 			while (s[i] && s[i] != c)
 				i++;
 		}
-		else if ((s[i] == c))
+		else if (s[i] == c)
 			i++;
 	}
 	return (count);
@@ -66,12 +66,12 @@ char	**ft_split(char *s, char c, t_node **gc)
 	n = 0;
 	while (s[i] != '\0')
 	{
-		while ((s[i] == c))
+		while (s[i] == c)
 			i++;
 		if (s[i] == '\0')
 			break ;
 		j = 0;
-		while ((s[i] != c) && s[i] != '\0' && j++ > -1)
+		while (s[i] != c && s[i] != '\0' && j++ > -1)
 			i++;
 		str[n++] = ft_substr(s, i - j, j, gc);
 		if (!str[n - 1])

@@ -52,7 +52,10 @@ void split_pipe(char *cmd, t_cmd *env, t_node **gc)
         ft_lstadd_back(&link_cmd, ft_lstnew(*all_cmd));
         (all_cmd)++;
     }
-    ft_lstiter(link_cmd, rmv_wsp);
+    // ft_lstiter(link_cmd, rmv_wsp);
+
+    // printf("link->cmd = -%s-\n", (char *)link_cmd->data);
+    // printf("link->cmd = -%s-\n", (char *)link_cmd->next->data);
     ft_exc_cmd(link_cmd , gc, env);
 }
 

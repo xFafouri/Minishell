@@ -11,12 +11,12 @@ void ft_first_child(int i, t_node **gc, t_cmd *token)
             token->infile = token->infile->next;
         file = open(token->infile->data, O_RDONLY);
         if (file < 0)
-            (printf("error infile %s\n", token->infile->data), exit(1));
+            (printf("error infile %s\n", (char *)token->infile->data), exit(1));
         if ((dup2(file, 0) < 0))
             (printf("error first dub2 filed\n"), exit(1));
         close(file);
     }
-    if (token->outfile != NULL && token->outfile->data != NULL)
+    if (token->outfile != NULL && (char *)token->outfile->data != NULL)
     {
         while (token->outfile->next != NULL)
         {
@@ -61,7 +61,7 @@ void ft_midll_child(int i, t_node **gc, t_cmd *token)
             token->infile = token->infile->next;
         file = open(token->infile->data, O_RDONLY);
         if (file < 0)
-            (printf("error infile %s\n", token->infile->data), exit(1));
+            (printf("error infile %s\n", (char *)token->infile->data), exit(1));
         if ((dup2(file, 0) < 0))
             (printf("error first dub2 filed\n"), exit(1));
         close(file);
@@ -105,7 +105,7 @@ void ft_last_child(int i, t_node **gc, t_cmd *token)
             token->infile = token->infile->next;
         file = open(token->infile->data, O_RDONLY);
         if (file < 0)
-            (printf("error token->infile %s\n", token->infile->data), exit(1));
+            (printf("error token->infile %s\n", (char *)token->infile->data), exit(1));
         if ((dup2(file, 0) < 0))
             (printf("error first dub2 filed\n"), exit(1));
         close(file);

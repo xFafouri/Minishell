@@ -42,6 +42,7 @@ void ft_last_child(int i, t_node **gc, t_cmd *token);
 void ft_midll_child(int i, t_node **gc, t_cmd *token);
 int ft_strncmp(char *str, char *path, int line);
 void input_validation(char *line);
+char    *ft_substr(char *s, int start, int len, t_node **gc);
 void ft_putstr_fd(char *s, int fd);
 
 

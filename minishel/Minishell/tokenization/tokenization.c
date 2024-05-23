@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:40:39 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/05/23 17:19:36 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/05/23 19:51:39 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,63 @@ char *ft_strcpy(char *s1, char *s2, int len)
 	s1[i] = '\0';
 	return s1;
 }
+static char	check(const char *set, char c)
+{
+	while (*set && c != *set)
+		set++;
+	return (c == *set);
+}
+#include <string.h>
+#include <stdlib.h>
+
+int ft_strlen1(char *s)
+{
+	int i = 0;
+	while(s[i])
+		i++;
+	return(i);
+}
+char	*ft_substr1(char const *s, unsigned int start, size_t len)
+{
+	char		*sub;
+	size_t		i;
+
+	if (s == NULL)
+		return (NULL);
+	i = 0;
+	if (start >= ft_strlen1((char *)s))
+		return ("");
+	if (len > ft_strlen1((char *)s) - start)
+		len = ft_strlen1((char *)s) - start;
+	sub = (char *)malloc(sizeof(char) * (len + 1));
+	if (!sub)
+		return (NULL);
+	while (i < len)
+	{
+		sub[i] = s[start + i];
+		i++;
+	}
+	sub[len] = '\0';
+	return ((char *)sub);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	size_t	first;
+	size_t	last;
+
+	if (!s1 || !set)
+		return ("");
+	first = 0;
+	last = ft_strlen1((char *)s1);
+	while (first < last && check(set, s1[first]))
+		first++;
+	if (first == last)
+		return ("");
+	while (last > 0 && check(set, s1[last - 1]))
+		last--;
+	return (ft_substr1(s1, first, last - first));
+}
 
 void tokenisation(void *line, t_node **gc, t_cmd *token)
 {
@@ -41,8 +98,7 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
 	int cmd_count = 0;
 	int k = 0;
 	char *word;
-	char *line1 = (char *)line;
-
+	char *line1 = ft_strtrim((const char *)line, " ");
 	
 	while (line1[i])
 	{
@@ -110,6 +166,8 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
 		}
 		else
 		{
+			while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
 			j = i;
 			while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
 				i++;
@@ -168,7 +226,9 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
         }
         else
         {
-            j = i;
+			while (line1[i] == ' ' || line1[i] == '\t')
+                i++;
+			j = i;
             while (line1[i] && line1[i] != ' ' && line1[i] != '\t' && line1[i] != '>' && line1[i] != '<')
                 i++;
             token->cmd[k] = gc_malloc(gc, i - j + 1);
@@ -176,10 +236,10 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
             k++;
         }
     }
-	// printf("cmd = %s\n", token->cmd[0]);
-	// printf("cmd = %s\n", token->cmd[1]);
-	// printf("cmd = %p\n", token->cmd[2]);
-	
+	printf("cmd = %s\n", token->cmd[0]);
+	printf("cmd = %s\n", token->cmd[1]);
+	printf("cmd = %p\n", token->cmd[2]);
+
     token->cmd[k] = NULL;
 }
 
