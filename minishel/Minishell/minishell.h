@@ -26,6 +26,7 @@ typedef struct s_cmd
 
 
 void *gc_malloc(t_node **gc, int size);
+char	**ft_split_str(char *str, char *charset);
 char **ft_split(char *s, char c, t_node **gc);
 void ft_lstadd_back(t_node **lst, t_node *new);
 void ft_exc_cmd(t_node *cmd, t_node **gc, t_cmd *env);

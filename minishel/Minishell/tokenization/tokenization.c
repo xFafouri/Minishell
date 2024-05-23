@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 15:40:39 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/05/23 10:12:58 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/05/23 17:19:36 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
 	char *word;
 	char *line1 = (char *)line;
 
+	
 	while (line1[i])
 	{
 		while (line1[i] == ' ' || line1[i] == '\t')
@@ -175,6 +176,10 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
             k++;
         }
     }
+	// printf("cmd = %s\n", token->cmd[0]);
+	// printf("cmd = %s\n", token->cmd[1]);
+	// printf("cmd = %p\n", token->cmd[2]);
+	
     token->cmd[k] = NULL;
 }
 
