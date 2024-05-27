@@ -236,10 +236,6 @@ void tokenisation(void *line, t_node **gc, t_cmd *token)
             k++;
         }
     }
-	printf("cmd = %s\n", token->cmd[0]);
-	printf("cmd = %s\n", token->cmd[1]);
-	printf("cmd = %p\n", token->cmd[2]);
-
     token->cmd[k] = NULL;
 }
 
