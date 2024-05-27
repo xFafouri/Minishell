@@ -43,7 +43,6 @@ void	malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
 	}
 }
 
-
 void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 {
 	int	*id;
@@ -59,19 +58,22 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	{
 		tokenisation(line->data, gc, env);
 		if (env->heredoc != NULL)
-		{
 			ft_find_herdoc(env, &i, id, gc);
-		}
 		ft_fork_pipe(env, id, i, gc);
 		if (id[i] == 0)
 		{
 			her = ft_file((char *)line->data);
-			if (i == 0)
-				ft_first_child(i, gc, env, her);
-			else if (i + 1 == count)
-				ft_last_child(i, gc, env, her);
+			if (count == 1)
+				ft_one_child(i, gc, env, her);
 			else
-				ft_midll_child(i, gc, env, her);
+			{
+				if (i == 0)
+					ft_first_child(i, gc, env, her);
+				else if (i + 1 == count)
+					ft_last_child(i, gc, env, her);
+				else
+					ft_midll_child(i, gc, env, her);
+			}
 		}
 		else
 		{
@@ -89,4 +91,5 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	i = -1;
 	while (++i < count)
 		waitpid(id[i], NULL, 0);
+	ft_lstclear(gc);
 }

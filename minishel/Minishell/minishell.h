@@ -53,3 +53,8 @@ void				ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc);
 int					ft_file(char *str);
 int					count_herdoc(t_node *herdoc);
 void				ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc);
+char				*ft_strchr(char *s, int c);
+void				ft_check_file(t_cmd *token, int file, t_node **gc, int her);
+void				ft_check_infile(t_cmd *token, int file, int her,
+						t_node **gc);
+void				ft_one_child(int i, t_node **gc, t_cmd *token, int her);
