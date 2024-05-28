@@ -1,46 +1,5 @@
 #include "minishell.h"
 
-int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	return (0);
-}
-
-void	rmv_wsp(void *data)
-{
-	char	*str;
-	char	*read;
-	char	*write;
-
-	str = (char *)data;
-	if (!str)
-		return ;
-	read = str;
-	write = str;
-	while (*read)
-	{
-		if (!ft_isspace(*read))
-		{
-			*write = *read;
-			write++;
-		}
-		read++;
-	}
-	*write = '\0';
-}
-
-void	ft_lstiter(t_node *lst, void (*f)(void *))
-{
-	if (!lst || !f)
-		return ;
-	while (lst != NULL)
-	{
-		f(lst->data);
-		lst = lst->next;
-	}
-}
-
 void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 {
 	t_node	*link_cmd;
@@ -69,6 +28,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("$ ");
 		if (line != NULL)
 		{
+			input_validation(line);
 			split_pipe(line, &ev, &gc);
 			add_history(line);
 			ft_lstclear(&gc);

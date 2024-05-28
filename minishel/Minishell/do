@@ -1,0 +1,35 @@
+$ cat << "file
+herdoc> 
+$ cat << "file"
+herdoc> file
+herdoc> $USER
+herdoc> "file"
+file
+$USER
+$ cat << file
+herdoc> $USER
+herdoc> file
+$USER
+$ cat << "'file""
+herdoc> 
+$ cat << "'file'"
+herdoc> 'file'
+herdoc> file
+herdoc> $USER
+herdoc> "'file'"
+'file'
+file
+$USER
+$ cat << file
+herdoc> $USER"$USER"'$USE'''$USER''
+herdoc> file
+$USER"$USER"'$USE'''$USER''
+$ bash
+hfafouri@c4r10p2:~/Desktop/minishell_v2/minishel/Minishell$ cat << file
+> $USER"$USER"'$USE'''$USER''
+> file
+""''''''
+hfafouri@c4r10p2:~/Desktop/minishell_v2/minishel/Minishell$ cat << file
+$USER"$USER"'$USE'''$USER''
+file
+

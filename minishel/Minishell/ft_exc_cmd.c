@@ -57,6 +57,9 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	while (line != NULL)
 	{
 		tokenisation(line->data, gc, env);
+		line->data = handle_quotes(line->data , gc);
+		ft_pwd((char *)line->data);
+        ft_echo((char *)line->data);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, id, gc);
 		ft_fork_pipe(env, id, i, gc);
