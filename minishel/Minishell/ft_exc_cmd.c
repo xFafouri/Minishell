@@ -43,7 +43,7 @@ void	malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
 	}
 }
 
-void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
+void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env, t_node **envp)
 {
 	int	*id;
 	int	count;
@@ -57,35 +57,53 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	while (line != NULL)
 	{
 		tokenisation(line->data, gc, env);
-		line->data = handle_quotes(line->data , gc);
-		ft_pwd((char *)line->data);
-        ft_echo((char *)line->data);
+		line->data = handle_quotes(line->data, gc);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, id, gc);
-		ft_fork_pipe(env, id, i, gc);
-		if (id[i] == 0)
+		else if (ft_strcmp((env->cmd)[0], "pwd") == 0)
+			ft_pwd((char *)line->data, gc);
+		else if (ft_strcmp((env->cmd)[0], "echo") == 0)
+			ft_echo((char *)line->data);
+		else if (ft_strcmp((env->cmd)[0], "cd") == 0)
+			ft_cd((char *)line->data, env);
+		else if (ft_strcmp((env->cmd)[0], "exit") == 0)
+			ft_exit(gc);
+		else if (ft_strcmp((env->cmd)[0], "export") == 0)
 		{
-			her = ft_file((char *)line->data);
-			if (count == 1)
-				ft_one_child(i, gc, env, her);
-			else
+			printf("found export\n");
+			ft_export(gc, env, envp);
+			for (t_node *tmp = *envp; tmp; tmp = tmp->next)
 			{
-				if (i == 0)
-					ft_first_child(i, gc, env, her);
-				else if (i + 1 == count)
-					ft_last_child(i, gc, env, her);
-				else
-					ft_midll_child(i, gc, env, her);
+				printf("%s\n", tmp->data);
 			}
 		}
 		else
+			ft_fork_pipe(env, id, i, gc);
 		{
-			if (i == 0)
-				close((env->fd)[i][1]);
+			if (id[i] == 0)
+			{
+				her = ft_file((char *)line->data);
+				if (count == 1)
+					ft_one_child(i, gc, env, her);
+				else
+				{
+					if (i == 0)
+						ft_first_child(i, gc, env, her);
+					else if (i + 1 == count)
+						ft_last_child(i, gc, env, her);
+					else
+						ft_midll_child(i, gc, env, her);
+				}
+			}
 			else
 			{
-				close((env->fd)[i][1]);
-				close((env->fd)[i - 1][0]);
+				if (i == 0)
+					close((env->fd)[i][1]);
+				else
+				{
+					close((env->fd)[i][1]);
+					close((env->fd)[i - 1][0]);
+				}
 			}
 		}
 		line = line->next;

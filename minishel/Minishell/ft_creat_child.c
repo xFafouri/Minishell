@@ -129,7 +129,7 @@ void	ft_last_child(int i, t_node **gc, t_cmd *token, int her)
 	path = NULL;
 	close((token->fd)[i][1]);
 	if (dup2((token->fd)[i - 1][0], 0) < 0)
-		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
+		(perror("dup2 filed1\n"), ft_lstclear(gc), exit(1));
 	close((token->fd)[i - 1][0]);
 	ft_check_file(token, file, gc, her);
 	path = ft_check_path((token->cmd)[0], gc, token);
