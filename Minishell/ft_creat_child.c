@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
+void ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 {
 	if (token->infile != NULL && token->infile->data != NULL)
 	{
@@ -24,9 +24,8 @@ void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 	}
 }
 
-void	ft_check_file(t_cmd *token, int file, t_node **gc, int her)
+void ft_check_file(t_cmd *token, int file, t_node **gc, int her)
 {
-	ft_check_infile(token, file, her, gc);
 	if (token->outfile != NULL && token->outfile->data != NULL)
 	{
 		while (token->outfile->next != NULL)
@@ -44,16 +43,17 @@ void	ft_check_file(t_cmd *token, int file, t_node **gc, int her)
 			(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
 		close(file);
 	}
+	ft_check_infile(token, file, her, gc);
 }
 
-void	ft_one_child(int i, t_node **gc, t_cmd *token, int her)
+void ft_one_child(int i, t_node **gc, t_cmd *token)
 {
-	int		file;
-	char	*path;
+	int file;
+	char *path;
 
 	file = 0;
 	path = NULL;
-	ft_check_file(token, file, gc, her);
+	ft_check_file(token, file, gc, token->her);
 	path = ft_check_path((token->cmd)[0], gc, token);
 	if (path == NULL)
 	{
@@ -67,18 +67,48 @@ void	ft_one_child(int i, t_node **gc, t_cmd *token, int her)
 		(perror(path), ft_lstclear(gc), exit(126));
 }
 
-void	ft_first_child(int i, t_node **gc, t_cmd *token, int her)
+void ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line)
 {
-	int		file;
-	char	*path;
+    // Check if the command is a built-in command
+    if (ft_check_buldin1(token, line, gc) == 0)
+    {
+        // Close the read end of the pipe
+        close((token->fd)[i][0]);
 
-	file = 0;
+        // Redirect stdout to the write end of the pipe
+        if (dup2((token->fd)[i][1], 1) < 0)
+        {
+            perror("dup2 failed\n");
+            ft_lstclear(gc);
+            exit(1);
+        }
+
+        // Close the write end of the pipe
+        close((token->fd)[i][1]);
+
+        // Check and handle input/output files
+        ft_check_file(token, token->file, gc, token->her);
+
+        // Execute the built-in command
+        ft_check_buldin(token, line, gc,i);
+
+        // Exit after executing the built-in command
+        exit(1);
+    }
+}
+
+void ft_first_child(int i, t_node **gc, t_cmd *token, char *line)
+{
+	char *path;
+
+	token->file = 0;
 	path = NULL;
+	ft_all_bildin(i, gc, token, line); // Check if the command is a built-in command
 	close((token->fd)[i][0]);
 	if (dup2((token->fd)[i][1], 1) < 0)
 		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
 	close((token->fd)[i][1]);
-	ft_check_file(token, file, gc, her);
+	ft_check_file(token, token->file, gc, token->her); //Check and handle input/output files
 	path = ft_check_path((token->cmd)[0], gc, token);
 	if (path == NULL)
 	{
@@ -92,13 +122,13 @@ void	ft_first_child(int i, t_node **gc, t_cmd *token, int her)
 		(perror(path), ft_lstclear(gc), exit(126));
 }
 
-void	ft_midll_child(int i, t_node **gc, t_cmd *token, int her)
+void ft_midll_child(int i, t_node **gc, t_cmd *token, char *line)
 {
-	int		file;
-	char	*path;
+	char *path;
 
-	file = 0;
+	token->file = 0;
 	path = NULL;
+	ft_all_bildin(i, gc, token, line);  // Check if the command is a built-in command
 	close((token->fd)[i][0]);
 	if (dup2((token->fd)[i - 1][0], 0) < 0)
 		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
@@ -106,7 +136,7 @@ void	ft_midll_child(int i, t_node **gc, t_cmd *token, int her)
 	if (dup2((token->fd)[i][1], 1) < 0)
 		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
 	close((token->fd)[i][1]);
-	ft_check_file(token, file, gc, her);
+	ft_check_file(token, token->file, gc, token->her);  //Check and handle input/output files
 	path = ft_check_path((token->cmd)[0], gc, token);
 	if (path == NULL)
 	{
@@ -120,18 +150,18 @@ void	ft_midll_child(int i, t_node **gc, t_cmd *token, int her)
 		(perror(path), ft_lstclear(gc), exit(126));
 }
 
-void	ft_last_child(int i, t_node **gc, t_cmd *token, int her)
+void ft_last_child(int i, t_node **gc, t_cmd *token, char *line)
 {
-	int		file;
-	char	*path;
+	char *path;
 
-	file = 0;
+	token->file = 0;
 	path = NULL;
+	ft_all_bildin(i, gc, token, line);  // Check if the command is a built-in command
 	close((token->fd)[i][1]);
 	if (dup2((token->fd)[i - 1][0], 0) < 0)
-		(perror("dup2 filed1\n"), ft_lstclear(gc), exit(1));
+		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
 	close((token->fd)[i - 1][0]);
-	ft_check_file(token, file, gc, her);
+	ft_check_file(token, token->file, gc, token->her); //Check and handle input/output files
 	path = ft_check_path((token->cmd)[0], gc, token);
 	if (path == NULL)
 	{

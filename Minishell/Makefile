@@ -1,6 +1,6 @@
 SOR = minishell.c ft_link_node.c ft_split.c ft_access.c ft_helper.c ft_creat_child.c \
 ft_write_path.c ft_path_cmd.c ft_exc_cmd.c  tokenization/tokenization.c \
-input_validation/input.c ft_read_file.c utils/utils_builtins.c utils/utils1.c utils/utils_tokens.c input_validation/handle_quotes.c builtins/builtins.c
+input_validation/input.c ft_read_file.c biultin/bulitin.c biultin/check_is_buildin.c
 OBJC=$(SOR:.c=.o)
 NAME = minishell
 RM = rm -f
