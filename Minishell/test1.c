@@ -1,161 +1,91 @@
-#include "minishell.h"
-int	ft_file(char *str)
-{
-	int	i;
-	int	nb;
 
-	i = 0;
-	nb = 0;
-	while (str[i])
-	{
-		if (str[i] == '<' && str[i + 1] == '<')
-		{
-			nb = 2;
-			++i;
-		}
-		else if (str[i] == '<')
-			nb = 1;
-		i++;
-	}
-	return (nb);
-}
+// #include "minishell.h"
 
-int	count_herdoc(t_node *herdoc)
-{
-	int	number;
-	int	i;
 
-	number = 0;
-	i = 0;
-	while (herdoc != NULL)
-	{
-		while (((char *)(herdoc->data))[i] != '\0')
-		{
-			if ((((char *)(herdoc->data))[i] == '<')
-				&& (((char *)(herdoc->data))[i + 1] == '<'))
-			{
-				number++;
-				break ;
-			}
-			i++;
-		}
-		i = 0;
-		herdoc = herdoc->next;
-	}
-	return (number);
-}
-void	ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc)
-{
-	if (pipe((file_des->fd)[i]) == -1)
-	{
-		perror("pipe failed");
-		ft_lstclear(gc);
-		exit(1);
-	}
-	id[i] = fork();
-	if (id[i] < 0)
-	{
-		perror("fork failed");
-		(ft_lstclear(gc), exit(1));
-	}
-}
+// char	*ft_substr1(char *s, int start, int len, t_node **gc)
+// {
+// 	int		i;
+// 	char	*str;
 
-int	count_cmd(t_node *cmd)
-{
-	int	i;
+// 	i = 0;
+// 	if (!s)
+// 		return (NULL);
+// 	str = (char *)malloc((len + 1) * sizeof(char));
+// 	if (str == NULL)
+// 		return (NULL);
+// 	while (s[start] != '\0' && i < len)
+// 	{
+// 		str[i] = s[start];
+// 		i++;
+// 		start++;
+// 	}
+// 	str[i] = '\0';
+// 	return (str);
+// }
 
-	i = 0;
-	while (cmd != NULL)
-	{
-		i++;
-		cmd = cmd->next;
-	}
-	return (i);
-}
+// int ft_strlen_untile_char(char *str, char c)
+// {
+//     int i;
 
-void	malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
-{
-	int	i;
+//     i = 0;
+//     while(str[i] != '\0')
+//     {
+//         if(str[i] == c)
+//             break ;
+//         i++;
+//     }
+//     return (i);
+// }
+// t_env *init_env_list(char **envp) {
+//     t_env *head = NULL;
+//     t_env *new_node;
+//     char *name;
+//     char *value;
+//     char *env_copy;
+//     int i = 0;
 
-	i = 0;
-	*id = gc_malloc(gc, count * sizeof(int));
-	file_des->fd = gc_malloc(gc, count * sizeof(int *));
-	while (i < count)
-	{
-		(file_des->fd)[i] = gc_malloc(gc, 2 * sizeof(int));
-		i++;
-	}
-}
+//     while (envp[i] != NULL) {
+//         env_copy = strdup(envp[i]);
+//         if (!env_copy)
+//             return NULL;
 
-void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
-{
-	int		*id;
-	int		count;
-	int		i;
-	int		her;
-	char	*str;
+//         name = ft_substr1(env_copy, 0, ft_strlen_untile_char(env_copy, '='), NULL);
+//         value = strchr(env_copy, '=');
 
-	i = 0;
-	her = 0;
-	count = count_cmd(line) + count_herdoc(line);
-	str = NULL;
-	malloc_fd_id(&id, env, count + 1, gc);
-	while (line != NULL)
-	{
-		ft_fork_pipe(env, id, i, gc);
-		if (id[i] == 0)
-		{
-			her = ft_file((char *)line->data);
-			tokenisation(line->data, gc, env);
-			if (env->heredoc != NULL)
-			{
-				ft_fork_pipe(env, id, i, gc);
-				if (id[i] == 0)
-				{
-					while (env->heredoc)
-					{
-						while (1)
-						{
-							str = readline("herdoc> ");
-							if (str == NULL || (ft_strcmp(env->heredoc->data,
-										str) == 0))
-								break ;
-							str = ft_strjoin(gc, str, "\n");
-							if (env->heredoc->next == NULL)
-								write((env->fd)[i][1], str, ft_strlen(str));
-						}
-						if (env->heredoc->next == NULL)
-							close((env->fd)[i][1]);
-						env->heredoc = env->heredoc->next;
-					}
-					exit(0);
-				}
-				else
-				{
-					close((env->fd)[i][1]);
-					waitpid(id[i], 0, 0);
-				}
-				i++;
-			}
-			if (i == 0)
-				ft_first_child(i, gc, env, her);
-			else if (i + 1 == count)
-				ft_last_child(i, gc, env, her);
-			else
-				ft_midll_child(i, gc, env, her);
-		}
-		else
-		{
-			if (i == 0)
-				close((env->fd)[i][1]);
-			else
-			{
-				close((env->fd)[i][1]);
-				close((env->fd)[i - 1][0]);
-			}
-			waitpid(id[i], 0, 0);
-		}
-		line = line->next;
-		i++;
-	}
-}
+//         new_node = malloc(sizeof(t_env));
+//         if (!new_node) {
+//             free(env_copy);
+//             return NULL;
+//         }
+
+//         new_node->name = strdup(name);
+//         new_node->value = strdup(value);
+//         new_node->next = head;
+//         head = new_node;
+
+//         free(env_copy);
+//         i++;
+//     }
+//     return head;
+// }
+
+// int main(int argc, char **argv, char **envp) {
+//     t_env *env_list = init_env_list(envp);
+//     t_env *temp = env_list;
+
+//     while (temp != NULL) {
+//         printf("Name: %s\n", temp->name);
+//         temp = temp->next;
+//     }
+
+//     temp = env_list;
+//     while (temp != NULL) {
+//         t_env *next = temp->next;
+//         free(temp->name);
+//         free(temp->value);
+//         free(temp);
+//         temp = next;
+//     }
+
+//     return 0;
+// }

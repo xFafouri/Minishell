@@ -1,5 +1,19 @@
 #include "../minishell.h"
 
+int ft_strlen_untile_char(char *str, char c)
+{
+    int i;
+
+    i = 0;
+    while(str[i] != '\0')
+    {
+        if(str[i] == c)
+            break ;
+        i++;
+    }
+    return (i);
+}
+
 void	ft_pwd(char *line, t_node **gc)
 {
 	char	*str;
@@ -12,16 +26,16 @@ void	ft_pwd(char *line, t_node **gc)
 		write(1, "\n", 1);
 	}
 }
-void	ft_echo(char *line, int i, t_cmd *token)
+void	ft_echo(char *line, t_cmd *token)
 {
 	char	*s;
 
-	if (ft_strncmp(line, "echo -n", 6) == 0)
-	{
-		s = line + 8;
-		printf("%s\n", s);
-	}
-	else if (ft_strncmp(line, "echo", 3) == 0)
+	// if (ft_strncmp(line, "echo -n", 6) == 0)
+	// {
+	// 	s = line + 8;
+	// 	printf("%s\n", s);
+	// }
+	if (ft_strncmp(token->cmd[0], "echo", 3) == 0)
 	{
 		s = line + 5;
 		printf("%s\n", s);

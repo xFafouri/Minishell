@@ -60,7 +60,7 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, id, gc);
 		if ((count_cmd(line) == 1) && (i == 0))
-			if ((ft_check_buldin(env, (char *)line->data, gc, i)) == 0)
+			if ((ft_check_buldin(env, (char *)line->data, gc)) == 0)
 				break;
 		ft_fork_pipe(env, id, i, gc);
 		if (id[i] == 0)

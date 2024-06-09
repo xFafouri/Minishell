@@ -75,7 +75,6 @@ void ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line)
         // Close the read end of the pipe
         close((token->fd)[i][0]);
 
-        // Redirect stdout to the write end of the pipe
         if (dup2((token->fd)[i][1], 1) < 0)
         {
             perror("dup2 failed\n");
@@ -90,8 +89,7 @@ void ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line)
         ft_check_file(token, token->file, gc, token->her);
 
         // Execute the built-in command
-        ft_check_buldin(token, line, gc,i);
-
+        ft_check_buldin(token, line, gc);
         // Exit after executing the built-in command
         exit(1);
     }
@@ -156,7 +154,11 @@ void ft_last_child(int i, t_node **gc, t_cmd *token, char *line)
 
 	token->file = 0;
 	path = NULL;
-	ft_all_bildin(i, gc, token, line);  // Check if the command is a built-in command
+	if(ft_check_buldin1(token, line, gc) == 0)
+	{
+		ft_check_file(token, token->file, gc, token->her);
+		(ft_check_buldin(token, line, gc), exit(1));
+	}
 	close((token->fd)[i][1]);
 	if (dup2((token->fd)[i - 1][0], 0) < 0)
 		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));

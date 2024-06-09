@@ -5,12 +5,19 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef struct s_node
 {
 	void *data;
 	struct s_node *next;
 } t_node;
+
+typedef struct s_env {
+    char *name;
+    char *value;
+    struct s_env *next;
+} t_env;
 
 typedef struct s_cmd
 {
@@ -22,9 +29,12 @@ typedef struct s_cmd
 	t_node *outfile;
 	t_node *heredoc;
 	t_node *append;
+	t_env	*like_env;
 	int count;
 	int her;
 	int file;
+	t_env  *addres_env;
+	t_node *addres_fd;
 } t_cmd;
 
 void *gc_malloc(t_node **gc, int size);
@@ -61,12 +71,15 @@ void ft_check_infile(t_cmd *token, int file, int her,
 					 t_node **gc);
 void ft_one_child(int i, t_node **gc, t_cmd *token);
 void ft_pwd(char *line, t_node **gc);
-void ft_echo(char *line, int i, t_cmd *token);
+void ft_echo(char *line, t_cmd *token);
 void ft_cd(char *line, t_cmd *token);
 void ft_exit(t_node **gc);
 char	*ft_strtrim(char const *s1, char const *set);
 void				ft_putendl_fd(char *s, int fd);
-int ft_check_buldin(t_cmd *env, char *line, t_node **gc, int i);
+int ft_check_buldin(t_cmd *env, char *line, t_node **gc);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putchar_fd(char c, int fd);
 int ft_check_buldin1(t_cmd *env, char *line, t_node **gc);
+int ft_strlen_untile_char(char *str, char c);
+char	*ft_strdup(t_node **gc, char *s1);
+void ft_export(t_cmd *token, char *line);
