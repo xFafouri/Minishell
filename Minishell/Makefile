@@ -5,7 +5,7 @@ biultin/ft_export.c
 OBJC=$(SOR:.c=.o)
 NAME = minishell
 RM = rm -f
-CC = cc -ggdb #-fsanitize=address
+CC = cc -ggdb -fsanitize=address
 LDLIBS = -lreadline
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 

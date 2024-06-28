@@ -107,10 +107,12 @@ int main(int argc, char **argv, char **envp)
 	char *line;
 	t_env *env_list;
 	env_list = init_env_list(envp, &fd);
-	ev.addres_env = env_list;
+	ev.addres_env = env_list;;
 	ev.addres_fd = fd;
 	while (1)
 	{
+		ft_sort_env_list(&ev);
+		printf("\033[0m");
 		line = readline("$ ");
 		if (line != NULL)
 		{

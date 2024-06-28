@@ -5,6 +5,8 @@ int	ft_strlen(char *s1)
 	int	i;
 
 	i = 0;
+	if(s1 == NULL)
+		return(0);
 	while (s1[i] != '\0')
 		i++;
 	return (i);
@@ -15,6 +17,8 @@ char	*ft_strdup(t_node **gc, char *s1)
 	int		i;
 	char	*str;
 
+	if(!s1)
+		return(NULL);
 	str = gc_malloc(gc, ft_strlen(s1) * sizeof(char) + 1);
 	if (str == NULL)
 		return (NULL);

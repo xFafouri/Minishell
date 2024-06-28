@@ -1,60 +1,204 @@
 #include "../minishell.h"
 
-void ft_print_export(t_env *temp)
+void	ft_env(t_cmd *token)
 {
-    while (temp != NULL)
-    {
-        printf("declare -x %s%s\n", temp->name, temp->value);
-        temp = temp->next;
-    }
+	int	i;
+
+	i = 0;
+	while (token->env[i] != NULL)
+	{
+		printf("%s\n", token->env[i]);
+		i++;
+	}
 }
 
-void ft_add_value_to_export(t_cmd *token, char *line)
+void	ft_add_env(char *value, char *name, t_cmd *token)
 {
-    t_env *head = token->addres_env;
-    t_node *ft = token->addres_fd;
-	t_env *new_node;
-	char *name;
-	char *value;
-	char *env_copy;
-	int i = 1;
+	int		i;
+	char	*join;
+	char	*key;
+	char	*value1;
+	char	*new_node;
+	t_node	*ft;
 
-	while (token->cmd[i] != NULL)
+	i = 0;
+	join = NULL;
+	key = NULL;
+	value1 = NULL;
+	new_node = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
+	while (token->env[i] != NULL)
 	{
-		env_copy = strdup(token->cmd[i]);
+		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i],
+					'='), &ft);
+		value1 = ft_strchr(token->env[i], '=');
+		if (ft_strcmp(key, new_node) == 0)
+		{
+			if (name[ft_strlen(name) - 1] == '+')
+				token->env[i] = ft_strjoin(&ft, token->env[i], value + 1);
+			else
+			{
+				join = ft_strjoin(&ft, name, value);
+				token->env[i] = ft_strdup(&ft, join);
+			}
+			return ;
+		}
+		free(key);
+		i++;
+	}
+	join = ft_strjoin(&ft, name, value);
+	token->env[i] = ft_strdup(&ft, join);
+	token->env[i + 1] = NULL;
+	// Proper memory management: free allocated memory if needed.
+	free(join);
+}
+void	ft_sort_env_list(t_cmd *token)
+{
+	t_env	*head;
+	t_node	*ft;
+	char	*env_copy_name;
+	char	*env_copy_value;
+	int		swapped;
+	t_env	*current;
+
+	if (token == NULL || token->addres_env == NULL)
+		return ;
+	head = token->addres_env;
+	ft = token->addres_fd;
+	while (1)
+	{
+		swapped = 0;
+		current = head;
+		while (current != NULL && current->next != NULL)
+		{
+			if (strcmp(current->name, current->next->name) > 0)
+			{
+				env_copy_name = ft_strdup(&ft, current->name);
+				env_copy_value = ft_strdup(&ft, current->value);
+				free(current->name);
+				free(current->value);
+				current->name = current->next->name;
+				current->value = current->next->value;
+				current->next->name = env_copy_name;
+				current->next->value = env_copy_value;
+				swapped = 1;
+			}
+			current = current->next;
+		}
+		if (!swapped)
+			break ;
+	}
+}
+
+void	ft_print_export(t_env *temp)
+{
+	while (temp != NULL)
+	{
+		if (temp->value != NULL)
+			printf("declare -x %s%s\n", temp->name, temp->value);
+		else
+			printf("declare -x %s\n", temp->name);
+		temp = temp->next;
+	}
+}
+
+void	ft_add_value_to_export(t_cmd *token, char *line)
+{
+	t_env	*head;
+	t_node	*ft;
+	char	**str;
+	char	*name;
+	char	*value;
+	char	*env_copy;
+	int		i;
+	t_env	*new_node;
+	t_env	*current;
+	t_env	*prev;
+
+	head = token->addres_env;
+	ft = token->addres_fd;
+	str = ft_split(line, ' ', &ft);
+	name = NULL;
+	value = NULL;
+	env_copy = NULL;
+	i = 1;
+	while (str[i] != NULL)
+	{
+		env_copy = strdup(str[i]);
 		if (!env_copy)
-			return;
-
-		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), &ft);
+			return ;
+		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='),
+				&ft);
 		value = ft_strchr(env_copy, '=');
-
-		new_node = gc_malloc(&ft, sizeof(t_env));
+		// check is we have valid indentifier
+		if (name == NULL || name[0] == '\0' || (ft_isalpha(name) == 0))
+		{
+			printf("export: %s", value);
+			printf(": not a valid identifier\n");
+			free(env_copy);
+			return ;
+		}
+		new_node = (t_env *)malloc(sizeof(t_env));
 		if (!new_node)
 		{
 			free(env_copy);
-			return;
+			return ;
 		}
-
-		new_node->name = ft_strdup(&ft, name);
+		new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'),
+				&ft);
 		new_node->value = ft_strdup(&ft, value);
-		new_node->next = head;
-		head = new_node;
-
+		new_node->next = NULL;
+		// Check if the variable already exists
+		current = head;
+		prev = NULL;
+		while (current != NULL)
+		{
+			if (strcmp(current->name, new_node->name) == 0)
+			{
+				if (name[ft_strlen(name) - 1] == '+')
+				{
+					if (current->value == NULL)
+						current->value = ft_strjoin(&ft, current->value,
+								(new_node->value));
+					else
+						current->value = ft_strjoin(&ft, current->value,
+								(new_node->value + 1));
+				}
+				else
+				{
+					if (value != NULL)
+						current->value = ft_strdup(&ft, value);
+				}
+				break ;
+			}
+			prev = current;
+			current = current->next;
+		}
+		if (value != NULL)
+			ft_add_env(value, name, token);
+		// If variable doesn't exist, add it to the list
+		if (current == NULL)
+		{
+			if (prev == NULL)
+				token->addres_env = new_node;
+			else
+				prev->next = new_node;
+		}
 		free(env_copy);
 		i++;
 	}
 }
 
-void ft_export(t_cmd *token, char *line)
+void	ft_export(t_cmd *token, char *line)
 {
-    t_env *temp = token->addres_env;
-    if(token->cmd[1] == NULL)
-        ft_print_export(temp);
-    ft_add_value_to_export(token, line);
-    temp = token->addres_env;
-    while (temp != NULL)
-    {
-       printf("declare -x %s=%s\n", temp->name, temp->value);
-        temp = temp->next;
-    }
+	t_env	*temp;
+
+	temp = token->addres_env;
+	if (token->cmd[1] == NULL)
+		ft_print_export(temp);
+	ft_add_value_to_export(token, line);
+	// while (temp != NULL)
+	// {
+	//    printf("declare -x %s=%s\n", temp->name, temp->value);
+	//     temp = temp->next;
+	// }
 }
