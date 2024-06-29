@@ -25,6 +25,7 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 	join = NULL;
 	key = NULL;
 	value1 = NULL;
+	ft = token->addres_fd;
 	new_node = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 	while (token->env[i] != NULL)
 	{
@@ -48,7 +49,6 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 	join = ft_strjoin(&ft, name, value);
 	token->env[i] = ft_strdup(&ft, join);
 	token->env[i + 1] = NULL;
-	// Proper memory management: free allocated memory if needed.
 	free(join);
 }
 void	ft_sort_env_list(t_cmd *token)
@@ -196,9 +196,4 @@ void	ft_export(t_cmd *token, char *line)
 	if (token->cmd[1] == NULL)
 		ft_print_export(temp);
 	ft_add_value_to_export(token, line);
-	// while (temp != NULL)
-	// {
-	//    printf("declare -x %s=%s\n", temp->name, temp->value);
-	//     temp = temp->next;
-	// }
 }

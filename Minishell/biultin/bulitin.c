@@ -63,6 +63,7 @@ void	ft_cd(char *line, t_cmd *token)
 {
 	int		i;
 	char	*cwd;
+	char	*path;
 
 	i = 0;
 	while ((token->cmd)[i])
@@ -74,19 +75,31 @@ void	ft_cd(char *line, t_cmd *token)
 	}
 	else
 	{
-		if (chdir((token->cmd)[1]) == 0)
+		if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0)
+		{
+			path = getenv("HOME");
+			if (!path)
+			{
+				ft_putstr_fd("cd: HOME not set\n", 2);
+				return;
+			}
+		}
+		else
+			path = (token->cmd)[1];
+		
+		if (chdir(path) == 0)
 		{
 			cwd = getcwd(NULL, 0);
 			if (cwd)
 			{
-				ft_putstr_fd(cwd, 1);
-				free(cwd);
+				ft_setexport("PWD", cwd, token);
+				//free(cwd);
 			}
 			else
 				perror("getcwd");
 		}
 		else
-			perror((token->cmd)[1]);
+			perror(path);
 	}
 }
 

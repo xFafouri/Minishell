@@ -90,3 +90,4 @@ void				ft_sort_env_list(t_cmd *token);
 int					find_char(char *str, char c);
 int					ft_isalpha(char *str);
 void				ft_env(t_cmd *token);
+void ft_setexport(char *pwd, char *cwd, t_cmd *token);
