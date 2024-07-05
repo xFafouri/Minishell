@@ -1,15 +1,40 @@
 #include "../minishell.h"
 
+int	ft_check_path_env(t_cmd *token)
+{
+	int		i;
+	int		b;
+	char	*key;
+	t_node	*ft;
+
+	i = 0;
+	b = 1;
+	ft = token->addres_fd;
+	while (token->env[i] != NULL)
+	{
+		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i],
+					'='), &ft);
+		if (ft_strcmp(key, "PATH") == 0)
+			b = 0;
+		i++;
+	}
+	return (b);
+}
 void	ft_env(t_cmd *token)
 {
 	int	i;
 
 	i = 0;
-	while (token->env[i] != NULL)
+	if (ft_check_path_env(token) == 0)
 	{
-		printf("%s\n", token->env[i]);
-		i++;
+		while (token->env[i] != NULL)
+		{
+			printf("%s\n", token->env[i]);
+			i++;
+		}
 	}
+	else
+		write(2, "env: No such file or directory\n", 32);
 }
 
 void	ft_add_env(char *value, char *name, t_cmd *token)
@@ -116,7 +141,7 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 
 	head = token->addres_env;
 	ft = token->addres_fd;
-	str = ft_split(line, ' ', &ft);
+	str = ft_split_qoute(line, ' ', &ft);
 	name = NULL;
 	value = NULL;
 	env_copy = NULL;
@@ -129,9 +154,15 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='),
 				&ft);
 		value = ft_strchr(env_copy, '=');
+		// remove the sngle and double qoute for name
+		if (name[0] == '\'')
+			name = ft_strtrim1(name, "\'", &ft);
+		else if (name[0] == '\"')
+			name = ft_strtrim1(name, "\"", &ft);
 		// check is we have valid indentifier
 		if (name == NULL || name[0] == '\0' || (ft_isalpha(name) == 0))
 		{
+			// i have same errror in this line
 			printf("export: %s", value);
 			printf(": not a valid identifier\n");
 			free(env_copy);
@@ -173,6 +204,7 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 			prev = current;
 			current = current->next;
 		}
+		// add varialble to the env
 		if (value != NULL)
 			ft_add_env(value, name, token);
 		// If variable doesn't exist, add it to the list

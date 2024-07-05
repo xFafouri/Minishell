@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc)
+void	ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc)
 {
 	if (pipe((file_des->fd)[i]) == -1)
 	{
@@ -16,9 +16,9 @@ void ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc)
 	}
 }
 
-int count_cmd(t_node *cmd)
+int	count_cmd(t_node *cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cmd != NULL)
@@ -29,9 +29,9 @@ int count_cmd(t_node *cmd)
 	return (i);
 }
 
-void malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
+void	malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	*id = gc_malloc(gc, count * sizeof(int));
@@ -43,12 +43,12 @@ void malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
 	}
 }
 
-void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
+void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 {
-	int *id;
-	int count;
-	int i;
-	int her;
+	int	*id;
+	int	count;
+	int	i;
+	int	her;
 
 	i = 0;
 	env->her = 0;
@@ -63,7 +63,7 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 			if ((ft_check_buldin1(env, (char *)line->data, gc)) == 0)
 			{
 				ft_check_buldin(env, (char *)line->data, gc);
-				break;
+				break ;
 			}
 		ft_fork_pipe(env, id, i, gc);
 		if (id[i] == 0)

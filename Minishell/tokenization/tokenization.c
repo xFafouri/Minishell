@@ -33,8 +33,6 @@ static char	check(const char *set, char c)
 		set++;
 	return (c == *set);
 }
-#include <string.h>
-#include <stdlib.h>
 
 int ft_strlen1(char *s)
 {
