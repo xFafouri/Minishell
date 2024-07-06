@@ -1,84 +1,52 @@
 #include "minishell.h"
 
-int	ft_isspace(char c)
+int ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t')
 		return (1);
 	return (0);
 }
 
-void	rmv_wsp(void *data)
+t_env *init_env_list(char **envp, t_node **gc)
 {
-	char	*str;
-	char	*read;
-	char	*write;
+	t_env *head = NULL;
+	t_env *new_node;
+	char *name;
+	char *value;
+	char *env_copy;
+	int i = 0;
 
-	str = (char *)data;
-	if (!str)
-		return ;
-	read = str;
-	write = str;
-	while (*read)
-	{
-		if (!ft_isspace(*read))
-		{
-			*write = *read;
-			write++;
-		}
-		read++;
-	}
-	*write = '\0';
-}
-
-void	ft_lstiter(t_node *lst, void (*f)(void *))
-{
-	if (!lst || !f)
-		return ;
-	while (lst != NULL)
-	{
-		f(lst->data);
-		lst = lst->next;
-	}
-}
-
-t_env	*init_env_list(char **envp, t_node **gc)
-{
-	t_env	*head;
-	t_env	*new_node;
-	char	*name;
-	char	*value;
-	char	*env_copy;
-	int		i;
-
-	head = NULL;
-	i = 0;
 	while (envp[i] != NULL)
 	{
 		env_copy = strdup(envp[i]);
 		if (!env_copy)
-			return (NULL);
+			return NULL;
+
 		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), gc);
 		value = ft_strchr(env_copy, '=');
+
 		new_node = gc_malloc(gc, sizeof(t_env));
 		if (!new_node)
 		{
 			free(env_copy);
-			return (NULL);
+			return NULL;
 		}
+
 		new_node->name = ft_strdup(gc, name);
 		new_node->value = ft_strdup(gc, value);
 		new_node->next = head;
 		head = new_node;
+
 		free(env_copy);
 		i++;
 	}
-	return (head);
+	return head;
 }
 
-void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
+void split_pipe(char *cmd, t_cmd *env, t_node **gc)
 {
-	t_node	*link_cmd;
-	char	**all_cmd;
+	t_node *link_cmd;
+	char **all_cmd;
 
 	link_cmd = NULL;
 	all_cmd = ft_split(cmd, '|', gc);
@@ -107,7 +75,6 @@ int	main(int argc, char **argv, char **envp)
 	env_list = init_env_list(envp, &fd);
 	ev.addres_env = env_list;
 	ev.addres_fd = fd;
-	// add commond to the history
 	ev.history = gc_malloc(&fd, sizeof(t_history));
 	if (!ev.history)
 		return (0);
@@ -124,7 +91,6 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("$ ");
 		if (line != NULL)
 		{
-			// add commond to the history
 			while (line[i] != '\0')
 			{
 				if (line[i] != ' ')
@@ -144,7 +110,8 @@ int	main(int argc, char **argv, char **envp)
 				}
 				i++;
 			}
-			split_pipe(line, &ev, &gc);
+			if (input_validation(line) != 1)
+				split_pipe(line, &ev, &gc);
 			add_history(line);
 			ft_lstclear(&gc);
 		}
