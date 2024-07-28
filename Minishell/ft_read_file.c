@@ -25,11 +25,14 @@ int	count_herdoc(t_node *herdoc)
 	return (number);
 }
 
+
+
 void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 {
 	char	*str;
 
 	str = NULL;
+	printf("heredoc = %s\n", (char *)env->heredoc->data);
 	ft_fork_pipe(env, id, *i, gc);
 	if (id[*i] == 0)
 	{

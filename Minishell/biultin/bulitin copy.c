@@ -148,7 +148,7 @@ void ft_echo(char *line, t_cmd *token)
     newline = 1;
     is_flag = 1;
 
-    if (ft_strcmp(token->cmd[0], "echo") == 0)
+    if (ft_strncmp(token->cmd[0], "echo", 4) == 0)
     {
         while (token->cmd[i] != NULL)
         {
@@ -161,17 +161,17 @@ void ft_echo(char *line, t_cmd *token)
                 if (token->cmd[i][j] != '\0')
                 {
                     is_flag = 0;
-                    // if (token->cmd[i][j] == '$')
-                    // {
-                    //     j++;
-                    //     search_env(&token->cmd[i][j], token);
-                    //     if (token->env_line != NULL)
-                    //     {
-                    //         printf("%s", token->env_line);
-                    //     }
-                    // }
-                    // else
-                    printf("%s", token->cmd[i]);
+                    if (token->cmd[i][j] == '$')
+                    {
+                        j++;
+                        search_env(&token->cmd[i][j], token);
+                        if (token->env_line != NULL)
+                        {
+                            printf("%s", token->env_line);
+                        }
+                    }
+                    else
+                        printf("%s", token->cmd[i]);
                 }
                 else
                 {
@@ -183,32 +183,32 @@ void ft_echo(char *line, t_cmd *token)
                 is_flag = 0;
                 if (i > 1)
                     printf(" ");
-                // if (token->dollar)
-                // {
-                //     search_env(token->dollar, token);
-                //     if (token->env_line != NULL)
-                //     {
-                //         printf("%s", token->env_line);
-                //     }
-                // }
-                // if (token->cmd[i][j] == '$')
-                // {
-                //     if (token->aft_dol_dq == 1)
-                //     {
-                //         j++;
-                //         printf("%s", &token->cmd[i][j]);
-                //     }
-                //     else
-                //     {
-                //         j++;
-                //         search_env(&token->cmd[i][j], token);
-                //         if (token->env_line != NULL)
-                //         {
-                //             printf("%s", token->env_line);
-                //         }
-                //     }
-                // }
-                // else
+                if (token->dollar)
+                {
+                    search_env(token->dollar, token);
+                    if (token->env_line != NULL)
+                    {
+                        printf("%s", token->env_line);
+                    }
+                }
+                if (token->cmd[i][j] == '$')
+                {
+                    if (token->aft_dol_dq == 1)
+                    {
+                        j++;
+                        printf("%s", &token->cmd[i][j]);
+                    }
+                    else
+                    {
+                        j++;
+                        search_env(&token->cmd[i][j], token);
+                        if (token->env_line != NULL)
+                        {
+                            printf("%s", token->env_line);
+                        }
+                    }
+                }
+                else
                     printf("%s", token->cmd[i]);
             }
             i++;

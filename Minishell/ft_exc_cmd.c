@@ -51,12 +51,15 @@ void ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	int her;
 
 	i = 0;
+	int l = 0;
 	env->her = 0;
 	count = count_cmd(line) + count_herdoc(line);
 	malloc_fd_id(&id, env, count + 1, gc);
 	while (line != NULL)
 	{
+		line-> data = handle_dollar_sign(line->data, env);
 		tokenisation(line->data, gc, env);
+		// handle_dollar(env->cmd, gc, env);
 		handle_quotes(env, gc);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, id, gc);

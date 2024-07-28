@@ -43,11 +43,25 @@ typedef struct s_cmd
 	int				her;
 	int				file;
 	int	cmd_count;
+	int	k;
 	t_env			*addres_env;
 	t_node			*addres_fd;
 	char *env_line;
+	char	*dollar;
+	int	aft_dol_dq;
 }					t_cmd;
 
+typedef struct s_quote_state
+{
+	int	in_single_quotes;
+	int	in_double_quotes;
+	int	nested_quotes;
+}		t_quote_state;
+
+void    search_env(char *line, t_cmd *env);
+// void handle_dollar_and_quotes(t_cmd *cmd, t_node **gc);
+void handle_dollar(char *line, t_node **gc, t_cmd *token, int d);
+char	*handle_dollar_sign(char *line, t_cmd *env);
 void				*gc_malloc(t_node **gc, int size);
 char				**ft_split_str(char *str, char *charset);
 char				**ft_split(char *s, char c, t_node **gc);
@@ -125,3 +139,4 @@ char	**ft_split_qoute(char *s, char c, t_node **gc);
 void ft_history(t_cmd *token);
 int	checkchar(char a, char *b);
 char	*ft_strtrim1(char *s1, char *set, t_node **gc);
+char *expand_quotes(char *line);
