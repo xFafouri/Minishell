@@ -46,7 +46,7 @@ void	ft_pwd(char *line, t_node **gc)
 	}
 }
 
-static char	*ft_strstr(char *haystack, char *needle)
+ char	*ft_strstr(char *haystack, char *needle)
 {
 	int	i;
 	int	j;

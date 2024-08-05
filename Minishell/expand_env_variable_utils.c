@@ -66,7 +66,8 @@ char	*concatenate_char(char *str, char c)
 
 char	*concatenate_name(char *name, char **line)
 {
-	while (**line == '_' || ft_isalnum(**line))
+	/// we have peoblem in isalnum
+	while (**line == '_' || isalnum(**line))
 	{
 		name = concatenate_char(name, **line);
 		(*line)++;

@@ -1,34 +1,34 @@
 #include "../minishell.h"
 
-int find_char(char *str, char c)
+int	find_char(char *str, char c)
 {
-    int i;
-	int b;
+	int	i;
+	int	b;
 
-    i = 0;
+	i = 0;
 	b = 0;
-	if(!str)
+	if (!str)
 		return (0);
-    while(str[i] != '\0')
-    {
-        if(str[i] == c)
-            b++;
-        i++;
-    }
-    return (b);
+	while (str[i] != '\0')
+	{
+		if (str[i] == c)
+			b++;
+		i++;
+	}
+	return (b);
 }
-int ft_strlen_untile_char(char *str, char c)
+int	ft_strlen_untile_char(char *str, char c)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(str[i] != '\0')
-    {
-        if(str[i] == c)
-            break ;
-        i++;
-    }
-    return (i);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == c)
+			break ;
+		i++;
+	}
+	return (i);
 }
 
 void	ft_pwd(char *line, t_node **gc)
@@ -44,178 +44,179 @@ void	ft_pwd(char *line, t_node **gc)
 	}
 }
 
-static char	*ft_strstr(char *haystack, char *needle)
+char	*ft_strstr(char *haystack, char *needle)
 {
-	int	i;
-	int	j;
+	int i;
+    int j;
 
 	i = 0;
-	if (*needle == 0)
+	j = 0;
+	if (*needle == '\0')
 		return ((char *)haystack);
 	while (haystack[i] != '\0')
 	{
 		j = 0;
-		while (haystack[i + j] == needle[j] && needle[j] != '\0')
+		while (needle[j] != '\0')
+		{
+			if (haystack[i + j] != needle[j])
+				break ;
 			j++;
-		if (j == ft_strlen(needle))
-        {
-            while(haystack[i] != '=')
-                i++;
-			return ((char *)&haystack[i] + 1);
-        }
+		}
+		if (needle[j] == '\0')
+			return ((char *)&haystack[i]);
 		i++;
 	}
 	return (NULL);
 }
 
-void    search_env(char *line, t_cmd *env)
+void	search_env(char *line, t_cmd *env)
 {
-    int i;
-    int j = 0;
-    int count;
+	int	i;
+	int	j;
+	int	count;
 
-    i = 0;
-    count = 0;
-    env->env_line = NULL;
-    while (env->env[i])
-    {
-        j = 0;
-        count = 0;
-        while (env->env[i][j] != '=' && env->env[i][j] != '\0')
-        {
-            count++;
-            j++;
-        }
-        if (ft_strncmp(env->env[i], line, count) == 0)
-        {
-            env->env_line = ft_strstr(env->env[i], line);
-            break;
-        }
-        i++;
-    }
-    if (!env->env_line)
-    {
-        env->env_line = NULL;
-    }
+	j = 0;
+	i = 0;
+	count = 0;
+	env->env_line = NULL;
+	while (env->env[i])
+	{
+		j = 0;
+		count = 0;
+		while (env->env[i][j] != '=' && env->env[i][j] != '\0')
+		{
+			count++;
+			j++;
+		}
+		if (ft_strncmp(env->env[i], line, count) == 0)
+		{
+			env->env_line = ft_strstr(env->env[i], line);
+			break ;
+		}
+		i++;
+	}
+	if (!env->env_line)
+	{
+		env->env_line = NULL;
+	}
 }
 
-char *expand_quotes(char *line)
+char	*expand_quotes(char *line)
 {
-    int i, j, k;
-    int len;
-    int in_dq;
-    int in_sq;
-    char c;
-    char *buffer;
+	int		len;
+	int		in_dq;
+	int		in_sq;
+	char	c;
+	char	*buffer;
 
-    len = ft_strlen(line);
-    in_dq = in_double_quote(line, len);
-    in_sq = in_single_quote(line, len);
-    buffer = (char *)malloc(sizeof(char) * (len + 1));
-    if (!buffer)
-        return NULL;
-    j = 0;
-    k = 0;
-    while (k < len)
-    {
-        c = line[k];
-        if (c == '\'' && !in_dq)
-        {
-            in_sq = !in_sq;
-        }
-        else if (c == '"' && !in_sq)
-        {
-            in_dq = !in_dq;
-        }
-        else
-        {
-            buffer[j++] = c;
-        }
-        k++;
-    }
-    buffer[j] = '\0';
-    return buffer;
+	int i, j, k;
+	len = ft_strlen(line);
+	in_dq = in_double_quote(line, len);
+	in_sq = in_single_quote(line, len);
+	buffer = (char *)malloc(sizeof(char) * (len + 1));
+	if (!buffer)
+		return (NULL);
+	j = 0;
+	k = 0;
+	while (k < len)
+	{
+		c = line[k];
+		if (c == '\'' && !in_dq)
+		{
+			in_sq = !in_sq;
+		}
+		else if (c == '"' && !in_sq)
+		{
+			in_dq = !in_dq;
+		}
+		else
+		{
+			buffer[j++] = c;
+		}
+		k++;
+	}
+	buffer[j] = '\0';
+	return (buffer);
 }
 
-void ft_echo(char *line, t_cmd *token)
+void	ft_echo(char *line, t_cmd *token)
 {
-    int i;
-    int j;
-    int newline;
-    int is_flag;
+	int	i;
+	int	j;
+	int	newline;
+	int	is_flag;
 
-    i = 1;
-    newline = 1;
-    is_flag = 1;
-
-    if (ft_strcmp(token->cmd[0], "echo") == 0)
-    {
-        while (token->cmd[i] != NULL)
-        {
-            j = 0;
-            if (is_flag && token->cmd[i][0] == '-' && token->cmd[i][1] == 'n')
-            {
-                j = 1;
-                while (token->cmd[i][j] == 'n')
-                    j++;
-                if (token->cmd[i][j] != '\0')
-                {
-                    is_flag = 0;
-                    // if (token->cmd[i][j] == '$')
-                    // {
-                    //     j++;
-                    //     search_env(&token->cmd[i][j], token);
-                    //     if (token->env_line != NULL)
-                    //     {
-                    //         printf("%s", token->env_line);
-                    //     }
-                    // }
-                    // else
-                    printf("%s", token->cmd[i]);
-                }
-                else
-                {
-                    newline = 0;
-                }
-            }
-            else
-            {
-                is_flag = 0;
-                if (i > 1)
-                    printf(" ");
-                // if (token->dollar)
-                // {
-                //     search_env(token->dollar, token);
-                //     if (token->env_line != NULL)
-                //     {
-                //         printf("%s", token->env_line);
-                //     }
-                // }
-                // if (token->cmd[i][j] == '$')
-                // {
-                //     if (token->aft_dol_dq == 1)
-                //     {
-                //         j++;
-                //         printf("%s", &token->cmd[i][j]);
-                //     }
-                //     else
-                //     {
-                //         j++;
-                //         search_env(&token->cmd[i][j], token);
-                //         if (token->env_line != NULL)
-                //         {
-                //             printf("%s", token->env_line);
-                //         }
-                //     }
-                // }
-                // else
-                    printf("%s", token->cmd[i]);
-            }
-            i++;
-        }
-    }
-    if (newline)
-        printf("\n");
+	i = 1;
+	newline = 1;
+	is_flag = 1;
+	if (ft_strcmp(token->cmd[0], "echo") == 0)
+	{
+		while (token->cmd[i] != NULL)
+		{
+			j = 0;
+			if (is_flag && token->cmd[i][0] == '-' && token->cmd[i][1] == 'n')
+			{
+				j = 1;
+				while (token->cmd[i][j] == 'n')
+					j++;
+				if (token->cmd[i][j] != '\0')
+				{
+					is_flag = 0;
+					// if (token->cmd[i][j] == '$')
+					// {
+					//     j++;
+					//     search_env(&token->cmd[i][j], token);
+					//     if (token->env_line != NULL)
+					//     {
+					//         printf("%s", token->env_line);
+					//     }
+					// }
+					// else
+					printf("%s", token->cmd[i]);
+				}
+				else
+				{
+					newline = 0;
+				}
+			}
+			else
+			{
+				is_flag = 0;
+				if (i > 1)
+					printf(" ");
+				// if (token->dollar)
+				// {
+				//     search_env(token->dollar, token);
+				//     if (token->env_line != NULL)
+				//     {
+				//         printf("%s", token->env_line);
+				//     }
+				// }
+				// if (token->cmd[i][j] == '$')
+				// {
+				//     if (token->aft_dol_dq == 1)
+				//     {
+				//         j++;
+				//         printf("%s", &token->cmd[i][j]);
+				//     }
+				//     else
+				//     {
+				//         j++;
+				//         search_env(&token->cmd[i][j], token);
+				//         if (token->env_line != NULL)
+				//         {
+				//             printf("%s", token->env_line);
+				//         }
+				//     }
+				// }
+				// else
+				printf("%s", token->cmd[i]);
+			}
+			i++;
+		}
+	}
+	if (newline)
+		printf("\n");
 }
 
 // void ft_echo(char *line, t_cmd *env)
@@ -242,7 +243,7 @@ void ft_echo(char *line, t_cmd *token)
 //             if (line[i] != ' ' && line[i] != '\0')
 //             {
 //                 n_flag_valid = 0;
-//                 break;
+//                 break ;
 //             }
 //             if (line[i] == ' ')
 //             {
@@ -285,7 +286,7 @@ void ft_echo(char *line, t_cmd *token)
 //                     s = expand_quotes(s);
 //                     ft_putendl_fd(s, 1);
 //                 }
-//                 break;
+//                 break ;
 //             }
 //         }
 //     }
@@ -313,19 +314,18 @@ void	ft_cd(char *line, t_cmd *token)
 			if (!path)
 			{
 				ft_putstr_fd("cd: HOME not set\n", 2);
-				return;
+				return ;
 			}
 		}
 		else
 			path = (token->cmd)[1];
-		
 		if (chdir(path) == 0)
 		{
 			cwd = getcwd(NULL, 0);
 			if (cwd)
 			{
 				ft_setexport("PWD", cwd, token);
-				//free(cwd);
+				// free(cwd);
 			}
 			else
 				perror("getcwd");

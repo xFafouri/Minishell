@@ -6,6 +6,21 @@ t_cmd *shell(void)
     return (&shell);
 }
 
+
+int count_heredocs(const char *line) {
+    int count = 0;
+    char *ptr = (char *)line;
+
+    while ((ptr = ft_strstr(ptr, "<<")) != NULL) {
+        // Check if the '<<' is not part of a larger token (like '<<<')
+        if (ptr == line || !isalnum(*(ptr - 1))) {
+            count++;
+        }
+        ptr += 2;  // Move past the '<<'
+    }
+
+    return count;
+}
 int ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t')
@@ -55,6 +70,11 @@ void split_pipe(char *cmd, t_cmd *env, t_node **gc)
 	char **all_cmd;
 
 	link_cmd = NULL;
+	if( count_heredocs(cmd) >= 16)
+		{
+			printf("minishell: maximum here-document count exceeded\n");
+			return ;
+		}
 	all_cmd = ft_split(cmd, '|', gc);
 	while (*all_cmd != NULL)
 	{
@@ -107,8 +127,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		ft_sort_env_list(&ev);
-		printf("\033[0m");
-		line = readline("$ ");
+		line = readline(FG_YELLOW "$ " FG_GREEN);
 		if (line != NULL)
 		{
 			ev.flag_signle = 0;
