@@ -22,6 +22,8 @@ int ft_strlen_untile_char(char *str, char c)
     int i;
 
     i = 0;
+    if(!str)
+        return(0);
     while(str[i] != '\0')
     {
         if(str[i] == c)

@@ -1,91 +1,65 @@
+#include "minishell.h"
 
-// #include "minishell.h"
+void ft_restore_fds(t_fds *fds)
+{
+    if (fds->stdin_fd != -1)
+    {
+        dup2(fds->original_stdin, STDIN_FILENO);
+        close(fds->stdin_fd);
+        close(fds->original_stdin);
+    }
+    if (fds->stdout_fd != -1)
+    {
+        dup2(fds->original_stdout, STDOUT_FILENO);
+        close(fds->stdout_fd);
+        close(fds->original_stdout);
+    }
+}
 
+t_fds ft_check_file1(t_cmd *env, t_node **gc, int her)
+{
+    t_fds fds = {-1, -1, -1, -1};
+    
+    fds.original_stdin = dup(STDIN_FILENO);
+    fds.original_stdout = dup(STDOUT_FILENO);
 
-// char	*ft_substr1(char *s, int start, int len, t_node **gc)
-// {
-// 	int		i;
-// 	char	*str;
+    // Handle output file
+    if (env->outfile != NULL && env->outfile->data != NULL)
+    {
+        fds.stdout_fd = open(env->outfile->data, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fds.stdout_fd < 0)
+        {
+            perror("open failed");
+            ft_lstclear(gc);
+            exit(1);
+        }
+        if (dup2(fds.stdout_fd, STDOUT_FILENO) < 0)
+        {
+            perror("dup2 failed");
+            close(fds.stdout_fd);
+            ft_lstclear(gc);
+            exit(1);
+        }
+    }
+    
+    // Handle input file
+    if (env->infile != NULL && env->infile->data != NULL)
+    {
+        fds.stdin_fd = open(env->infile->data, O_RDONLY);
+        if (fds.stdin_fd < 0)
+        {
+            perror("open failed");
+            ft_lstclear(gc);
+            exit(1);
+        }
+        if (dup2(fds.stdin_fd, STDIN_FILENO) < 0)
+        {
+            perror("dup2 failed");
+            close(fds.stdin_fd);
+            ft_lstclear(gc);
+            exit(1);
+        }
+    }
 
-// 	i = 0;
-// 	if (!s)
-// 		return (NULL);
-// 	str = (char *)malloc((len + 1) * sizeof(char));
-// 	if (str == NULL)
-// 		return (NULL);
-// 	while (s[start] != '\0' && i < len)
-// 	{
-// 		str[i] = s[start];
-// 		i++;
-// 		start++;
-// 	}
-// 	str[i] = '\0';
-// 	return (str);
-// }
-
-// int ft_strlen_untile_char(char *str, char c)
-// {
-//     int i;
-
-//     i = 0;
-//     while(str[i] != '\0')
-//     {
-//         if(str[i] == c)
-//             break ;
-//         i++;
-//     }
-//     return (i);
-// }
-// t_env *init_env_list(char **envp) {
-//     t_env *head = NULL;
-//     t_env *new_node;
-//     char *name;
-//     char *value;
-//     char *env_copy;
-//     int i = 0;
-
-//     while (envp[i] != NULL) {
-//         env_copy = strdup(envp[i]);
-//         if (!env_copy)
-//             return NULL;
-
-//         name = ft_substr1(env_copy, 0, ft_strlen_untile_char(env_copy, '='), NULL);
-//         value = strchr(env_copy, '=');
-
-//         new_node = malloc(sizeof(t_env));
-//         if (!new_node) {
-//             free(env_copy);
-//             return NULL;
-//         }
-
-//         new_node->name = strdup(name);
-//         new_node->value = strdup(value);
-//         new_node->next = head;
-//         head = new_node;
-
-//         free(env_copy);
-//         i++;
-//     }
-//     return head;
-// }
-
-// int main(int argc, char **argv, char **envp) {
-//     t_env *env_list = init_env_list(envp);
-//     t_env *temp = env_list;
-
-//     while (temp != NULL) {
-//         printf("Name: %s\n", temp->name);
-//         temp = temp->next;
-//     }
-
-//     temp = env_list;
-//     while (temp != NULL) {
-//         t_env *next = temp->next;
-//         free(temp->name);
-//         free(temp->value);
-//         free(temp);
-//         temp = next;
-//     }
-
-//     return 0;
-// }
+    return fds;
+}

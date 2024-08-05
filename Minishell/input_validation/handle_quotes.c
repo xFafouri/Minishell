@@ -531,7 +531,7 @@ char	*concatenate_char(char *str, char c)
 {
 	size_t	len;
 
-	len = strlen(str);
+	len = ft_strlen(str);
 	char *new_str = malloc(len + 2);
 	if (!new_str)
 		return (NULL);

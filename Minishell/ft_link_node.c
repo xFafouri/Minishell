@@ -12,7 +12,8 @@
 t_node	*ft_lstnew(void *ptr)
 {
 	t_node	*str;
-
+	if(ptr == NULL)
+		return(NULL);
 	str = (t_node *)malloc(sizeof(t_node));
 	if (str == NULL)
 		return (NULL);

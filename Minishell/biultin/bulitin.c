@@ -108,7 +108,7 @@ char *expand_quotes(char *line)
     char c;
     char *buffer;
 
-    len = strlen(line);
+    len = ft_strlen(line);
     in_dq = in_double_quote(line, len);
     in_sq = in_single_quote(line, len);
     buffer = (char *)malloc(sizeof(char) * (len + 1));

@@ -25,26 +25,27 @@ int	count_herdoc(t_node *herdoc)
 	return (number);
 }
 
-
-
 void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 {
 	char	*str;
+	char	*temp;
 
 	str = NULL;
-	printf("heredoc = %s\n", (char *)env->heredoc->data);
 	ft_fork_pipe(env, id, *i, gc);
-	if (id[*i] == 0)
+	if (id[*i] == 0) // Child process
 	{
 		close((env->fd)[*i][0]);
+		signal(SIGINT, ft_signal_handler_herdoc);
 		while (env->heredoc)
 		{
 			while (1)
 			{
-				str = readline("herdoc> ");
+				str = readline("heredoc> ");
 				if (str == NULL || (ft_strcmp(env->heredoc->data, str) == 0))
 					break ;
+				temp = str;
 				str = ft_strjoin(gc, str, "\n");
+				free(temp);
 				if (env->heredoc->next == NULL)
 					write((env->fd)[*i][1], str, ft_strlen(str));
 			}
@@ -54,10 +55,16 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 		}
 		exit(0);
 	}
-	else
+	else // Parent process
 	{
 		close((env->fd)[*i][1]);
-		waitpid(id[*i], 0, 0);
+		waitpid(id[*i], &env->status, 0);
+		// Check if child exited due to SIGINT
+		if (WEXITSTATUS(env->status) == 130)
+		{
+			signal(SIGINT, ft_signal_handler);
+			env->flag_signle = 1;
+		}
 	}
 	(*i)++;
 }
@@ -82,3 +89,4 @@ int	ft_file(char *str)
 	}
 	return (nb);
 }
+

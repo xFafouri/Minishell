@@ -1,5 +1,40 @@
 #include "../minishell.h"
 
+void	ft_remove_quotes(t_cmd *token)
+{
+	t_env	*head;
+	t_node	*gc;
+
+	head = token->addres_env;
+	gc = token->addres_fd;
+	while (head != NULL)
+	{
+		head->value = expand_quotes(head->value);
+		head = head->next;
+	}
+}
+void	ft_add_qiotes(t_cmd *token)
+{
+	t_env	*head;
+	t_node	*gc;
+	char	*s;
+
+	head = token->addres_env;
+	gc = token->addres_fd;
+	while (head != NULL)
+	{
+		if (head->value[0] == '=')
+		{
+			s = gc_malloc(&gc, ft_strlen(head->value) + 3);
+			s = "=\"";
+			s = ft_strjoin(&gc, s, (head->value + 1));
+			s = ft_strjoin(&gc, s, "\"");
+			head->value = ft_strdup(&gc, s);
+		}
+		head = head->next;
+	}
+}
+
 int	ft_check_path_env(t_cmd *token)
 {
 	int		i;
@@ -25,6 +60,29 @@ void	ft_env(t_cmd *token)
 	int	i;
 
 	i = 0;
+	while (token->cmd[i] != NULL)
+	{
+		if (ft_strcmp(token->cmd[i], "env") != 0)
+		{
+			write(2, token->cmd[i], ft_strlen(token->cmd[1]));
+			if (token->cmd[i][0] == '.' && token->cmd[i][1] == '/')
+				write(2, ": Permission denied\n", 21);
+			else
+				write(2, ": No such file or directory\n", 29);
+			return ;
+		}
+		i++;
+	}
+	i = 0;
+	if (token->flag == 1)
+	{
+		while (token->env[i] != NULL)
+		{
+			printf("%s\n", token->env[i]);
+			i++;
+		}
+		return ;
+	}
 	if (ft_check_path_env(token) == 0)
 	{
 		while (token->env[i] != NULL)
@@ -71,6 +129,7 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 		free(key);
 		i++;
 	}
+	name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 	join = ft_strjoin(&ft, name, value);
 	token->env[i] = ft_strdup(&ft, join);
 	token->env[i + 1] = NULL;
@@ -114,8 +173,13 @@ void	ft_sort_env_list(t_cmd *token)
 	}
 }
 
-void	ft_print_export(t_env *temp)
+void	ft_print_export(t_cmd *token)
 {
+	t_env	*temp;
+
+	temp = token->addres_env;
+	ft_remove_quotes(token);
+	ft_add_qiotes(token);
 	while (temp != NULL)
 	{
 		if (temp->value != NULL)
@@ -142,6 +206,7 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	head = token->addres_env;
 	ft = token->addres_fd;
 	str = ft_split_qoute(line, ' ', &ft);
+	ft_remove_quotes(token);
 	name = NULL;
 	value = NULL;
 	env_copy = NULL;
@@ -155,16 +220,17 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 				&ft);
 		value = ft_strchr(env_copy, '=');
 		// remove the sngle and double qoute for name
-		if (name[0] == '\'')
-			name = ft_strtrim1(name, "\'", &ft);
-		else if (name[0] == '\"')
-			name = ft_strtrim1(name, "\"", &ft);
+		name = expand_quotes(name);
+		value = expand_quotes(value);
 		// check is we have valid indentifier
 		if (name == NULL || name[0] == '\0' || (ft_isalpha(name) == 0))
 		{
 			// i have same errror in this line
 			printf("export: %s", value);
-			printf(": not a valid identifier\n");
+			if (name[0] == '-')
+				printf(": invalid option\n");
+			else
+				printf(": not a valid identifier\n");
 			free(env_copy);
 			return ;
 		}
@@ -185,9 +251,14 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 		{
 			if (strcmp(current->name, new_node->name) == 0)
 			{
+				if (new_node->value == NULL || new_node->value[0] == '\0')
+				{
+					new_node->value = ft_strdup(&ft, current->value);
+					break ;
+				}
 				if (name[ft_strlen(name) - 1] == '+')
 				{
-					if (current->value == NULL)
+					if (current->value == NULL || current->value[0] == '\0')
 						current->value = ft_strjoin(&ft, current->value,
 								(new_node->value));
 					else
@@ -205,7 +276,7 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 			current = current->next;
 		}
 		// add varialble to the env
-		if (value != NULL)
+		if (value != NULL && value[0] != '\0')
 			ft_add_env(value, name, token);
 		// If variable doesn't exist, add it to the list
 		if (current == NULL)
@@ -218,14 +289,12 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 		free(env_copy);
 		i++;
 	}
+	ft_add_qiotes(token);
 }
 
 void	ft_export(t_cmd *token, char *line)
 {
-	t_env	*temp;
-
-	temp = token->addres_env;
 	if (token->cmd[1] == NULL)
-		ft_print_export(temp);
+		ft_print_export(token);
 	ft_add_value_to_export(token, line);
 }

@@ -14,8 +14,8 @@
 			"com.tldraw.pointer": 1,
 			"com.tldraw.shape": 4,
 			"com.tldraw.asset.bookmark": 2,
-			"com.tldraw.asset.image": 4,
-			"com.tldraw.asset.video": 4,
+			"com.tldraw.asset.image": 5,
+			"com.tldraw.asset.video": 5,
 			"com.tldraw.shape.group": 0,
 			"com.tldraw.shape.text": 2,
 			"com.tldraw.shape.bookmark": 2,
@@ -27,7 +27,7 @@
 			"com.tldraw.shape.arrow": 5,
 			"com.tldraw.shape.highlight": 1,
 			"com.tldraw.shape.embed": 4,
-			"com.tldraw.shape.image": 3,
+			"com.tldraw.shape.image": 4,
 			"com.tldraw.shape.video": 2,
 			"com.tldraw.binding.arrow": 0
 		}
@@ -43,9 +43,9 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": -201.8104578560613,
-			"y": 4811.132070462865,
-			"lastActivityTimestamp": 1719309288592,
+			"x": 53.01457382508465,
+			"y": 6555.301949608574,
+			"lastActivityTimestamp": 1722524057119,
 			"meta": {}
 		},
 		{
@@ -65,7 +65,7 @@
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "cross",
+				"type": "default",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -75,8 +75,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 893,
-				"h": 905
+				"w": 889,
+				"h": 907
 			},
 			"insets": [
 				false,
@@ -106,9 +106,7 @@
 		{
 			"editingShapeId": null,
 			"croppingShapeId": null,
-			"selectedShapeIds": [
-				"shape:M2f50F1ZLC21AGlXly5eL"
-			],
+			"selectedShapeIds": [],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
@@ -119,9 +117,9 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": 543.1587171825249,
-			"y": -4199.549772502951,
-			"z": 0.703094254746046,
+			"x": 433.57649346928406,
+			"y": -5919.754433142461,
+			"z": 0.7049040211675286,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -22728,6 +22726,29 @@
 			},
 			"parentId": "page:page",
 			"index": "b2v",
+			"typeName": "shape"
+		},
+		{
+			"x": 16.130119744461922,
+			"y": 6431.290540565216,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:ys4KYQiSh9dXazawEpAt-",
+			"type": "text",
+			"props": {
+				"color": "light-green",
+				"size": "m",
+				"w": 291.125,
+				"text": "i ned hadl unset \nbuilt comad bulid unset",
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1
+			},
+			"parentId": "page:page",
+			"index": "b2w",
 			"typeName": "shape"
 		}
 	]

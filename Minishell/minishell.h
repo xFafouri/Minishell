@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,16 +21,16 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-typedef struct s_history
-{
-	int					number_of_history;
-	char				*history;
-	struct s_history	*next;
-}						t_history;
-
 typedef struct s_cmd
 {
 	int				**fd;
+	int				*id;
+	int				flag_file;
+	int				original_stdin;
+	int				original_stdout;
+	int				status;
+	int				flag;
+	int				flag_signle;
 	char			*access_path;
 	char			**env;
 	char			**cmd;
@@ -38,30 +39,33 @@ typedef struct s_cmd
 	t_node			*heredoc;
 	t_node			*append;
 	t_env			*like_env;
-	t_history			*history;
 	int				count;
 	int				her;
 	int				file;
-	int	cmd_count;
-	int	k;
+	int				cmd_count;
+	int				k;
 	t_env			*addres_env;
 	t_node			*addres_fd;
-	char *env_line;
-	char	*dollar;
-	int	aft_dol_dq;
+	char			*env_line;
+	char			*dollar;
+	int				aft_dol_dq;
 }					t_cmd;
 
 typedef struct s_quote_state
 {
-	int	in_single_quotes;
-	int	in_double_quotes;
-	int	nested_quotes;
-}		t_quote_state;
-
-void    search_env(char *line, t_cmd *env);
+	int				in_single_quotes;
+	int				in_double_quotes;
+	int				nested_quotes;
+}					t_quote_state;
+t_cmd				*shell(void);
+void				ft_signal_handler(int signum);
+void				ft_signal_back_slash(int signum);
+void				ft_signal_handler_herdoc(int signum);
+void				ft_signal_handler_cmd(int signum);
+void				search_env(char *line, t_cmd *env);
 // void handle_dollar_and_quotes(t_cmd *cmd, t_node **gc);
-void handle_dollar(char *line, t_node **gc, t_cmd *token, int d);
-char	*handle_dollar_sign(char *line, t_cmd *env);
+void				handle_dollar(char *line, t_node **gc, t_cmd *token, int d);
+char				*handle_dollar_sign(char *line, t_cmd *env);
 void				*gc_malloc(t_node **gc, int size);
 char				**ft_split_str(char *str, char *charset);
 char				**ft_split(char *s, char c, t_node **gc);
@@ -92,9 +96,8 @@ int					ft_file(char *str);
 int					count_herdoc(t_node *herdoc);
 void				ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc);
 char				*ft_strchr(char *s, int c);
-void				ft_check_file(t_cmd *token, int file, t_node **gc, int her);
-void				ft_check_infile(t_cmd *token, int file, int her,
-						t_node **gc);
+void				ft_check_file(t_cmd *token, t_node **gc, int her);
+void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc);
 void				ft_one_child(int i, t_node **gc, t_cmd *token);
 void				ft_pwd(char *line, t_node **gc);
 void				ft_echo(char *line, t_cmd *token);
@@ -112,31 +115,37 @@ void				ft_sort_env_list(t_cmd *token);
 int					find_char(char *str, char c);
 int					ft_isalpha(char *str);
 void				ft_env(t_cmd *token);
-void ft_setexport(char *pwd, char *cwd, t_cmd *token);
+void				ft_setexport(char *pwd, char *cwd, t_cmd *token);
+void				ft_append_outfile(t_cmd *token,int file, t_node **gc);
+void				ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line);
 
 // utils tokens
-void handle_append(char *line1, int *i, t_node **gc, t_cmd *token);
-void handle_outfile(char *line1, int *i, t_node **gc, t_cmd *token);
-void handle_heredoc(char *line1, int *i, t_node **gc, t_cmd *token);
-void handle_infile(char *line1, int *i, t_node **gc, t_cmd *token);
+void				handle_append(char *line1, int *i, t_node **gc,
+						t_cmd *token);
+void				handle_outfile(char *line1, int *i, t_node **gc,
+						t_cmd *token);
+void				handle_heredoc(char *line1, int *i, t_node **gc,
+						t_cmd *token);
+void				handle_infile(char *line1, int *i, t_node **gc,
+						t_cmd *token);
 
-int input_validation(char *line);
-//handle quotes
+int					input_validation(char *line);
+// handle quotes
 
-int	in_single_quote(char *line, int index);
-int	in_double_quote(char *line, int index);
-void	handle_quotes(t_cmd *cmd, t_node **gc);
+int					in_single_quote(char *line, int index);
+int					in_double_quote(char *line, int index);
+void				handle_quotes(t_cmd *cmd, t_node **gc);
 
-char *ft_strcpy(char *s1, char *s2, int len);
-static char check(const char *set, char c);
-char *ft_strtrim(char *s1, char *set, t_node **gc);
+char				*ft_strcpy(char *s1, char *s2, int len);
+static char			check(const char *set, char c);
+char				*ft_strtrim(char *s1, char *set, t_node **gc);
 
-void	ft_remove_key_env(t_cmd *token, char *str);
-void	ft_remove_key_export(t_cmd *token, char *str);
-void	ft_unset(t_cmd *token, char *line);
-char	**ft_split_qoute(char *s, char c, t_node **gc);
+void				ft_remove_key_env(t_cmd *token, char *str);
+void				ft_remove_key_export(t_cmd *token, char *str);
+void				ft_unset(t_cmd *token, char *line);
+char				**ft_split_qoute(char *s, char c, t_node **gc);
 
-void ft_history(t_cmd *token);
-int	checkchar(char a, char *b);
-char	*ft_strtrim1(char *s1, char *set, t_node **gc);
-char *expand_quotes(char *line);
+void				ft_history(t_cmd *token);
+int					checkchar(char a, char *b);
+char				*ft_strtrim1(char *s1, char *set, t_node **gc);
+char				*expand_quotes(char *line);
