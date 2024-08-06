@@ -153,4 +153,4 @@ int					count_heredocs(const char *line);
 int					checkchar(char a, char *b);
 char				*ft_strtrim1(char *s1, char *set, t_node **gc);
 char				*expand_quotes(char *line);
- char	*ft_strstr(char *haystack, char *needle);
+ //char	*ft_strstr(char *haystack, char *needle);

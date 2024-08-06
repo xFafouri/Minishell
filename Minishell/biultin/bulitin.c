@@ -44,26 +44,25 @@ void	ft_pwd(char *line, t_node **gc)
 	}
 }
 
-char	*ft_strstr(char *haystack, char *needle)
+ static char	*ft_strstr(char *haystack, char *needle)
 {
-	int i;
-    int j;
+	int	i;
+	int	j;
 
 	i = 0;
-	j = 0;
-	if (*needle == '\0')
+	if (*needle == 0)
 		return ((char *)haystack);
 	while (haystack[i] != '\0')
 	{
 		j = 0;
-		while (needle[j] != '\0')
-		{
-			if (haystack[i + j] != needle[j])
-				break ;
+		while (haystack[i + j] == needle[j] && needle[j] != '\0')
 			j++;
-		}
-		if (needle[j] == '\0')
-			return ((char *)&haystack[i]);
+		if (j == ft_strlen(needle))
+        {
+            while(haystack[i] != '=')
+                i++;
+			return ((char *)&haystack[i] + 1);
+        }
 		i++;
 	}
 	return (NULL);

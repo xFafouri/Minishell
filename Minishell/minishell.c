@@ -11,7 +11,7 @@ int count_heredocs(const char *line) {
     int count = 0;
     char *ptr = (char *)line;
 
-    while ((ptr = ft_strstr(ptr, "<<")) != NULL) {
+    while ((ptr = strstr(ptr, "<<")) != NULL) {
         // Check if the '<<' is not part of a larger token (like '<<<')
         if (ptr == line || !isalnum(*(ptr - 1))) {
             count++;

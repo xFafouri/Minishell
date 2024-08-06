@@ -126,9 +126,18 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	while (++i < count)
 		waitpid(env->id[i], &env->status, 0);
 	signal(SIGINT, ft_signal_handler);
-	if (WEXITSTATUS(env->status) == 131)
-		write(1, "Quit (core dumped)\n", 20);
-	else if (WEXITSTATUS(env->status) == 130 || WEXITSTATUS(env->status) == 2)
-		write(1, "\n", 1);
+	if (WIFEXITED(env->status)) {
+        int exit_status = WEXITSTATUS(env->status);
+        if (exit_status == 131)
+            write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+        else if (exit_status == 130 || exit_status == 2)
+            write(STDERR_FILENO, "\n", 1);
+    } else if (WIFSIGNALED(env->status)) {
+        int signal_num = WTERMSIG(env->status);
+        if (signal_num == SIGQUIT)
+            write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+        else if (signal_num == SIGINT)
+            write(STDERR_FILENO, "\n", 1);
+    }
 	ft_lstclear(gc);
 }
