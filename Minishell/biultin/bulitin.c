@@ -34,17 +34,20 @@ int	ft_strlen_untile_char(char *str, char c)
 void	ft_pwd(char *line, t_node **gc)
 {
 	char	*str;
+	t_cmd	*token;
 
 	str = NULL;
+	token = shell();
 	str = ft_strtrim(line, " ", gc);
 	if (ft_strncmp(str, "pwd", 3) == 0)
 	{
 		ft_putstr_fd(getcwd(NULL, 0), 0);
 		write(1, "\n", 1);
 	}
+	token->status = 0;
 }
 
- static char	*ft_strstr(char *haystack, char *needle)
+static char	*ft_strstr(char *haystack, char *needle)
 {
 	int	i;
 	int	j;
@@ -58,11 +61,11 @@ void	ft_pwd(char *line, t_node **gc)
 		while (haystack[i + j] == needle[j] && needle[j] != '\0')
 			j++;
 		if (j == ft_strlen(needle))
-        {
-            while(haystack[i] != '=')
-                i++;
+		{
+			while (haystack[i] != '=')
+				i++;
 			return ((char *)&haystack[i] + 1);
-        }
+		}
 		i++;
 	}
 	return (NULL);
@@ -216,6 +219,7 @@ void	ft_echo(char *line, t_cmd *token)
 	}
 	if (newline)
 		printf("\n");
+	token->status = 0;
 }
 
 // void ft_echo(char *line, t_cmd *env)
@@ -291,6 +295,20 @@ void	ft_echo(char *line, t_cmd *token)
 //     }
 // }
 
+int	check_home_key_export(t_cmd *token, char *str)
+{
+	t_env	*head;
+	t_node	*ft;
+
+	head = token->addres_env;
+	while (head != NULL)
+	{
+		if (ft_strcmp(head->name, str) == 0)
+			return (1);
+		head = head->next;
+	}
+	return (0);
+}
 void	ft_cd(char *line, t_cmd *token)
 {
 	int		i;
@@ -304,15 +322,20 @@ void	ft_cd(char *line, t_cmd *token)
 	{
 		ft_putstr_fd((token->cmd)[0], 2);
 		ft_putstr_fd(": too many arguments\n", 2);
+		token->status = 1;
+		return ;
 	}
 	else
 	{
 		if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0)
 		{
 			path = getenv("HOME");
+			if (check_home_key_export(token, "HOME") == 0)
+				path = NULL;
 			if (!path)
 			{
 				ft_putstr_fd("cd: HOME not set\n", 2);
+				token->status = 1;
 				return ;
 			}
 		}
@@ -330,12 +353,83 @@ void	ft_cd(char *line, t_cmd *token)
 				perror("getcwd");
 		}
 		else
+		{
 			perror(path);
+			token->status = 1;
+			return ;
+		}
 	}
+	token->status = 0;
 }
 
-void	ft_exit(t_node **gc)
+long ft_strtol(char *str, char **endptr, t_node **gc)
 {
-	ft_lstclear(gc);
-	exit(1);
+    long result = 0;
+    int i = 0;
+    int sign = 1;
+
+    while ((str[i] >= 9 && str[i] <= 13) || (str[i] == 32))
+        i++;
+    if (str[i] == '-' || str[i] == '+')
+    {
+        if (str[i] == '-')
+            sign = -1;
+        i++;
+    }
+    while (str[i] != '\0')
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+        {
+            if (result > (LONG_MAX - (str[i] - '0')) / 10)
+            {
+                *endptr = str + i;
+				if(sign > 0)
+					return (LONG_MAX);
+				else
+					return(LONG_MIN);
+            }
+            result = result * 10 + (str[i] - '0');
+            i++;
+        }
+        else
+            break;
+    }
+    *endptr = str + i;
+    return (result * sign);
+}
+
+void ft_exit(t_node **gc, t_cmd *token)
+{
+    long nb = 0;
+    char *endptr = NULL;
+
+    ft_putendl_fd("exit", 2);
+
+    if (token->cmd[1] == NULL)
+    {
+        ft_lstclear(gc);
+        exit(token->status);
+    }
+
+    nb = ft_strtol(token->cmd[1], &endptr, gc);
+
+    if (*endptr != '\0')
+    {
+        ft_putstr_fd("minishell: exit: ", 2);
+        ft_putstr_fd(token->cmd[1], 2);
+        ft_putendl_fd(": numeric argument required", 2);
+        ft_lstclear(gc);
+        exit(2);
+    }
+
+
+    if (token->cmd[2] != NULL)
+    {
+        ft_putendl_fd("minishell: exit: too many arguments", 2);
+        token->status = 1;
+        return;
+    }
+
+    ft_lstclear(gc);
+    exit((int)(nb & 0xFF));
 }

@@ -6,10 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <limits.h>
 #include <unistd.h>
+#include <errno.h>
 
-#define FG_GREEN "\033[92m"
-#define FG_YELLOW "\033[93m"
+#define FG_GREEN "\001\033[92m\002"
+#define FG_YELLOW "\001\033[93m\002"
 
 typedef struct s_node
 {
@@ -28,6 +30,7 @@ typedef struct s_cmd
 {
 	int				**fd;
 	int				*id;
+	int flag_appned;
 	int				flag_file;
 	int				original_stdin;
 	int				original_stdout;
@@ -106,7 +109,7 @@ void				ft_one_child(int i, t_node **gc, t_cmd *token);
 void				ft_pwd(char *line, t_node **gc);
 void				ft_echo(char *line, t_cmd *token);
 void				ft_cd(char *line, t_cmd *token);
-void				ft_exit(t_node **gc);
+void	ft_exit(t_node **gc, t_cmd *token);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_check_buldin(t_cmd *env, char *line, t_node **gc);
 void				ft_putstr_fd(char *s, int fd);
@@ -117,7 +120,7 @@ char				*ft_strdup(t_node **gc, char *s1);
 void				ft_export(t_cmd *token, char *line);
 void				ft_sort_env_list(t_cmd *token);
 int					find_char(char *str, char c);
-int					ft_isalpha(char *str);
+int					ft_isalpha1(char *str);
 void				ft_env(t_cmd *token);
 void				ft_setexport(char *pwd, char *cwd, t_cmd *token);
 void				ft_append_outfile(t_cmd *token, int file, t_node **gc);

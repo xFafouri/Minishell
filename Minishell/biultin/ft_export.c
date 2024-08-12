@@ -213,80 +213,88 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	i = 1;
 	while (str[i] != NULL)
 	{
-		env_copy = strdup(str[i]);
-		if (!env_copy)
+		env_copy = ft_strdup(&ft, str[i]);
+		if (env_copy == NULL)
 			return ;
 		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='),
 				&ft);
 		value = ft_strchr(env_copy, '=');
-		// remove the sngle and double qoute for name
 		name = expand_quotes(name);
 		value = expand_quotes(value);
-		// check is we have valid indentifier
-		if (name == NULL || name[0] == '\0' || (ft_isalpha(name) == 0))
+		//i have one eroore in this place export a+ 
+		if (value == NULL  || value[0] == '\0')
 		{
-			// i have same errror in this line
-			printf("export: %s", value);
-			if (name[0] == '-')
-				printf(": invalid option\n");
-			else
-				printf(": not a valid identifier\n");
-			free(env_copy);
-			return ;
-		}
-		new_node = (t_env *)malloc(sizeof(t_env));
-		if (!new_node)
-		{
-			free(env_copy);
-			return ;
-		}
-		new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'),
-				&ft);
-		new_node->value = ft_strdup(&ft, value);
-		new_node->next = NULL;
-		// Check if the variable already exists
-		current = head;
-		prev = NULL;
-		while (current != NULL)
-		{
-			if (strcmp(current->name, new_node->name) == 0)
+			if (name[ft_strlen(name) - 1] == '+')
 			{
-				if (new_node->value == NULL || new_node->value[0] == '\0')
+				ft_putstr_fd("export: ", 2);
+				if (name != NULL)
+					ft_putstr_fd(name, 2);
+				if (value != NULL)
+					ft_putstr_fd(value, 2);
+				ft_putstr_fd(": not a valid identifier\n", 2);
+			}
+		}
+		if ((name == NULL || name[0] == '\0' || (ft_isalpha1(name) == 0)))
+		{
+			ft_putstr_fd("export: ", 2);
+			if (name != NULL)
+				ft_putstr_fd(name, 2);
+			if (value != NULL)
+				ft_putstr_fd(value, 2);
+			if (name[0] == '-')
+				ft_putstr_fd(": invalid option\n", 2);
+			else
+				ft_putstr_fd(": not a valid identifier\n", 2);
+			token->status = 1;
+		}
+		else
+		{
+			new_node = (t_env *)gc_malloc(&ft, sizeof(t_env));
+			if (new_node == NULL)
+				return ;
+			new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name,
+						'+'), &ft);
+			new_node->value = ft_strdup(&ft, value);
+			new_node->next = NULL;
+			current = head;
+			prev = NULL;
+			while (current != NULL)
+			{
+				if (ft_strcmp(current->name, new_node->name) == 0)
 				{
-					new_node->value = ft_strdup(&ft, current->value);
+					if (new_node->value == NULL || new_node->value[0] == '\0')
+					{
+						new_node->value = ft_strdup(&ft, current->value);
+					}
+					else if (name[ft_strlen(name) - 1] == '+')
+					{
+						if (current->value == NULL || current->value[0] == '\0')
+							current->value = ft_strjoin(&ft, current->value,
+									new_node->value);
+						else
+							current->value = ft_strjoin(&ft, current->value,
+									new_node->value + 1);
+					}
+					else
+					{
+						if (value != NULL)
+							current->value = ft_strdup(&ft, value);
+					}
 					break ;
 				}
-				if (name[ft_strlen(name) - 1] == '+')
-				{
-					if (current->value == NULL || current->value[0] == '\0')
-						current->value = ft_strjoin(&ft, current->value,
-								(new_node->value));
-					else
-						current->value = ft_strjoin(&ft, current->value,
-								(new_node->value + 1));
-				}
-				else
-				{
-					if (value != NULL)
-						current->value = ft_strdup(&ft, value);
-				}
-				break ;
+				prev = current;
+				current = current->next;
 			}
-			prev = current;
-			current = current->next;
+			if (value != NULL && value[0] != '\0')
+				ft_add_env(value, name, token);
+			if (current == NULL)
+			{
+				if (prev == NULL)
+					token->addres_env = new_node;
+				else
+					prev->next = new_node;
+			}
 		}
-		// add varialble to the env
-		if (value != NULL && value[0] != '\0')
-			ft_add_env(value, name, token);
-		// If variable doesn't exist, add it to the list
-		if (current == NULL)
-		{
-			if (prev == NULL)
-				token->addres_env = new_node;
-			else
-				prev->next = new_node;
-		}
-		free(env_copy);
 		i++;
 	}
 	ft_add_qiotes(token);

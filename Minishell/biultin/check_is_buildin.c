@@ -41,7 +41,7 @@ char	*ft_strtrim1(char *s1, char *set, t_node **gc)
 	return (str);
 }
 
-int	ft_isalpha(char *str)
+int	ft_isalpha1(char *str)
 {
 	int	i;
 
@@ -78,7 +78,7 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 	else if (ft_strcmp((env->cmd)[0], "cd") == 0)
 		ft_cd(line, env);
 	else if (ft_strcmp((env->cmd)[0], "exit") == 0)
-		ft_exit(gc);
+		ft_exit(gc, env);
 	else if (ft_strcmp((env->cmd)[0], "env") == 0)
 		ft_env(env);
 	else if (ft_strcmp((env->cmd)[0], "unset") == 0)

@@ -87,11 +87,14 @@ void	ft_check_file(t_cmd *token, t_node **gc, int her)
 				return ;
 			}
 		}
-		if ((dup2(token->file, 1) < 0))
-			(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
+		if (token->flag_appned == 1)
+		{
+			if ((dup2(token->file, 1) < 0))
+				(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
+		}
 		close(token->file);
 	}
-	else if (token->append != NULL && token->append->data != NULL)
+	if (token->append != NULL && token->append->data != NULL)
 		ft_append_outfile(token, token->file, gc);
 	ft_check_infile(token, token->file, her, gc);
 }
@@ -118,8 +121,11 @@ void	ft_append_outfile(t_cmd *token, int file, t_node **gc)
 	file = open(token->append->data, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (file < 0)
 		(perror(token->append->data), ft_lstclear(gc), exit(1));
-	if ((dup2(file, 1) < 0))
-		(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
+	if (token->flag_appned == 2)
+	{
+		if ((dup2(file, 1) < 0))
+			(perror("dup2 filed\n"), ft_lstclear(gc), exit(1));
+	}
 	close(file);
 }
 
