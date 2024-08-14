@@ -164,16 +164,6 @@ void	ft_echo(char *line, t_cmd *token)
 				if (token->cmd[i][j] != '\0')
 				{
 					is_flag = 0;
-					// if (token->cmd[i][j] == '$')
-					// {
-					//     j++;
-					//     search_env(&token->cmd[i][j], token);
-					//     if (token->env_line != NULL)
-					//     {
-					//         printf("%s", token->env_line);
-					//     }
-					// }
-					// else
 					printf("%s", token->cmd[i]);
 				}
 				else
@@ -186,32 +176,6 @@ void	ft_echo(char *line, t_cmd *token)
 				is_flag = 0;
 				if (i > 1)
 					printf(" ");
-				// if (token->dollar)
-				// {
-				//     search_env(token->dollar, token);
-				//     if (token->env_line != NULL)
-				//     {
-				//         printf("%s", token->env_line);
-				//     }
-				// }
-				// if (token->cmd[i][j] == '$')
-				// {
-				//     if (token->aft_dol_dq == 1)
-				//     {
-				//         j++;
-				//         printf("%s", &token->cmd[i][j]);
-				//     }
-				//     else
-				//     {
-				//         j++;
-				//         search_env(&token->cmd[i][j], token);
-				//         if (token->env_line != NULL)
-				//         {
-				//             printf("%s", token->env_line);
-				//         }
-				//     }
-				// }
-				// else
 				printf("%s", token->cmd[i]);
 			}
 			i++;
@@ -221,79 +185,6 @@ void	ft_echo(char *line, t_cmd *token)
 		printf("\n");
 	token->status = 0;
 }
-
-// void ft_echo(char *line, t_cmd *env)
-// {
-//     char *s;
-//     int i;
-//     int flag;
-//     int n_flag_valid;
-
-//     i = 0;
-//     flag = 0;
-//     n_flag_valid = 1;
-
-//     if (ft_strncmp(line, "echo", 4) == 0)
-//     {
-//         i = 4;
-//         while (line[i] == ' ')
-//             i++;
-//         while (ft_strncmp(&line[i], "-n", 2) == 0)
-//         {
-//             i += 2;
-//             while (line[i] == 'n')
-//                 i++;
-//             if (line[i] != ' ' && line[i] != '\0')
-//             {
-//                 n_flag_valid = 0;
-//                 break ;
-//             }
-//             if (line[i] == ' ')
-//             {
-//                 flag = 1;
-//                 while (line[i] == ' ')
-//                     i++;
-//             }
-//         }
-//         if (n_flag_valid)
-//         {
-//             s = &line[i];
-//         }
-//         else
-//         {
-//             while (i > 0 && line[i] != '-')
-//                 i--;
-//             s = &line[i];
-//         }
-//         if (s)
-//         {
-//             while (*s)
-//             {
-//                 if (ft_strncmp(s, "$", 1) == 0)
-//                 {
-//                     s++;
-//                     search_env(s, env);
-//                     if (env->env_line != NULL)
-//                     {
-//                         s = env->env_line;
-//                     }
-//                 }
-
-//                 if (flag == 1 && n_flag_valid)
-//                 {
-//                     s = expand_quotes(s);
-//                     ft_putstr_fd(s, 1);
-//                 }
-//                 else
-//                 {
-//                     s = expand_quotes(s);
-//                     ft_putendl_fd(s, 1);
-//                 }
-//                 break ;
-//             }
-//         }
-//     }
-// }
 
 int	check_home_key_export(t_cmd *token, char *str)
 {
@@ -421,15 +312,12 @@ void ft_exit(t_node **gc, t_cmd *token)
         ft_lstclear(gc);
         exit(2);
     }
-
-
     if (token->cmd[2] != NULL)
     {
         ft_putendl_fd("minishell: exit: too many arguments", 2);
         token->status = 1;
         return;
     }
-
     ft_lstclear(gc);
     exit((int)(nb & 0xFF));
 }

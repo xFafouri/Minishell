@@ -81,9 +81,7 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	while (line != NULL)
 	{
 		print_last_redirection((char *)line->data, env);
-		line->data = handle_dollar_sign(line->data, env);
 		tokenisation(line->data, gc, env);
-		// handle_dollar(env->cmd, gc, env);
 		handle_quotes(env, gc);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, env->id, gc);
@@ -97,7 +95,7 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 			if ((ft_check_buldin1(env, (char *)line->data, gc)) == 0)
 			{
 				ft_check_file(env, gc, env->her);
-				if (env->status == 2)
+				if (env->status == -1)
 				{
 					env->status = 1;
 					env->status = env->status << 8;

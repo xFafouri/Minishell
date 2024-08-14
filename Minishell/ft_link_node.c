@@ -24,19 +24,19 @@ t_node	*ft_lstnew(void *ptr)
 
 void	ft_lstadd_back(t_node **lst, t_node *new)
 {
-	t_node	*ptr;
+	t_node	*last;
 
-	if (new)
+	if (!lst || !new)
+		return ;
+	if (*lst == NULL)
 	{
-		if (!*lst)
-		{
-			*lst = new;
-			new->next = NULL;
-			return ;
-		}
-		ptr = ft_lstlast(*lst);
-		ptr->next = new;
+		*lst = new;
+		return ;
 	}
+	last = *lst;
+	while (last->next != NULL)
+		last = last->next;
+	last->next = new;
 }
 
 void	ft_lstclear(t_node **lst)

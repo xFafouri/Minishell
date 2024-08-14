@@ -16,6 +16,7 @@
 typedef struct s_node
 {
 	void			*data;
+	int				flag;
 	struct s_node	*next;
 }					t_node;
 
@@ -23,12 +24,15 @@ typedef struct s_env
 {
 	char			*name;
 	char			*value;
+	int				flag;
 	struct s_env	*next;
 }					t_env;
 
 typedef struct s_cmd
 {
 	int				**fd;
+	int				f_out;
+	int				f_append;
 	int				*id;
 	int flag_appned;
 	int				flag_file;
@@ -46,6 +50,7 @@ typedef struct s_cmd
 	t_node			*append;
 	t_env			*like_env;
 	int				count;
+	int				flag_her;
 	int				her;
 	int				file;
 	int				cmd_count;
@@ -63,6 +68,7 @@ typedef struct s_quote_state
 	int				in_double_quotes;
 	int				nested_quotes;
 }					t_quote_state;
+
 t_cmd				*shell(void);
 void				ft_signal_handler(int signum);
 void				ft_signal_back_slash(int signum);

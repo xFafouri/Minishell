@@ -43,7 +43,8 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 				str = readline("heredoc> ");
 				if (str == NULL || (ft_strcmp(env->heredoc->data, str) == 0))
 					break ;
-				str = handle_dollar_sign(str, env);
+				if (env->flag_her != 1)
+					str = handle_dollar_sign(str, env);
 				temp = str;
 				str = ft_strjoin(gc, str, "\n");
 				free(temp);
@@ -90,4 +91,3 @@ int	ft_file(char *str)
 	}
 	return (nb);
 }
-

@@ -59,6 +59,7 @@ void	ft_check_file(t_cmd *token, t_node **gc, int her)
 	{
 		while (token->outfile->next != NULL)
 		{
+			//-----------------------------
 			token->file = open(token->outfile->data, O_CREAT | O_TRUNC, 0666);
 			if (token->file < 0)
 			{
