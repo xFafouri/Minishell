@@ -1,4 +1,6 @@
+#include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
@@ -6,9 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <limits.h>
 #include <unistd.h>
-#include <errno.h>
 
 #define FG_GREEN "\001\033[92m\002"
 #define FG_YELLOW "\001\033[93m\002"
@@ -34,7 +34,7 @@ typedef struct s_cmd
 	int				f_out;
 	int				f_append;
 	int				*id;
-	int flag_appned;
+	int				flag_appned;
 	int				flag_file;
 	int				original_stdin;
 	int				original_stdout;
@@ -109,13 +109,13 @@ int					count_herdoc(t_node *herdoc);
 void				ft_fork_pipe(t_cmd *file_des, int *id, int i, t_node **gc);
 char				*ft_strchr(char *s, int c);
 void				ft_check_file(t_cmd *token, t_node **gc, int her);
-void				ft_check_infile(t_cmd *token, int file, int her,
+int					ft_check_infile(t_cmd *token, int file, int her,
 						t_node **gc);
 void				ft_one_child(int i, t_node **gc, t_cmd *token);
 void				ft_pwd(char *line, t_node **gc);
 void				ft_echo(char *line, t_cmd *token);
 void				ft_cd(char *line, t_cmd *token);
-void	ft_exit(t_node **gc, t_cmd *token);
+void				ft_exit(t_node **gc, t_cmd *token);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_check_buldin(t_cmd *env, char *line, t_node **gc);
 void				ft_putstr_fd(char *s, int fd);
@@ -133,6 +133,7 @@ void				ft_append_outfile(t_cmd *token, int file, t_node **gc);
 void				ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line);
 
 // utils tokens
+int					check_dollars(char *line);
 void				handle_append(char *line1, int *i, t_node **gc,
 						t_cmd *token);
 void				handle_outfile(char *line1, int *i, t_node **gc,
@@ -162,4 +163,5 @@ int					count_heredocs(const char *line);
 int					checkchar(char a, char *b);
 char				*ft_strtrim1(char *s1, char *set, t_node **gc);
 char				*expand_quotes(char *line);
- //char	*ft_strstr(char *haystack, char *needle);
+
+// char	*ft_strstr(char *haystack, char *needle);

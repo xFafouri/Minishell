@@ -1,11 +1,21 @@
 #include "minishell.h"
 
-void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
+int	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 {
 	if (token->infile != NULL && token->infile->data != NULL)
 	{
 		while (token->infile->next != NULL)
 		{
+			if (check_dollars((char *)token->infile->data) == 1)
+			{
+				token->infile->data = handle_dollar_sign((char *)token->infile->data, token);
+				if (token->env_line == NULL)
+				{
+					write(2, "ambigiuos redirect\n",20);
+					token->status = 2;
+					return 2;
+				}
+			}
 			file = open(token->infile->data, O_RDONLY);
 			if (file < 0)
 			{
@@ -15,11 +25,21 @@ void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 				{
 					perror(token->infile->data);
 					token->status = 1;
-					return ;
+					return 1;
 				}
 			}
 			close(file);
 			token->infile = token->infile->next;
+		}
+		if (check_dollars((char *)token->infile->data) == 1)
+		{
+			token->infile->data = handle_dollar_sign((char *)token->infile->data, token);
+			if (token->env_line == NULL)
+			{
+				write(2, "ambigiuos redirect\n",20);
+				token->status = 2;
+				return 2;
+			}
 		}
 		file = open(token->infile->data, O_RDONLY);
 		if (file < 0)
@@ -30,7 +50,7 @@ void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 			{
 				perror(token->infile->data);
 				token->status = 1;
-				return ;
+				return 1;
 			}
 		}
 		if (her != 2)
@@ -40,6 +60,7 @@ void	ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 		}
 		close(file);
 	}
+	return(0);
 }
 
 void	ft_check_file(t_cmd *token, t_node **gc, int her)
@@ -55,11 +76,25 @@ void	ft_check_file(t_cmd *token, t_node **gc, int her)
 		ft_lstclear(gc);
 		exit(1);
 	}
+	if (ft_check_infile(token, token->file, her, gc) != 0)
+	{
+		token->status = 2;
+		return;
+	}
 	if (token->outfile != NULL && token->outfile->data != NULL)
 	{
 		while (token->outfile->next != NULL)
 		{
-			//-----------------------------
+			if (check_dollars((char *)token->outfile->data) == 1)
+			{
+				token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token);
+				if (token->env_line == NULL)
+				{
+					write(2, "ambigiuos redirect\n",20);
+					token->status = 2;
+					return ;
+				}
+			}
 			token->file = open(token->outfile->data, O_CREAT | O_TRUNC, 0666);
 			if (token->file < 0)
 			{
@@ -72,13 +107,24 @@ void	ft_check_file(t_cmd *token, t_node **gc, int her)
 					return ;
 				}
 			}
-			close(token->file);
+			close(token->file); 
 			token->outfile = token->outfile->next;
+		}
+		if (check_dollars((char *)token->outfile->data) == 1)
+		{
+			token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token);
+			if (token->env_line == NULL)
+			{
+				write(2, "ambigiuos redirect\n",20);
+				token->status = 2;
+				return ;
+			}
 		}
 		token->file = open(token->outfile->data, O_WRONLY | O_CREAT | O_TRUNC,
 				0666);
 		if (token->file < 0)
 		{
+			//-------------------------------
 			if (token->flag_file == 1)
 				(perror(token->outfile->data), ft_lstclear(gc), exit(1));
 			else
@@ -97,13 +143,24 @@ void	ft_check_file(t_cmd *token, t_node **gc, int her)
 	}
 	if (token->append != NULL && token->append->data != NULL)
 		ft_append_outfile(token, token->file, gc);
-	ft_check_infile(token, token->file, her, gc);
 }
 
 void	ft_append_outfile(t_cmd *token, int file, t_node **gc)
 {
 	while (token->append->next != NULL)
 	{
+		if (check_dollars((char *)token->append->data) == 1)
+		{
+			token->append->data = handle_dollar_sign((char *)token->append->data, token);
+			if (token->env_line == NULL)
+			{
+				write(2, "ambigiuos redirect\n",20);
+				token->status = 2;
+				return ;
+			}
+			// dprintf(2,"after = %s\n",(char *)token->outfile->data);
+			// token->f_out = 1;
+		}
 		file = open(token->append->data, O_CREAT | O_TRUNC, 0666);
 		if (file < 0)
 		{
@@ -118,6 +175,16 @@ void	ft_append_outfile(t_cmd *token, int file, t_node **gc)
 		}
 		close(file);
 		token->append = token->append->next;
+	}
+	if (check_dollars((char *)token->append->data) == 1)
+	{
+		token->append->data = handle_dollar_sign((char *)token->append->data, token);
+		if (token->env_line == NULL)
+		{
+			write(2, "ambigiuos redirect\n",20);
+			token->status = 2;
+			return ;
+		}
 	}
 	file = open(token->append->data, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (file < 0)

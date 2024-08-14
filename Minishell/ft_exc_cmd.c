@@ -95,7 +95,7 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 			if ((ft_check_buldin1(env, (char *)line->data, gc)) == 0)
 			{
 				ft_check_file(env, gc, env->her);
-				if (env->status == -1)
+				if (env->status == 2)
 				{
 					env->status = 1;
 					env->status = env->status << 8;
