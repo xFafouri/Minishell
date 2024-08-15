@@ -31,6 +31,7 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	int				**fd;
+	int falg_to_exit;
 	int				f_out;
 	int				f_append;
 	int				*id;

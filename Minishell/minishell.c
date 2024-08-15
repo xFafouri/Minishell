@@ -139,6 +139,7 @@ int	main(int argc, char **argv, char **envp)
 
 	while (1)
 	{
+		ev.falg_to_exit = 0;
 		ft_sort_env_list(&ev);
 		line = readline(FG_YELLOW "$ " FG_GREEN);
 		if (line != NULL)
