@@ -40,10 +40,7 @@ void	ft_pwd(char *line, t_node **gc)
 	token = shell();
 	str = ft_strtrim(line, " ", gc);
 	if (ft_strncmp(str, "pwd", 3) == 0)
-	{
-		ft_putstr_fd(getcwd(NULL, 0), 0);
-		write(1, "\n", 1);
-	}
+		printf("%s\n", getcwd(NULL, 0));
 	token->status = 0;
 }
 
@@ -218,7 +215,7 @@ void	ft_cd(char *line, t_cmd *token)
 	}
 	else
 	{
-		if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0)
+		if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0 || (token->env_line == NULL))
 		{
 			path = getenv("HOME");
 			if (check_home_key_export(token, "HOME") == 0)

@@ -80,7 +80,7 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 	else if (ft_strcmp((env->cmd)[0], "exit") == 0)
 		ft_exit(gc, env);
 	else if (ft_strcmp((env->cmd)[0], "env") == 0)
-		ft_env(env);
+		ft_env(env, gc);
 	else if (ft_strcmp((env->cmd)[0], "unset") == 0)
 		ft_unset(env, line);
 }

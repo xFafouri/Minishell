@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-void	ft_remove_quotes(t_cmd *token)
+void ft_remove_quotes(t_cmd *token)
 {
-	t_env	*head;
-	t_node	*gc;
+	t_env *head;
+	t_node *gc;
 
 	head = token->addres_env;
 	gc = token->addres_fd;
@@ -13,11 +13,11 @@ void	ft_remove_quotes(t_cmd *token)
 		head = head->next;
 	}
 }
-void	ft_add_qiotes(t_cmd *token)
+void ft_add_qiotes(t_cmd *token)
 {
-	t_env	*head;
-	t_node	*gc;
-	char	*s;
+	t_env *head;
+	t_node *gc;
+	char *s;
 
 	head = token->addres_env;
 	gc = token->addres_fd;
@@ -35,74 +35,108 @@ void	ft_add_qiotes(t_cmd *token)
 	}
 }
 
-int	ft_check_path_env(t_cmd *token)
+int ft_check_path_env(t_cmd *token)
 {
-	int		i;
-	int		b;
-	char	*key;
-	t_node	*ft;
+	int i;
+	int b;
+	char *key;
+	t_node *ft;
 
 	i = 0;
 	b = 1;
 	ft = token->addres_fd;
 	while (token->env[i] != NULL)
 	{
-		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i],
-					'='), &ft);
+		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i], '='), &ft);
 		if (ft_strcmp(key, "PATH") == 0)
 			b = 0;
 		i++;
 	}
 	return (b);
 }
-void	ft_env(t_cmd *token)
-{
-	int	i;
 
-	i = 0;
-	while (token->cmd[i] != NULL)
-	{
-		if (ft_strcmp(token->cmd[i], "env") != 0)
-		{
-			write(2, token->cmd[i], ft_strlen(token->cmd[1]));
-			if (token->cmd[i][0] == '.' && token->cmd[i][1] == '/')
-				write(2, ": Permission denied\n", 21);
-			else
-				write(2, ": No such file or directory\n", 29);
-			return ;
-		}
-		i++;
-	}
-	i = 0;
-	if (token->flag == 1)
-	{
-		while (token->env[i] != NULL)
-		{
-			printf("%s\n", token->env[i]);
-			i++;
-		}
-		return ;
-	}
-	if (ft_check_path_env(token) == 0)
-	{
-		while (token->env[i] != NULL)
-		{
-			printf("%s\n", token->env[i]);
-			i++;
-		}
-	}
-	else
-		write(2, "env: No such file or directory\n", 32);
+void ft_env(t_cmd *token, t_node **gc)
+{
+    int i = 0;
+    int has_args = 0;
+
+    // Check if there are any arguments after "env"
+    while (token->cmd[i] != NULL)
+    {
+        if (ft_strcmp(token->cmd[i], "env") != 0)
+        {
+            has_args = 1;
+            break;
+        }
+        i++;
+    }
+
+    // If there are no arguments, print environment variables
+    if (!has_args)
+    {
+        i = 0;
+        while (token->env[i] != NULL)
+        {
+            printf("%s\n", token->env[i]);
+            i++;
+        }
+        return;
+    }
+
+    int pid = fork();
+
+    if (pid == -1)
+    {
+        perror("fork");
+        token->status = 1;
+        return;
+    }
+    else if (pid == 0)
+    {
+        char *path = NULL;
+
+        ft_check_file(token, gc, token->her);
+        signal(SIGINT, ft_signal_handler_cmd);
+        signal(SIGQUIT, ft_signal_back_slash);
+        
+        path = ft_check_path(token->cmd[i], gc, token);
+        if (path == NULL)
+        {
+            ft_putstr_fd(token->cmd[i], 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+            ft_lstclear(gc);
+            exit(127);
+        }
+        
+        if (execve(path, &token->cmd[i], token->env) < 0)
+        {
+            perror(path);
+            ft_lstclear(gc);
+            exit(126);
+        }
+    }
+    else
+    {
+        int status;
+        waitpid(pid, &status, 0);
+
+        if (WIFEXITED(status))
+            token->status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            token->status = 128 + WTERMSIG(status);
+        else
+            token->status = 1;
+    }
 }
 
-void	ft_add_env(char *value, char *name, t_cmd *token)
+void ft_add_env(char *value, char *name, t_cmd *token)
 {
-	int		i;
-	char	*join;
-	char	*key;
-	char	*value1;
-	char	*new_node;
-	t_node	*ft;
+	int i;
+	char *join;
+	char *key;
+	char *value1;
+	char *new_node;
+	t_node *ft;
 
 	i = 0;
 	join = NULL;
@@ -112,8 +146,7 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 	new_node = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 	while (token->env[i] != NULL)
 	{
-		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i],
-					'='), &ft);
+		key = ft_substr(token->env[i], 0, ft_strlen_untile_char(token->env[i], '='), &ft);
 		value1 = ft_strchr(token->env[i], '=');
 		if (ft_strcmp(key, new_node) == 0)
 		{
@@ -124,7 +157,7 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 				join = ft_strjoin(&ft, name, value);
 				token->env[i] = ft_strdup(&ft, join);
 			}
-			return ;
+			return;
 		}
 		free(key);
 		i++;
@@ -135,17 +168,17 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 	token->env[i + 1] = NULL;
 	free(join);
 }
-void	ft_sort_env_list(t_cmd *token)
+void ft_sort_env_list(t_cmd *token)
 {
-	t_env	*head;
-	t_node	*ft;
-	char	*env_copy_name;
-	char	*env_copy_value;
-	int		swapped;
-	t_env	*current;
+	t_env *head;
+	t_node *ft;
+	char *env_copy_name;
+	char *env_copy_value;
+	int swapped;
+	t_env *current;
 
 	if (token == NULL || token->addres_env == NULL)
-		return ;
+		return;
 	head = token->addres_env;
 	ft = token->addres_fd;
 	while (1)
@@ -169,13 +202,13 @@ void	ft_sort_env_list(t_cmd *token)
 			current = current->next;
 		}
 		if (!swapped)
-			break ;
+			break;
 	}
 }
 
-void	ft_print_export(t_cmd *token)
+void ft_print_export(t_cmd *token)
 {
-	t_env	*temp;
+	t_env *temp;
 
 	temp = token->addres_env;
 	ft_remove_quotes(token);
@@ -190,18 +223,18 @@ void	ft_print_export(t_cmd *token)
 	}
 }
 
-void	ft_add_value_to_export(t_cmd *token, char *line)
+void ft_add_value_to_export(t_cmd *token, char *line)
 {
-	t_env	*head;
-	t_node	*ft;
-	char	**str;
-	char	*name;
-	char	*value;
-	char	*env_copy;
-	int		i;
-	t_env	*new_node;
-	t_env	*current;
-	t_env	*prev;
+	t_env *head;
+	t_node *ft;
+	char **str;
+	char *name;
+	char *value;
+	char *env_copy;
+	int i;
+	t_env *new_node;
+	t_env *current;
+	t_env *prev;
 
 	head = token->addres_env;
 	ft = token->addres_fd;
@@ -215,14 +248,18 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	{
 		env_copy = ft_strdup(&ft, str[i]);
 		if (env_copy == NULL)
-			return ;
+			return;
 		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='),
-				&ft);
+						 &ft);
+		name = ft_substr(name, 0, ft_strlen_untile_char(env_copy, '>'),
+						 &ft);
+		name = ft_substr(name, 0, ft_strlen_untile_char(env_copy, '<'),
+						 &ft);
 		value = ft_strchr(env_copy, '=');
 		name = expand_quotes(name);
 		value = expand_quotes(value);
-		//i have one eroore in this place export a+ 
-		if (value == NULL  || value[0] == '\0')
+		// i have one eroore in this place export a+
+		if (value == NULL || value[0] == '\0')
 		{
 			if (name[ft_strlen(name) - 1] == '+')
 			{
@@ -251,9 +288,8 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 		{
 			new_node = (t_env *)gc_malloc(&ft, sizeof(t_env));
 			if (new_node == NULL)
-				return ;
-			new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name,
-						'+'), &ft);
+				return;
+			new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 			new_node->value = ft_strdup(&ft, value);
 			new_node->next = NULL;
 			current = head;
@@ -270,17 +306,17 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 					{
 						if (current->value == NULL || current->value[0] == '\0')
 							current->value = ft_strjoin(&ft, current->value,
-									new_node->value);
+														new_node->value);
 						else
 							current->value = ft_strjoin(&ft, current->value,
-									new_node->value + 1);
+														new_node->value + 1);
 					}
 					else
 					{
 						if (value != NULL)
 							current->value = ft_strdup(&ft, value);
 					}
-					break ;
+					break;
 				}
 				prev = current;
 				current = current->next;
@@ -300,9 +336,12 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	ft_add_qiotes(token);
 }
 
-void	ft_export(t_cmd *token, char *line)
+void ft_export(t_cmd *token, char *line)
 {
 	if (token->cmd[1] == NULL)
+	{
 		ft_print_export(token);
+		return;
+	}
 	ft_add_value_to_export(token, line);
 }

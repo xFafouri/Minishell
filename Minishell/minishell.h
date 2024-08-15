@@ -128,7 +128,7 @@ void				ft_export(t_cmd *token, char *line);
 void				ft_sort_env_list(t_cmd *token);
 int					find_char(char *str, char c);
 int					ft_isalpha1(char *str);
-void				ft_env(t_cmd *token);
+void				ft_env(t_cmd *token, t_node **gc);
 void				ft_setexport(char *pwd, char *cwd, t_cmd *token);
 void				ft_append_outfile(t_cmd *token, int file, t_node **gc);
 void				ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line);

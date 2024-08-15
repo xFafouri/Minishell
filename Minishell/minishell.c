@@ -144,6 +144,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline(FG_YELLOW "$ " FG_GREEN);
 		if (line != NULL)
 		{
+			ev.status = 0;
 			ev.flag_signle = 0;
 			if (input_validation(line) != 1)
 				split_pipe(line, &ev, &gc);
