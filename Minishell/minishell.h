@@ -165,4 +165,5 @@ int					checkchar(char a, char *b);
 char				*ft_strtrim1(char *s1, char *set, t_node **gc);
 char				*expand_quotes(char *line);
 
+void parse_commands(char *line1, t_node **gc, t_cmd *token);
 // char	*ft_strstr(char *haystack, char *needle);

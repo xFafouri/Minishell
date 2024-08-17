@@ -3,7 +3,6 @@
 t_cmd	*shell(void)
 {
 	static t_cmd	shell;
-
 	return (&shell);
 }
 
@@ -125,7 +124,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ev.flag = 1;
 		envp = gc_malloc(&fd, 4 * sizeof(char *));
-		envp[0] = ft_strdup(&fd, "PWD=/nfs/homes/oait-bou/Downloads");
+		envp[0] = ft_strdup(&fd, "PWD=/nfs/homes/sbourziq");
 		envp[1] = ft_strdup(&fd, "SHLVL=1");
 		envp[2] = ft_strdup(&fd, "_=/usr/bin/env");
 		envp[3] = NULL;

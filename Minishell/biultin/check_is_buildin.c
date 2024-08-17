@@ -45,27 +45,27 @@ int	ft_isalpha1(char *str)
 {
 	int	i;
 
+	if (!str || str[0] == '\0' || str[0] == '+')
+		return (0);
 	i = 0;
-	if (!str)
-		return (0);
-	if (str[i] == '+')
-		return (0);
 	while (str[i] != '\0')
 	{
-		if (str[i] >= 'a' && str[i] <= 'z')
+		if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')
+			|| str[i] == '_')
 			i++;
-		else if ((str[i] >= 'A' && str[i] <= 'Z'))
-			i++;
-		else if (str[i] == '_')
+		else if (i > 0 && (str[i] >= '0' && str[i] <= '9'))
 			i++;
 		else if (str[i] == '+' && str[i + 1] == '\0')
+		{
 			i++;
-		else if ((i != 0) && (str[i] >= '0' && str[i <= '9']))
-			i++;
+			break ;
+		}
 		else
 			return (0);
 	}
-	return (i);
+	if (i > 0)
+		return (1);
+	return (0);
 }
 void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 {

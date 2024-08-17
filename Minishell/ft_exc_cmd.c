@@ -82,6 +82,8 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	{
 		print_last_redirection((char *)line->data, env);
 		tokenisation(line->data, gc, env);
+		line->data = handle_dollar_sign((char *)line->data, env);
+		parse_commands(line->data, gc, env);
 		handle_quotes(env, gc);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, env->id, gc);

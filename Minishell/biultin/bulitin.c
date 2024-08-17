@@ -100,6 +100,7 @@ void	search_env(char *line, t_cmd *env)
 	}
 }
 
+
 char	*expand_quotes(char *line)
 {
 	int		len;

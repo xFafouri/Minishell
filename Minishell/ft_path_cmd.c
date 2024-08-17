@@ -51,6 +51,11 @@ char	**ft_helper_find_path(t_node **gc, t_cmd *ptr)
 	char	**commond_path;
 
 	commond_path = NULL;
+	if(ptr->flag == 1)
+	{
+		commond_path = ft_split("/nfs/homes/sbourziq/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin", ':', gc);
+		return(commond_path);
+	}
 	while (*(ptr->env))
 	{
 		if (ft_strncmp(*(ptr->env), "PATH=", 5) == 0)

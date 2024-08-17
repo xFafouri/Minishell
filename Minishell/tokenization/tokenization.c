@@ -66,7 +66,6 @@ void parse_commands(char *line1, t_node **gc, t_cmd *token)
             {
                 token->cmd[k] = gc_malloc(gc, i - j + 1);
                 ft_strcpy(token->cmd[k], &line1[j], i - j);
-                token->cmd[k] = handle_dollar_sign(token->cmd[k], token);
                 k++;
             }
         }// f_out ==1 && env->env_line = NULL
@@ -122,7 +121,7 @@ void	tokenisation(void *line, t_node **gc, t_cmd *token)
 			token->cmd_count++;
 		}
 	}
-	parse_commands(line1, gc, token);
+	// parse_commands(line1, gc, token);
 	if (token->cmd_count == 0)
 	{
 		token->cmd = (char **)gc_malloc(gc, 2 * sizeof(char *));
