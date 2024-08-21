@@ -44,7 +44,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 				if (str == NULL || (ft_strcmp(env->heredoc->data, str) == 0))
 					break ;
 				if (env->flag_her != 1)
-					str = handle_dollar_sign(str, env);
+					str = handle_dollar_sign(str, env,gc);
 				temp = str;
 				str = ft_strjoin(gc, str, "\n");
 				free(temp);

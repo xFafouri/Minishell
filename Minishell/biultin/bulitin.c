@@ -68,36 +68,29 @@ static char	*ft_strstr(char *haystack, char *needle)
 	return (NULL);
 }
 
-void	search_env(char *line, t_cmd *env)
+void search_env(char *line, t_cmd *env)
 {
-	int	i;
-	int	j;
-	int	count;
+    int i;
+    int len;
+    char *start, *end;
 
-	j = 0;
-	i = 0;
-	count = 0;
-	env->env_line = NULL;
-	while (env->env[i])
-	{
-		j = 0;
-		count = 0;
-		while (env->env[i][j] != '=' && env->env[i][j] != '\0')
-		{
-			count++;
-			j++;
-		}
-		if (ft_strncmp(env->env[i], line, count) == 0)
-		{
-			env->env_line = ft_strstr(env->env[i], line);
-			break ;
-		}
-		i++;
-	}
-	if (!env->env_line)
-	{
-		env->env_line = NULL;
-	}
+    i = 0;
+    env->env_line = NULL;
+    while (env->env[i])
+    {
+        start = env->env[i];
+        end = start;
+        while (*end != '=' && *end != '\0')
+            end++;
+        len = end - start;
+        if (*end == '=' && strncmp(start, line, len) == 0 && (line[len] == '=' || line[len] == '\0'))
+        {
+            env->env_line = end + 1;
+            return;
+        }
+        i++;
+    }
+    env->env_line = NULL;
 }
 
 

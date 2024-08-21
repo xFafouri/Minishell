@@ -45,7 +45,8 @@ void	malloc_fd_id(int **id, t_cmd *file_des, int count, t_node **gc)
 
 void	print_last_redirection(char *input, t_cmd *head)
 {
-	int		i;
+	int	i;
+
 	i = strlen(input) - 1;
 	while (i >= 0)
 	{
@@ -82,9 +83,8 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	{
 		print_last_redirection((char *)line->data, env);
 		tokenisation(line->data, gc, env);
-		line->data = handle_dollar_sign((char *)line->data, env);
+		line->data = handle_dollar_sign((char *)line->data, env,gc);
 		parse_commands(line->data, gc, env);
-		handle_quotes(env, gc);
 		if (env->heredoc != NULL)
 			ft_find_herdoc(env, &i, env->id, gc);
 		if (env->flag_signle == 1)
@@ -110,7 +110,6 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 						perror("Failed to restore original stdin");
 					if (dup2(env->original_stdout, STDOUT_FILENO) < 0)
 						perror("Failed to restore original stdout");
-					// Close the saved original file descriptors
 					close(env->original_stdin);
 					close(env->original_stdout);
 				}
@@ -152,7 +151,6 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	while (++i < count)
 		waitpid(env->id[i], &env->status, 0);
 	signal(SIGINT, ft_signal_handler);
-	printf("my exit status is %d \n", (env->status >> 8) & 0xFF);
 	if (WIFEXITED(env->status))
 	{
 		exit_status = WEXITSTATUS(env->status);

@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 13:17:52 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/12 10:32:14 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:39:18 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ char	*handle_variable_expansion(char *line, char **ret,
 		}
 		var_name[var_name_start] = '\0';
 		search_env(var_name, env);
-		if (env->env_line) // f_out == 1 and env->env_line = NULL ambigiuous error
+		if (env->env_line)
 		{
 			new_len = strlen(*ret) + strlen(env->env_line) + 1;
 			new_ret = malloc(new_len);
@@ -243,30 +243,43 @@ char	*handle_variable_expansion(char *line, char **ret,
 }
 
 
-char	*handle_dollar_sign(char *line, t_cmd *env)
+char *handle_dollar_sign(char *line, t_cmd *env, t_node **gc)
 {
-	char			*result;
-	t_quote_state	quote_state;
+    char            *result;
+    t_quote_state   quote_state;
+    int             only_dollar;
 
-	quote_state.in_single_quotes = 0;
-	quote_state.in_double_quotes = 0;
-	quote_state.nested_quotes = 0;
-	result = malloc(1);
-	if (!result)
-		return (NULL);
-	result[0] = '\0';
-	while (*line)
-	{
-		if (*line == '\'' || *line == '\"')
-		{
-			toggle_quotes(*line, &quote_state);
-			result = concatenate_char(result, *line);
-		}
-		else
-		{
-			line = handle_variable_expansion(line, &result, &quote_state, env);
-		}
-		line++;
-	}
-	return (result);
+    quote_state.in_single_quotes = 0;
+    quote_state.in_double_quotes = 0;
+    quote_state.nested_quotes = 0;
+    result = malloc(1);
+    if (!result)
+        return (NULL);
+    result[0] = '\0';
+    only_dollar = (strcmp(line, "$") == 0);
+    while (*line)
+    {
+        if (*line == '\'' || *line == '\"')
+        {
+            toggle_quotes(*line, &quote_state);
+            result = concatenate_char(result, *line);
+        }
+        else if (*line == '$')
+        {
+            if (only_dollar || *(line + 1) == '$' || *(line + 1) == '\0' || 
+                quote_state.in_single_quotes)
+                result = concatenate_char(result, '$');
+            else if (!quote_state.in_double_quotes)
+                line = handle_variable_expansion(line, &result, &quote_state, env);
+            else if (!isalpha(*(line + 1)) && *(line + 1) != '_' && *(line + 1) != '?')
+                result = concatenate_char(result, '$');
+            else
+                line = handle_variable_expansion(line, &result, &quote_state, env);
+        }
+        else
+            result = concatenate_char(result, *line);
+        line++;
+    }
+    return (result);
 }
+

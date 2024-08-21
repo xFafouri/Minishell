@@ -75,7 +75,7 @@ void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 		printf("minishell: maximum here-document count exceeded\n");
 		return ;
 	}
-	all_cmd = ft_split(cmd, '|', gc);
+	all_cmd = ft_split_qoute(cmd, '|', gc);
 	while (*all_cmd != NULL)
 	{
 		ft_lstadd_back(&link_cmd, ft_lstnew(*all_cmd));

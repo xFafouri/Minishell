@@ -6,7 +6,7 @@ signle.c
 OBJC=$(SOR:.c=.o)
 NAME = minishell
 RM = rm -f
-CC = cc -ggdb #-fsanitize=address
+CC = cc #-fsanitize=address
 LDLIBS = -lreadline
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 

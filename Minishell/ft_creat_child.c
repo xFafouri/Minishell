@@ -8,7 +8,7 @@ int ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 		{
 			if (check_dollars((char *)token->infile->data) == 1)
 			{
-				token->infile->data = handle_dollar_sign((char *)token->infile->data, token);
+				token->infile->data = handle_dollar_sign((char *)token->infile->data, token, gc);
 				if (token->env_line == NULL)
 				{
 					write(2, "ambigiuos redirect\n", 20);
@@ -37,7 +37,7 @@ int ft_check_infile(t_cmd *token, int file, int her, t_node **gc)
 		}
 		if (check_dollars((char *)token->infile->data) == 1)
 		{
-			token->infile->data = handle_dollar_sign((char *)token->infile->data, token);
+			token->infile->data = handle_dollar_sign((char *)token->infile->data, token, gc);
 			if (token->env_line == NULL)
 			{
 				write(2, "ambigiuos redirect\n", 20);
@@ -92,7 +92,7 @@ void ft_check_file(t_cmd *token, t_node **gc, int her)
 		{
 			if (check_dollars((char *)token->outfile->data) == 1)
 			{
-				token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token);
+				token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token,gc);
 				if (token->env_line == NULL)
 				{
 					write(2, "ambigiuos redirect\n", 20);
@@ -121,7 +121,7 @@ void ft_check_file(t_cmd *token, t_node **gc, int her)
 		}
 		if (check_dollars((char *)token->outfile->data) == 1)
 		{
-			token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token);
+			token->outfile->data = handle_dollar_sign((char *)token->outfile->data, token,gc);
 			if (token->env_line == NULL)
 			{
 				write(2, "ambigiuos redirect\n", 20);
@@ -163,7 +163,7 @@ void ft_append_outfile(t_cmd *token, int file, t_node **gc)
 	{
 		if (check_dollars((char *)token->append->data) == 1)
 		{
-			token->append->data = handle_dollar_sign((char *)token->append->data, token);
+			token->append->data = handle_dollar_sign((char *)token->append->data, token, gc);
 			if (token->env_line == NULL)
 			{
 				write(2, "ambigiuos redirect\n", 20);
@@ -194,7 +194,7 @@ void ft_append_outfile(t_cmd *token, int file, t_node **gc)
 	}
 	if (check_dollars((char *)token->append->data) == 1)
 	{
-		token->append->data = handle_dollar_sign((char *)token->append->data, token);
+		token->append->data = handle_dollar_sign((char *)token->append->data, token,gc);
 		if (token->env_line == NULL)
 		{
 			write(2, "ambigiuos redirect\n", 20);

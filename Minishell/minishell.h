@@ -78,7 +78,7 @@ void				ft_signal_handler_cmd(int signum);
 void				search_env(char *line, t_cmd *env);
 // void handle_dollar_and_quotes(t_cmd *cmd, t_node **gc);
 void				handle_dollar(char *line, t_node **gc, t_cmd *token, int d);
-char				*handle_dollar_sign(char *line, t_cmd *env);
+char				*handle_dollar_sign(char *line, t_cmd *env,t_node **gc);
 void				*gc_malloc(t_node **gc, int size);
 char				**ft_split_str(char *str, char *charset);
 char				**ft_split(char *s, char c, t_node **gc);
