@@ -149,14 +149,14 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 			ft_add_env_existing(value, name, token, i, ft);
 			return ;
 		}
-		free(key);
+		// free(key);
 		i++;
 	}
 	name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 	join = ft_strjoin(&ft, name, value);
 	token->env[i] = ft_strdup(&ft, join);
 	token->env[i + 1] = NULL;
-	free(join);
+	// free(join);
 }
 
 void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
@@ -166,8 +166,8 @@ void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
 
 	env_copy_name = ft_strdup(&ft, current->name);
 	env_copy_value = ft_strdup(&ft, current->value);
-	free(current->name);
-	free(current->value);
+	// free(current->name);
+	// free(current->value);
 	current->name = next->name;
 	current->value = next->value;
 	next->name = env_copy_name;

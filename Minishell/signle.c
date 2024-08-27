@@ -10,6 +10,15 @@ void	ft_signal_back_slash(int signum)
 	exit(131);
 }
 
+void	ft_signal_handler(int signum)
+{
+	(void)signum;
+	ft_putstr_fd("\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 void	ft_signal_handler_herdoc(int signum)
 {
 	if (signum == SIGINT)

@@ -31,7 +31,7 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	int				**fd;
-	int falg_to_exit;
+	int				falg_to_exit;
 	int				f_out;
 	int				f_append;
 	int				*id;
@@ -78,7 +78,7 @@ void				ft_signal_handler_cmd(int signum);
 void				search_env(char *line, t_cmd *env);
 // void handle_dollar_and_quotes(t_cmd *cmd, t_node **gc);
 void				handle_dollar(char *line, t_node **gc, t_cmd *token, int d);
-char				*handle_dollar_sign(char *line, t_cmd *env,t_node **gc);
+char				*handle_dollar_sign(char *line, t_cmd *env, t_node **gc);
 void				*gc_malloc(t_node **gc, int size);
 char				**ft_split_str(char *str, char *charset);
 char				**ft_split(char *s, char c, t_node **gc);
@@ -164,6 +164,15 @@ int					count_heredocs(const char *line);
 int					checkchar(char a, char *b);
 char				*ft_strtrim1(char *s1, char *set, t_node **gc);
 char				*expand_quotes(char *line);
-
-void parse_commands(char *line1, t_node **gc, t_cmd *token);
+void				ft_add_env(char *value, char *name, t_cmd *token);
+void				parse_commands(char *line1, t_node **gc, t_cmd *token);
 // char	*ft_strstr(char *haystack, char *needle);
+void				ft_setup_last_child_io(int i, t_cmd *token, t_node **gc);
+void				ft_setup_middle_child_io(int i, t_cmd *token, t_node **gc);
+void				ft_setup_first_child_io(int i, t_cmd *token, t_node **gc);
+void				ft_setup_builtin_io(int i, t_cmd *token, t_node **gc);
+void				ft_handle_execve_error(char *path, t_node **gc);
+void				ft_handle_command_not_found(t_cmd *token, t_node **gc);
+void				ft_execute_command(char *path, t_cmd *token, t_node **gc);
+void				ft_setup_child_signals(void);
+void setup_signals(void);

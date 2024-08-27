@@ -34,20 +34,23 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-void	ft_empty(char *av)
+void	ft_empty(char *av, t_node **gc)
 {
+	if(av == NULL)
+		(ft_lstclear(gc),exit(0));
 	if (av[0] == '.' && av[1] == '\0')
 	{
 		write(2, ".: filename argument required\n", 31);
 		write(2, ".: usage: . filename [arguments]\n", 34);
-		exit(2);
+		(ft_lstclear(gc),exit(2));
 	}
 	if (av[0] == '\0')
-		exit(0);
+		(ft_lstclear(gc),exit(0));
 }
 
 char	**ft_helper_find_path(t_node **gc, t_cmd *ptr)
 {
+	int i = 0;
 	char	**commond_path;
 
 	commond_path = NULL;
@@ -56,14 +59,14 @@ char	**ft_helper_find_path(t_node **gc, t_cmd *ptr)
 		commond_path = ft_split("/nfs/homes/sbourziq/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin", ':', gc);
 		return(commond_path);
 	}
-	while (*(ptr->env))
+	while (ptr->env[i])
 	{
-		if (ft_strncmp(*(ptr->env), "PATH=", 5) == 0)
+		if (ft_strncmp(ptr->env[i], "PATH=", 5) == 0)
 		{
-			commond_path = ft_split((*(ptr->env) + 5), ':', gc);
+			commond_path = ft_split((ptr->env[i] + 5), ':', gc);
 			break ;
 		}
-		(ptr->env)++;
+		i++;
 	}
 	return (commond_path);
 }
@@ -85,7 +88,7 @@ int	ft_find_path(char **path, t_cmd *ptr, char *cmd, t_node **gc)
 			if (access((commond_path)[i], X_OK) == 0)
 				*path = (commond_path)[i];
 			else
-				(exit(127));
+				(ft_lstclear(gc), exit(127));
 		}
 		i++;
 	}
@@ -99,7 +102,7 @@ char	*ft_check_path(char *str, t_node **gc, t_cmd *env)
 	char *path;
 
 	i = 0;
-	ft_empty(str);
+	ft_empty(str, gc);
 	path = NULL;
 	cmd = ft_check_space(str, gc);
 	if (cmd == NULL)

@@ -84,15 +84,6 @@ void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 	ft_exc_cmd(link_cmd, gc, env);
 }
 
-void	ft_signal_handler(int signum)
-{
-	(void)signum;
-	ft_putstr_fd("\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
 int	has_non_space_chars(const char *str)
 {
 	while (*str)
@@ -104,58 +95,79 @@ int	has_non_space_chars(const char *str)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
+t_env *init_environment(char ***envp, t_node **fd)
 {
-	t_node *gc;
-	t_node *fd;
-	t_cmd ev;
-	int i;
-	char *line;
-	t_env *env_list;
+    t_env *env_list;
+    if (*envp == NULL || (*envp)[0] == NULL)
+    {
+        *envp = gc_malloc(fd, 4 * sizeof(char *));
+        (*envp)[0] = ft_strdup(fd, "PWD=/nfs/homes/sbourziq");
+        (*envp)[1] = ft_strdup(fd, "SHLVL=1");
+        (*envp)[2] = ft_strdup(fd, "_=/usr/bin/env");
+        (*envp)[3] = NULL;
+    }
+    env_list = init_env_list(*envp, fd);
+    return env_list;
+}
 
-	gc = NULL;
-	fd = NULL;
-	i = 0;
-	ev.flag_appned = 0;
-	ev.status = 0;
-	ev.flag_file = 0;
-	ev.flag = 0;
-	if (envp == NULL || envp[0] == NULL)
-	{
-		ev.flag = 1;
-		envp = gc_malloc(&fd, 4 * sizeof(char *));
-		envp[0] = ft_strdup(&fd, "PWD=/nfs/homes/sbourziq");
-		envp[1] = ft_strdup(&fd, "SHLVL=1");
-		envp[2] = ft_strdup(&fd, "_=/usr/bin/env");
-		envp[3] = NULL;
-	}
-	ev.env = envp;
-	env_list = init_env_list(envp, &fd);
-	ev.addres_env = env_list;
-	ev.addres_fd = fd;
-	signal(SIGINT, ft_signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+void setup_signals(void)
+{
+    signal(SIGINT, ft_signal_handler);
+    signal(SIGQUIT, SIG_IGN);
+}
 
-	while (1)
-	{
-		ev.falg_to_exit = 0;
-		ft_sort_env_list(&ev);
-		line = readline(FG_YELLOW "$ " FG_GREEN);
-		if (line != NULL)
-		{
-			ev.status = 0;
-			ev.flag_signle = 0;
-			if (input_validation(line) != 1)
-				split_pipe(line, &ev, &gc);
+void process_input(char *line, t_cmd *ev)
+{
+    t_node *command_gc = NULL; 
 
-			if (has_non_space_chars(line))
-				add_history(line);
-			ft_lstclear(&gc);
-		}
-		else
-			break ;
-	}
-	rl_clear_history();
-	ft_lstclear(&gc);
-	return (0);
+    ev->status = 0;
+    ev->flag_signle = 0;
+    if (input_validation(line) != 1)
+        split_pipe(line, ev, &command_gc); 
+
+    if (has_non_space_chars(line))
+        add_history(line);
+
+    ft_lstclear(&command_gc); 
+}
+
+int main(int argc, char **argv, char **envp)
+{
+    t_node *gc = NULL;
+    t_node *fd = NULL;
+    t_cmd ev = {0};
+    char *line;
+
+    ev.env = envp;
+    ev.addres_env = init_environment(&envp, &fd);
+    ev.addres_fd = fd;
+    setup_signals();
+
+    while (1)
+    {
+        ev.falg_to_exit = 0;
+        ft_sort_env_list(&ev);
+        line = readline(FG_YELLOW "$ " FG_GREEN);
+        if (line != NULL)
+        {
+            process_input(line, &ev);
+            free(line);
+        }
+        else
+        {
+            // Handle Ctrl+D (EOF)
+            if (isatty(STDIN_FILENO))
+            {
+                // If input is from terminal, print a newline and exit gracefully
+                printf("\n");
+            }
+            // Exit the shell
+            break;
+        }
+    }
+
+    printf("exit\n");
+    rl_clear_history();
+    //ft_lstclear(&fd);
+    return (0);
 }

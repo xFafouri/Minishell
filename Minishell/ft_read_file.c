@@ -55,7 +55,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 				close((env->fd)[*i][1]);
 			env->heredoc = env->heredoc->next;
 		}
-		exit(0);
+		(ft_lstclear(gc), exit(0));
 	}
 	else // Parent process
 	{

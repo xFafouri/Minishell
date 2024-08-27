@@ -16,7 +16,10 @@ t_node	*ft_lstnew(void *ptr)
 		return(NULL);
 	str = (t_node *)malloc(sizeof(t_node));
 	if (str == NULL)
+	{
+		free(str);
 		return (NULL);
+	}
 	str->data = ptr;
 	str->next = NULL;
 	return (str);
