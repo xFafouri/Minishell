@@ -32,7 +32,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 
 	str = NULL;
 	ft_fork_pipe(env, id, *i, gc);
-	if (id[*i] == 0) // Child process
+	if (id[*i] == 0)
 	{
 		close((env->fd)[*i][0]);
 		signal(SIGINT, ft_signal_handler_herdoc);
@@ -44,7 +44,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 				if (str == NULL || (ft_strcmp(env->heredoc->data, str) == 0))
 					break ;
 				if (env->flag_her != 1)
-					str = handle_dollar_sign(str, env,gc);
+					str = handle_dollar_sign_heredoc(str, env, gc);
 				temp = str;
 				str = ft_strjoin(gc, str, "\n");
 				free(temp);
@@ -57,11 +57,10 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 		}
 		(ft_lstclear(gc), exit(0));
 	}
-	else // Parent process
+	else
 	{
 		close((env->fd)[*i][1]);
 		waitpid(id[*i], &env->status, 0);
-		// Check if child exited due to SIGINT
 		if (WEXITSTATUS(env->status) == 130)
 		{
 			signal(SIGINT, ft_signal_handler);

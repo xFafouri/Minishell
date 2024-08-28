@@ -60,8 +60,19 @@ typedef struct s_cmd
 	t_node			*addres_fd;
 	char			*env_line;
 	char			*dollar;
+	char			quote_char;
+	int				only_dollar;
+	int				in_quotes;
 	int				aft_dol_dq;
+	int				dollar_count;
 }					t_cmd;
+
+typedef struct s_input_v
+{
+	int				ero;
+	int				in_dq;
+	int				in_sq;
+}					t_input_v;
 
 typedef struct s_quote_state
 {
@@ -133,7 +144,21 @@ void				ft_setexport(char *pwd, char *cwd, t_cmd *token);
 void				ft_append_outfile(t_cmd *token, int file, t_node **gc);
 void				ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line);
 
-// utils tokens
+// ##Tokenisation##
+
+//--help parse
+void				help_three(char *line1, int *i, t_cmd *token);
+void				count_commands(char *line1, t_cmd *token);
+void				help_one(char *line1, int *i, t_cmd *token);
+void				help_two(char *line1, int *i, t_cmd *token, t_node **gc);
+
+// --help utils tokens
+void				help_skip_spaces(char *line, int *i);
+void				help_handle_quotes(char *line, int *i, int *in_quotes,
+						char *quote_char);
+char				*help_extract_word(char *line, int *i, t_node **gc);
+
+//--utils tokens
 int					check_dollars(char *line);
 void				handle_append(char *line1, int *i, t_node **gc,
 						t_cmd *token);
@@ -145,8 +170,17 @@ void				handle_infile(char *line1, int *i, t_node **gc,
 						t_cmd *token);
 
 int					input_validation(char *line);
-// handle quotes
 
+// ##expand
+void				toggle_quotes(char current_char,
+						t_quote_state *quote_state);
+char				*concatenate_char(char *str, char c);
+void				check_env(t_cmd *env, char *var_name, char **ret);
+void				handle_exit(char **ret, t_cmd *env);
+char				*handle_dollar_sign_heredoc(char *line, t_cmd *env,
+						t_node **gc);
+
+// ##handle quotes##
 int					in_single_quote(char *line, int index);
 int					in_double_quote(char *line, int index);
 void				handle_quotes(t_cmd *cmd, t_node **gc);
@@ -175,4 +209,20 @@ void				ft_handle_execve_error(char *path, t_node **gc);
 void				ft_handle_command_not_found(t_cmd *token, t_node **gc);
 void				ft_execute_command(char *path, t_cmd *token, t_node **gc);
 void				ft_setup_child_signals(void);
-void setup_signals(void);
+void				setup_signals(void);
+
+void				help_one(char *line1, int *i, t_cmd *token);
+char				*ft_strncpy(char *dest, char *src, unsigned int n);
+char				*process_var_name(char *line, char **ret, t_cmd *env);
+void				check_env(t_cmd *env, char *var_name, char **ret);
+void				*ft_memmove(void *dst, const void *src, size_t len);
+int					ft_strcmp(char *s1, char *s2);
+char				*ft_itoa(int n);
+int					check_dollars(char *line);
+char				*ft_strcpy1(char *s1, char *s2);
+char				*ft_strcat(char *dest, char *src);
+void				*ft_memcpy(void *dst, const void *src, size_t n);
+int					ft_isdigit(int c);
+int					ft_isalnum(int c);
+int					ft_isalpha(int c);
+char				*handle_single_dollar(char *line, char **ret);

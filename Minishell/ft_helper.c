@@ -5,12 +5,12 @@ char	*ft_strchr_hlber(char *s, int c, int *n)
 	int	i;
 
 	i = 0;
-    *n = 0;
+	*n = 0;
 	while (s[i] != '\0')
 	{
 		if (s[i] == (char)c)
-            (*n)++;
-        else if((s[i] != (char)c) && ((*n) != 0))
+			(*n)++;
+		else if ((s[i] != (char)c) && ((*n) != 0))
 			return ((char *)(s + i));
 		i++;
 	}
@@ -21,9 +21,9 @@ char	*ft_strchr_hlber(char *s, int c, int *n)
 
 char	*ft_check_space(char *av, t_node **gc)
 {
-	int		i;
-	int		j;
-	char	*str;
+	int i;
+	int j;
+	char *str;
 
 	i = 0;
 	j = 0;
@@ -33,7 +33,7 @@ char	*ft_check_space(char *av, t_node **gc)
 	if (str == NULL)
 		return (NULL);
 	str[0] = '/';
-    j = 0;
+	j = 0;
 	i = 1;
 	while (av[j] != '\0')
 	{

@@ -86,7 +86,7 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 }
 int	ft_check_buldin1(t_cmd *env, char *line, t_node **gc)
 {
-	int	n;
+	int n;
 
 	n = 1;
 	if (ft_strcmp((env->cmd)[0], "pwd") == 0)

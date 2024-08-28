@@ -24,7 +24,7 @@ void	ft_signal_handler_herdoc(int signum)
 	if (signum == SIGINT)
 	{
 		write(1, "\n", 1);
-		exit(130); // Exit if SIGINT is received
+		exit(130);
 	}
 }
 void	ft_signal_handler_cmd(int signum)

@@ -6,23 +6,11 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:14:18 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/22 00:48:04 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/23 18:07:21 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (!s1 || !s2)
-		return (1);
-	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
-}
 
 void	syntax_error(int fd, int *ero)
 {
@@ -30,66 +18,72 @@ void	syntax_error(int fd, int *ero)
 	*ero = 1;
 }
 
-int	input_validation(char *line)
+int	handle_q(char c, t_input_v *input)
 {
-	int		i;
-	int		ero;
-	int		in_dq;
-	int		in_sq;
-	char	quote;
+	if (c == '"' && !input->in_sq)
+		input->in_dq = !input->in_dq;
+	else if (c == '\'' && !input->in_dq)
+		input->in_sq = !input->in_sq;
+	return (input->in_dq || input->in_sq);
+}
+
+void	handle_redirection(char *line, int *i, t_input_v *input)
+{
 	char	redir;
 
+	redir = line[*i];
+	(*i)++;
+	if (line[*i] == redir)
+		(*i)++;
+	while (line[*i] == ' ' || line[*i] == '\t')
+		(*i)++;
+	if (line[*i] == '\0' || line[*i] == '>' || line[*i] == '<'
+		|| line[*i] == '|')
+		syntax_error(2, &input->ero);
+}
+
+void	help_validation(char *line, int *i, t_input_v *input)
+{
+	while (line[*i] != '\0' && !input->ero)
+	{
+		if (!handle_q(line[*i], input))
+		{
+			if (line[*i] == '|' && line[*i + 1] != '\0' && line[*i + 1] != '|')
+			{
+				(*i)++;
+				while (line[*i] == ' ' || line[*i] == '\t')
+					(*i)++;
+				if (line[*i] == '\0' || line[*i] == '|')
+					syntax_error(2, &input->ero);
+				continue ;
+			}
+			else if (line[*i] == '>' || line[*i] == '<')
+			{
+				handle_redirection(line, i, input);
+				continue ;
+			}
+			else if (line[*i] == '&' || line[*i] == '|' || line[*i] == ';'
+				|| line[*i] == '(' || line[*i] == ')')
+				syntax_error(2, &input->ero);
+		}
+		(*i)++;
+	}
+}
+int	input_validation(char *line)
+{
+	t_input_v	input;
+	int			i;
+
+	input.in_sq = 0;
+	input.in_dq = 0;
+	input.ero = 0;
 	i = 0;
-	ero = 0;
-	in_dq = 0;
-	in_sq = 0;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	if (line[i] == '|')
-		syntax_error(2, &ero);
-	while (line[i] && !ero)
-	{
-		if (!in_sq && line[i] == '"')
-			in_dq = !in_dq;
-		else if (!in_dq && line[i] == '\'')
-			in_sq = !in_sq;
-		else if (!in_dq && !in_sq)
-		{
-			if (line[i] == '&' || (line[i] == '|' && line[i + 1] != '\0'
-					&& line[i + 1] == '|') || line[i] == ';' || line[i] == '('
-				|| line[i] == ')')
-			{
-				syntax_error(2, &ero);
-				break ;
-			}
-			else if (line[i] == '|')
-			{
-				i++;
-				while (line[i] == ' ' || line[i] == '\t')
-					i++;
-				if (line[i] == '\0')
-					syntax_error(2, &ero);
-				continue ;
-			}
-			else if (line[i] == '>' || line[i] == '<')
-			{
-				redir = line[i];
-				i++;
-				if (line[i] == redir)
-					i++;
-				while (line[i] == ' ' || line[i] == '\t')
-					i++;
-				if (line[i] == '\0' || line[i] == '>' || line[i] == '<'
-					|| line[i] == '|')
-					syntax_error(2, &ero);
-				continue ;
-			}
-		}
-		i++;
-	}
-	if (in_dq)
-		syntax_error(2, &ero);
-	if (in_sq)
-		syntax_error(2, &ero);
-	return (ero);
+		syntax_error(2, &input.ero);
+	help_validation(line, &i, &input);
+	if (input.in_dq || input.in_sq)
+		syntax_error(2, &input.ero);
+	return (input.ero);
 }

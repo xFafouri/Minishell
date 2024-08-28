@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:23:06 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/05/23 16:51:18 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 03:55:46 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	**ft_split_str(char *str, char *charset)
 	i = 0;
 	s = (char **)malloc(sizeof(char *) * (count_strings(str, charset) + 1));
 	if (!s)
-		return(NULL);
+		return (NULL);
 	while (*str != '\0')
 	{
 		while (*str != '\0' && check_separator(*str, charset))

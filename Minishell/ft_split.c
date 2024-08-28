@@ -54,10 +54,10 @@ static char	**ft_checknull(char **str, int n)
 
 char	**ft_split(char *s, char c, t_node **gc)
 {
-	int		i;
-	int		n;
-	int		j;
-	char	**str;
+	int i;
+	int n;
+	int j;
+	char **str;
 
 	str = (char **)gc_malloc(gc, (ft_count(s, c) + 1) * sizeof(char *));
 	if (str == NULL)

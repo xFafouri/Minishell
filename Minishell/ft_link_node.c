@@ -1,6 +1,6 @@
 #include "minishell.h"
 
- t_node	*ft_lstlast(t_node *lst)
+t_node	*ft_lstlast(t_node *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -12,8 +12,9 @@
 t_node	*ft_lstnew(void *ptr)
 {
 	t_node	*str;
-	if(ptr == NULL)
-		return(NULL);
+
+	if (ptr == NULL)
+		return (NULL);
 	str = (t_node *)malloc(sizeof(t_node));
 	if (str == NULL)
 	{
@@ -63,7 +64,7 @@ void	ft_lstclear(t_node **lst)
 
 void	*gc_malloc(t_node **gc, int size)
 {
-	void	*ptr;
+	void *ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL)
