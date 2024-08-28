@@ -34,7 +34,7 @@ void	ft_remove_key_env(t_cmd *token, char *str)
 			token->env[i] = NULL;
 			return ;
 		}
-		free(key);
+		//free(key);
 		i++;
 	}
 }
@@ -56,9 +56,9 @@ void	ft_remove_key_export(t_cmd *token, char *str)
 				token->addres_env = head->next;
 			else
 				prev->next = head->next;
-			free(head->name);
-			free(head->value);
-			free(head);
+			//free(head->name);
+			//free(head->value);
+			//free(head);
 			return ;
 		}
 		prev = head;

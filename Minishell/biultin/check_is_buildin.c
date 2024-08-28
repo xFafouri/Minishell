@@ -27,7 +27,7 @@ char	*ft_strtrim1(char *s1, char *set, t_node **gc)
 	j = ft_strlen(s1);
 	if (j == 0)
 	{
-		str = (char *)malloc(1);
+		str = (char *)gc_malloc(gc,1);
 		if (!str)
 			return (NULL);
 		str[0] = '\0';

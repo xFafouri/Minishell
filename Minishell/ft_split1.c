@@ -58,12 +58,14 @@ int	ft_strlen_sep(char *str, char *charset)
 char	*ft_word(char *str, char *charset)
 {
 	int		len_word;
+	t_cmd *head;
 	int		i;
 	char	*word;
 
 	i = 0;
+	head = shell();
 	len_word = ft_strlen_sep(str, charset);
-	word = (char *)malloc(sizeof(char) * (len_word + 1));
+	word = (char *)gc_malloc(head->gc_comand, sizeof(char) * (len_word + 1));
 	while (i < len_word)
 	{
 		word[i] = str[i];
@@ -76,10 +78,12 @@ char	*ft_word(char *str, char *charset)
 char	**ft_split_str(char *str, char *charset)
 {
 	char	**s;
+	t_cmd *head;
 	int		i;
 
 	i = 0;
-	s = (char **)malloc(sizeof(char *) * (count_strings(str, charset) + 1));
+	head = shell();
+	s = (char **)gc_malloc(head->gc_comand, sizeof(char *) * (count_strings(str, charset) + 1));
 	if (!s)
 		return (NULL);
 	while (*str != '\0')

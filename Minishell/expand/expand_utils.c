@@ -33,16 +33,18 @@ void	toggle_quotes(char current_char, t_quote_state *quote_state)
 char	*concatenate_char(char *str, char c)
 {
 	size_t	len;
+	t_cmd  *head;
 	char	*new_str;
 
 	len = ft_strlen(str);
-	new_str = malloc(len + 2);
+	head = shell();
+	new_str = gc_malloc(head->gc_comand, len + 2);
 	if (!new_str)
 		return (NULL);
 	ft_strcpy1(new_str, str);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
-	free(str);
+	//free(str);
 	return (new_str);
 }
 
@@ -56,12 +58,12 @@ void	check_env(t_cmd *env, char *var_name, char **ret)
 	if (env->env_line)
 	{
 		new_len = ft_strlen(*ret) + ft_strlen(env->env_line) + 1;
-		new_ret = malloc(new_len);
+		new_ret = gc_malloc(env->gc_comand, new_len);
 		if (!new_ret)
 			return ;
 		ft_strcpy1(new_ret, *ret);
 		ft_strcat(new_ret, env->env_line);
-		free(*ret);
+		//free(*ret);
 		*ret = new_ret;
 	}
 }
@@ -74,12 +76,12 @@ void	handle_exit(char **ret, t_cmd *env)
 
 	exit_status_str = ft_itoa(WIFEXITED(env->status));
 	new_len = ft_strlen(*ret) + ft_strlen(exit_status_str) + 1;
-	new_ret = malloc(new_len);
+	new_ret = gc_malloc(env->gc_comand, new_len);
 	ft_strcpy1(new_ret, *ret);
 	ft_strcat(new_ret, exit_status_str);
-	free(*ret);
+	//free(*ret);
 	*ret = new_ret;
-	free(exit_status_str);
+	//free(exit_status_str);
 }
 
 char	*handle_single_dollar(char *line, char **ret)

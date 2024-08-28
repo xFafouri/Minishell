@@ -96,8 +96,8 @@ char	**ft_split_qoute(char *s, char c, t_node **gc)
 			i++;
 		}
 		tokens[n] = ft_substr(s, start, i - start, gc);
-		if (!tokens[n])
-			return (ft_checknull(tokens, n));
+		// if (!tokens[n])
+		// 	return (ft_checknull(tokens, n));
 		n++;
 	}
 	tokens[n] = NULL;

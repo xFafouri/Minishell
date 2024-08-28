@@ -98,16 +98,18 @@ void	search_env(char *line, t_cmd *env)
 char	*expand_quotes(char *line)
 {
 	int		len;
+	t_cmd *head;
 	int		in_dq;
 	int		in_sq;
 	char	c;
 	char	*buffer;
 
 	int i, j, k;
+	head = shell();
 	len = ft_strlen(line);
 	in_dq = 0;
 	in_sq = 0;
-	buffer = (char *)malloc(sizeof(char) * (len + 1));
+	buffer = (char *)gc_malloc(head->gc_comand, sizeof(char) * (len + 1));
 	if (!buffer)
 		return (NULL);
 	j = 0;
@@ -187,127 +189,124 @@ int	check_home_key_export(t_cmd *token, char *str)
 	return (0);
 }
 
-void	ft_cd(char *line, t_cmd *token)
+static char *get_cd_path(t_cmd *token)
 {
-	int		i;
-	char	*cwd;
-	char	*path;
-
-	i = 0;
-	while ((token->cmd)[i])
-		i++;
-	if (i > 2)
-	{
-		ft_putstr_fd((token->cmd)[0], 2);
-		ft_putstr_fd(": too many arguments\n", 2);
-		token->status = 1;
-		return ;
-	}
-	else
-	{
-		if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0
-			|| (token->env_line == NULL))
-		{
-			path = getenv("HOME");
-			if (check_home_key_export(token, "HOME") == 0)
-				path = NULL;
-			if (!path)
-			{
-				ft_putstr_fd("cd: HOME not set\n", 2);
-				token->status = 1;
-				return ;
-			}
-		}
-		else
-			path = (token->cmd)[1];
-		if (chdir(path) == 0)
-		{
-			cwd = getcwd(NULL, 0);
-			if (cwd)
-			{
-				ft_setexport("PWD", cwd, token);
-			}
-			else
-				perror("getcwd");
-		}
-		else
-		{
-			perror(path);
-			token->status = 1;
-			return ;
-		}
-	}
-	token->status = 0;
+    int i = 0;
+    while ((token->cmd)[i]) i++;
+    
+    if (i == 1 || ft_strcmp((token->cmd)[1], "~") == 0)
+    {
+        char *path = getenv("HOME");
+        if (check_home_key_export(token, "HOME") == 0)
+            path = NULL;
+        if (!path)
+        {
+            ft_putstr_fd("cd: HOME not set\n", 2);
+            token->status = 1;
+            return NULL;
+        }
+        return path;
+    }
+    return (token->cmd)[1];
 }
 
-long	ft_strtol(char *str, char **endptr, t_node **gc)
+static void change_directory(char *path, t_cmd *token)
 {
-	long	result;
-	int		i;
-	int		sign;
-
-	result = 0;
-	i = 0;
-	sign = 1;
-	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == 32))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i] != '\0')
-	{
-		if (str[i] >= '0' && str[i] <= '9')
-		{
-			if (result > (LONG_MAX - (str[i] - '0')) / 10)
-			{
-				*endptr = str + i;
-				if (sign > 0)
-					return (LONG_MAX);
-				else
-					return (LONG_MIN);
-			}
-			result = result * 10 + (str[i] - '0');
-			i++;
-		}
-		else
-			break ;
-	}
-	*endptr = str + i;
-	return (result * sign);
+    if (chdir(path) == 0)
+    {
+        char *cwd = getcwd(NULL, 0);
+        if (cwd)
+        {
+            ft_setexport("PWD", cwd, token);
+            free(cwd);
+        }
+        else
+            perror("getcwd");
+        token->status = 0;
+    }
+    else
+    {
+        perror(path);
+        token->status = 1;
+    }
 }
 
-void	ft_exit(t_node **gc, t_cmd *token)
+void ft_cd(char *line, t_cmd *token)
 {
-	long nb = 0;
-	char *endptr = NULL;
+    int i = 0;
+    while ((token->cmd)[i]) i++;
+    
+    if (i > 2)
+    {
+        ft_putstr_fd((token->cmd)[0], 2);
+        ft_putstr_fd(": too many arguments\n", 2);
+        token->status = 1;
+        return;
+    }
+    
+    char *path = get_cd_path(token);
+    if (path)
+        change_directory(path, token);
+}
 
-	ft_putendl_fd("exit", 2);
+long ft_strtol(char *str, char **endptr, t_node **gc)
+{
+    long result = 0;
+    int i = 0, sign = 1;
 
-	if (token->cmd[1] == NULL)
-	{
-		ft_lstclear(gc);
-		exit(token->status);
-	}
+    while ((str[i] >= 9 && str[i] <= 13) || (str[i] == 32))
+        i++;
+    if (str[i] == '-' || str[i] == '+')
+        sign = (str[i++] == '-') ? -1 : 1;
 
-	nb = ft_strtol(token->cmd[1], &endptr, gc);
+    while (str[i] != '\0')
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+        {
+            if (result > (LONG_MAX - (str[i] - '0')) / 10)
+            {
+                *endptr = str + i;
+                return (sign > 0) ? LONG_MAX : LONG_MIN;
+            }
+            result = result * 10 + (str[i] - '0');
+            i++;
+        }
+        else
+            break;
+    }
+    *endptr = str + i;
+    return result * sign;
+}
 
-	if (*endptr != '\0')
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(token->cmd[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
-		ft_lstclear(gc);
-		exit(2);
-	}
-	if (token->cmd[2] != NULL)
-	{
-		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		token->status = 1;
-		return ;
-	}
-	ft_lstclear(gc);
-	exit((int)(nb & 0xFF));
+void ft_exit(t_node **gc, t_cmd *token)
+{
+    long nb = 0;
+    char *endptr = NULL;
+
+    ft_putendl_fd("exit", 2);
+
+    if (token->cmd[1] == NULL)
+    {
+        ft_lstclear(gc);
+        exit(token->status);
+    }
+
+    nb = ft_strtol(token->cmd[1], &endptr, gc);
+
+    if (*endptr != '\0')
+    {
+        ft_putstr_fd("minishell: exit: ", 2);
+        ft_putstr_fd(token->cmd[1], 2);
+        ft_putendl_fd(": numeric argument required", 2);
+        ft_lstclear(gc);
+        exit(2);
+    }
+    if (token->cmd[2] != NULL)
+    {
+        ft_putendl_fd("minishell: exit: too many arguments", 2);
+        token->status = 1;
+        return;
+    }
+    ft_lstclear(gc);
+    exit((int)(nb & 0xFF));
 }

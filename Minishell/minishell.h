@@ -49,6 +49,7 @@ typedef struct s_cmd
 	t_node			*outfile;
 	t_node			*heredoc;
 	t_node			*append;
+	t_node 			**gc_comand;
 	t_env			*like_env;
 	int				count;
 	int				flag_her;

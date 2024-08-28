@@ -74,8 +74,8 @@ char	**ft_split(char *s, char c, t_node **gc)
 		while (s[i] != c && s[i] != '\0' && j++ > -1)
 			i++;
 		str[n++] = ft_substr(s, i - j, j, gc);
-		if (!str[n - 1])
-			return (ft_checknull(str, n));
+		// if (!str[n - 1])
+		// 	return (ft_checknull(str, n));
 	}
 	str[n] = NULL;
 	return (str);

@@ -89,42 +89,44 @@ void	close_pipes(t_cmd *env, int i)
 	}
 }
 
-void	handle_exit_status(int exit_status)
+void handle_exit_status(int exit_status)
 {
-	if (exit_status == 131)
-		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
-	else if (exit_status == 130 || exit_status == 2)
-		write(STDERR_FILENO, "\n", 1);
+    if (exit_status == 131)
+        write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+    else if (exit_status == 130 || exit_status == 2)
+        write(STDERR_FILENO, "\n", 1);
 }
 
-void	handle_signal(int signal_num)
+void handle_signal(int signal_num)
 {
-	if (signal_num == SIGQUIT)
-		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
-	else if (signal_num == SIGINT)
-		write(STDERR_FILENO, "\n", 1);
+    if (signal_num == SIGQUIT)
+        write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+    else if (signal_num == SIGINT)
+        write(STDERR_FILENO, "\n", 1);
 }
 
-void	wait_and_handle_signals(int count, t_cmd *env)
+void wait_and_handle_signals(int count, t_cmd *env)
 {
-	int	i;
-	int	exit_status;
-	int	signal_num;
+    int i;
+    int exit_status;
+    int signal_num;
 
-	i = -1;
-	while (++i < count)
-		waitpid(env->id[i], &(env->status), 0);
-	signal(SIGINT, ft_signal_handler);
-	if (WIFEXITED(env->status))
-	{
-		exit_status = WEXITSTATUS(env->status);
-		handle_exit_status(exit_status);
-	}
-	else if (WIFSIGNALED(env->status))
-	{
-		signal_num = WTERMSIG(env->status);
-		handle_signal(signal_num);
-	}
+    i = -1;
+    while (++i < count)
+        waitpid(env->id[i], &(env->status), 0);
+    signal(SIGINT, ft_signal_handler);
+    if (WIFEXITED(env->status))
+    {
+        exit_status = WEXITSTATUS(env->status);
+        env->status = exit_status;
+        handle_exit_status(exit_status);
+    }
+    else if (WIFSIGNALED(env->status))
+    {
+        signal_num = WTERMSIG(env->status);
+        env->status = 128 + signal_num;
+        handle_signal(signal_num);
+    }
 }
 
 void	ft_fork_and_pipe(t_cmd *env, pid_t *id, int i, t_node **gc, int count,

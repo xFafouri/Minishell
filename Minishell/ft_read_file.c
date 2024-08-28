@@ -47,7 +47,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 					str = handle_dollar_sign_heredoc(str, env, gc);
 				temp = str;
 				str = ft_strjoin(gc, str, "\n");
-				free(temp);
+				//free(temp);
 				if (env->heredoc->next == NULL)
 					write((env->fd)[*i][1], str, ft_strlen(str));
 			}

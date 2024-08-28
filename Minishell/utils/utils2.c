@@ -46,12 +46,14 @@ char	*ft_itoa(int n)
 {
 	char		*str;
 	long long	nbr;
+	t_cmd *head;
 	int			i;
 	int			nb;
 
 	nbr = n;
 	nb = count(n);
-	str = (char *)malloc(nb + 1);
+	head = shell();
+	str = (char *)gc_malloc(head->gc_comand, nb + 1);
 	if (str == NULL)
 		return (NULL);
 	if (nbr < 0)

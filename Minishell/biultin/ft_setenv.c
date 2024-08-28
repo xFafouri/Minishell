@@ -51,7 +51,7 @@ void	ft_set_old(char *pwd, char *cwd, t_cmd *token)
 			token->env[i] = ft_strdup(&ft, join);
 			break ;
 		}
-		free(key);
+		//free(key);
 		i++;
 	}
 }
@@ -77,10 +77,10 @@ void	ft_setenv(char *pwd, char *cwd, t_cmd *token)
 			tmp = ft_strjoin(&ft, pwd, "=");
 			join = ft_strjoin(&ft, tmp, cwd);
 			token->env[i] = ft_strdup(&ft, join);
-			free(tmp);
+			//free(tmp);
 			break ;
 		}
-		free(key);
+		//free(key);
 		i++;
 	}
 }
@@ -124,7 +124,7 @@ void	ft_setexport(char *pwd, char *cwd, t_cmd *token)
 		{
 			new_value = ft_strjoin(&ft, "=", cwd);
 			head->value = ft_strdup(&ft, new_value);
-			free(new_value);
+			//free(new_value);
 			break ;
 		}
 		head = head->next;

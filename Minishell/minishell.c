@@ -3,7 +3,6 @@
 t_cmd	*shell(void)
 {
 	static t_cmd	shell;
-
 	return (&shell);
 }
 
@@ -44,7 +43,7 @@ t_env	*init_env_list(char **envp, t_node **gc)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		env_copy = strdup(envp[i]);
+		env_copy = ft_strdup(gc, envp[i]);
 		if (!env_copy)
 			return (NULL);
 		name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), gc);
@@ -52,14 +51,14 @@ t_env	*init_env_list(char **envp, t_node **gc)
 		new_node = gc_malloc(gc, sizeof(t_env));
 		if (!new_node)
 		{
-			free(env_copy);
+			//free(env_copy);
 			return (NULL);
 		}
 		new_node->name = ft_strdup(gc, name);
 		new_node->value = ft_strdup(gc, value);
 		new_node->next = head;
 		head = new_node;
-		free(env_copy);
+		//free(env_copy);
 		i++;
 	}
 	return (head);
@@ -77,6 +76,7 @@ void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 		return ;
 	}
 	all_cmd = ft_split_qoute(cmd, '|', gc);
+	env->gc_comand = gc;
 	while (*all_cmd != NULL)
 	{
 		ft_lstadd_back(&link_cmd, ft_lstnew(*all_cmd));
@@ -165,6 +165,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 
 	printf("exit\n");
+	ft_lstclear(&fd);
 	rl_clear_history();
 	return (0);
 }

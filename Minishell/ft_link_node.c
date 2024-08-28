@@ -70,6 +70,7 @@ void	*gc_malloc(t_node **gc, int size)
 	if (ptr == NULL)
 	{
 		ft_lstclear(gc);
+		free(ptr);
 		exit(1);
 	}
 	ft_lstadd_back(gc, ft_lstnew(ptr));

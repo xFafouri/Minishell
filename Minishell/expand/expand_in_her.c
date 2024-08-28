@@ -21,13 +21,13 @@ char	*process_var_name_here(char *line, char **ret, t_cmd *env)
 	while (line[var_name_len] && (ft_isalnum(line[var_name_len])
 			|| line[var_name_len] == '_'))
 		var_name_len++;
-	var_name = (char *)malloc(var_name_len + 1);
+	var_name = (char *)gc_malloc(env->gc_comand, var_name_len + 1);
 	if (!var_name)
 		return (line - 1);
 	ft_strncpy(var_name, line, var_name_len);
 	var_name[var_name_len] = '\0';
 	check_env(env, var_name, ret);
-	free(var_name);
+	//free(var_name);
 	return (line + var_name_len);
 }
 
@@ -93,7 +93,7 @@ char	*handle_dollar_sign_heredoc(char *line, t_cmd *env, t_node **gc)
 	char	*result;
 	char	*expanded_line;
 
-	result = malloc(1);
+	result = gc_malloc(gc, 1);
 	if (!result)
 		return (NULL);
 	result[0] = '\0';
