@@ -35,7 +35,7 @@ void	handle_infile(char *line1, int *i, t_node **gc, t_cmd *token)
 			ft_memmove(expanded, expanded + 1, ft_strlen(expanded) - 2);
 			expanded[ft_strlen(expanded) - 2] = '\0';
 		}
-		ft_lstadd_back(&token->infile, ft_lstnew(expanded));
+		ft_lstadd_back(&token->infile, ft_lstnew(expanded, gc));
 	}
 	else
 		(*i)--;
@@ -63,7 +63,7 @@ void	handle_append(char *line1, int *i, t_node **gc, t_cmd *token)
 			ft_memmove(expanded, expanded + 1, ft_strlen(expanded) - 2);
 			expanded[ft_strlen(expanded) - 2] = '\0';
 		}
-		ft_lstadd_back(&token->append, ft_lstnew(expanded));
+		ft_lstadd_back(&token->append, ft_lstnew(expanded, gc));
 	}
 }
 
@@ -89,7 +89,7 @@ void	handle_outfile(char *line1, int *i, t_node **gc, t_cmd *token)
 			ft_memmove(expanded, expanded + 1, ft_strlen(expanded) - 2);
 			expanded[ft_strlen(expanded) - 2] = '\0';
 		}
-		ft_lstadd_back(&token->outfile, ft_lstnew(expanded));
+		ft_lstadd_back(&token->outfile, ft_lstnew(expanded, gc));
 	}
 	else
 		(*i)--;
@@ -120,6 +120,6 @@ void	handle_heredoc(char *line1, int *i, t_node **gc, t_cmd *token)
 			ft_memmove(expanded, expanded + 1, ft_strlen(expanded) - 2);
 			expanded[ft_strlen(expanded) - 2] = '\0';
 		}
-		ft_lstadd_back(&token->heredoc, ft_lstnew(expanded));
+		ft_lstadd_back(&token->heredoc, ft_lstnew(expanded, gc));
 	}
 }

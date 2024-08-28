@@ -46,7 +46,7 @@ void	ft_empty(char *av, t_node **gc)
 	}
 	if (av[0] == '\0')
 	{
-		write(2, ":command not found\n", 19);
+		//write(2, ":command not found\n", 19);
 		(ft_lstclear(gc), exit(127));
 	}
 }

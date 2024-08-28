@@ -31,11 +31,11 @@ char	*process_var_name(char *line, char **ret, t_cmd *env)
 	return (line + var_name_len - 1);
 }
 
-char	*handle_variable_help(char *line, char **ret, t_cmd *env)
+char	*handle_variable_help(char *line, char **ret, t_cmd *env, t_node **gc)
 {
 	if (*(line + 1) == '\0')
 	{
-		*ret = concatenate_char(*ret, '$');
+		*ret = concatenate_char(*ret, '$', gc);
 		return (line);
 	}
 	if (*(line + 1) == '?')
@@ -45,7 +45,7 @@ char	*handle_variable_help(char *line, char **ret, t_cmd *env)
 		line += 2;
 		while (ft_isdigit(*line))
 		{
-			*ret = concatenate_char(*ret, *line);
+			*ret = concatenate_char(*ret, *line, gc);
 			line++;
 		}
 		return (line - 1);
@@ -53,43 +53,43 @@ char	*handle_variable_help(char *line, char **ret, t_cmd *env)
 	return (process_var_name(line + 1, ret, env));
 }
 
-char	*handle_variable(char *line, char **ret, t_quote_state *quote_state,
-		t_cmd *env)
+char	*handle_variable(char *line, char **ret,
+		t_cmd *env, t_node **gc)
 {
-	if (*line == '$' && (!quote_state->in_single_quotes
-			|| (quote_state->in_double_quotes && !quote_state->nested_quotes)))
+	if (*line == '$' && (!env->quote_state->in_single_quotes
+			|| (env->quote_state->in_double_quotes && !env->quote_state->nested_quotes)))
 	{
-		return (handle_variable_help(line, ret, env));
+		return (handle_variable_help(line, ret, env, gc));
 	}
-	*ret = concatenate_char(*ret, *line);
+	*ret = concatenate_char(*ret, *line, gc);
 	return (line);
 }
 
-void	handle_help(char *line, char **result, t_quote_state *quote_state,
-		t_cmd *env)
+void	handle_help(char *line, char **result,
+		t_cmd *env, t_node **gc)
 {
 	while (*line)
 	{
 		if (*line == '\'' || *line == '\"')
 		{
-			toggle_quotes(*line, quote_state);
-			*result = concatenate_char(*result, *line);
+			toggle_quotes(*line, env->quote_state);
+			*result = concatenate_char(*result, *line, gc);
 		}
 		else if (*line == '$')
 		{
 			if (env->only_dollar || *(line + 1) == '$' || *(line + 1) == '\0'
-				|| quote_state->in_single_quotes)
-				*result = concatenate_char(*result, '$');
-			else if (!quote_state->in_double_quotes)
-				line = handle_variable(line, result, quote_state, env);
+				|| env->quote_state->in_single_quotes)
+				*result = concatenate_char(*result, '$', gc);
+			else if (!env->quote_state->in_double_quotes)
+				line = handle_variable(line, result, env, gc);
 			else if (!ft_isalpha(*(line + 1)) && *(line + 1) != '_' && *(line
 					+ 1) != '?')
-				*result = concatenate_char(*result, '$');
+				*result = concatenate_char(*result, '$', gc);
 			else
-				line = handle_variable(line, result, quote_state, env);
+				line = handle_variable(line, result, env, gc);
 		}
 		else
-			*result = concatenate_char(*result, *line);
+			*result = concatenate_char(*result, *line, gc);
 		line++;
 	}
 }
@@ -107,6 +107,6 @@ char	*handle_dollar_sign(char *line, t_cmd *env, t_node **gc)
 		return (NULL);
 	result[0] = '\0';
 	env->only_dollar = (ft_strcmp(line, "$") == 0);
-	handle_help(line, &result, &quote_state, env);
+	handle_help(line, &result, env, gc);
 	return (result);
 }

@@ -79,7 +79,7 @@ void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 	env->gc_comand = gc;
 	while (*all_cmd != NULL)
 	{
-		ft_lstadd_back(&link_cmd, ft_lstnew(*all_cmd));
+		ft_lstadd_back(&link_cmd, ft_lstnew(*all_cmd, gc));
 		(all_cmd)++;
 	}
 	ft_exc_cmd(link_cmd, gc, env);
@@ -123,7 +123,6 @@ void	process_input(char *line, t_cmd *ev)
 	t_node	*command_gc;
 
 	command_gc = NULL;
-	ev->status = 0;
 	ev->flag_signle = 0;
 	if (input_validation(line) != 1)
 		split_pipe(line, ev, &command_gc);
@@ -156,16 +155,13 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 		{
-			if (isatty(STDIN_FILENO))
-			{
-				printf("\n");
-			}
 			break ;
 		}
 	}
 
 	printf("exit\n");
 	ft_lstclear(&fd);
+	ft_lstclear(shell()->gc_comand);
 	rl_clear_history();
 	return (0);
 }

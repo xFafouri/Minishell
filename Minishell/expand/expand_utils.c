@@ -30,17 +30,13 @@ void	toggle_quotes(char current_char, t_quote_state *quote_state)
 	}
 }
 
-char	*concatenate_char(char *str, char c)
+char	*concatenate_char(char *str, char c, t_node **gc)
 {
 	size_t	len;
-	t_cmd  *head;
 	char	*new_str;
 
 	len = ft_strlen(str);
-	head = shell();
-	new_str = gc_malloc(head->gc_comand, len + 2);
-	if (!new_str)
-		return (NULL);
+	new_str = gc_malloc(gc, len + 2);
 	ft_strcpy1(new_str, str);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
@@ -84,8 +80,8 @@ void	handle_exit(char **ret, t_cmd *env)
 	//free(exit_status_str);
 }
 
-char	*handle_single_dollar(char *line, char **ret)
+char	*handle_single_dollar(char *line, char **ret, t_node **gc)
 {
-	*ret = concatenate_char(*ret, '$');
+	*ret = concatenate_char(*ret, '$', gc);
 	return (line + 1);
 }

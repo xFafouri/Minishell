@@ -113,7 +113,7 @@ void wait_and_handle_signals(int count, t_cmd *env)
 
     i = -1;
     while (++i < count)
-        waitpid(env->id[i], &(env->status), 0);
+        waitpid(env->id[i], &(env->status), 0); // TODO intialize
     signal(SIGINT, ft_signal_handler);
     if (WIFEXITED(env->status))
     {
@@ -172,6 +172,7 @@ int	handle_single_command(t_cmd *env, char *line_data, t_node **gc)
 }
 void	process_line(t_node *line, t_cmd *env, t_node **gc, int *i, int count)
 {
+	dprintf(2, "gc -> %p\n", *gc);
 	print_last_redirection((char *)line->data, env);
 	tokenisation(line->data, gc, env);
 	line->data = handle_dollar_sign((char *)line->data, env, gc);

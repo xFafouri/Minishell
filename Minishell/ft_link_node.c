@@ -9,14 +9,12 @@ t_node	*ft_lstlast(t_node *lst)
 	return (lst);
 }
 
-t_node	*ft_lstnew(void *ptr)
+t_node	*ft_lstnew1(void *ptr)
 {
 	t_node	*str;
 
-	if (ptr == NULL)
-		return (NULL);
 	str = (t_node *)malloc(sizeof(t_node));
-	if (str == NULL)
+	if (str == NULL || ptr == NULL)
 	{
 		free(str);
 		return (NULL);
@@ -25,6 +23,22 @@ t_node	*ft_lstnew(void *ptr)
 	str->next = NULL;
 	return (str);
 }
+
+t_node	*ft_lstnew(void *ptr, t_node **gc)
+{
+	t_node	*str;
+
+	str = (t_node *)gc_malloc(gc, sizeof(t_node));
+	if (str == NULL || ptr == NULL)
+	{
+		free(str);
+		return (NULL);
+	}
+	str->data = ptr;
+	str->next = NULL;
+	return (str);
+}
+
 
 void	ft_lstadd_back(t_node **lst, t_node *new)
 {
@@ -69,10 +83,10 @@ void	*gc_malloc(t_node **gc, int size)
 	ptr = malloc(size);
 	if (ptr == NULL)
 	{
-		ft_lstclear(gc);
 		free(ptr);
+		ft_lstclear(gc);
 		exit(1);
 	}
-	ft_lstadd_back(gc, ft_lstnew(ptr));
+	ft_lstadd_back(gc, ft_lstnew1(ptr));
 	return (ptr);
 }

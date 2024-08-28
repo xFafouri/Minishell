@@ -28,6 +28,13 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
+typedef struct s_quote_state
+{
+	int				in_single_quotes;
+	int				in_double_quotes;
+	int				nested_quotes;
+}					t_quote_state;
+
 typedef struct s_cmd
 {
 	int				**fd;
@@ -66,6 +73,7 @@ typedef struct s_cmd
 	int				in_quotes;
 	int				aft_dol_dq;
 	int				dollar_count;
+	t_quote_state   *quote_state;
 }					t_cmd;
 
 typedef struct s_input_v
@@ -75,12 +83,6 @@ typedef struct s_input_v
 	int				in_sq;
 }					t_input_v;
 
-typedef struct s_quote_state
-{
-	int				in_single_quotes;
-	int				in_double_quotes;
-	int				nested_quotes;
-}					t_quote_state;
 
 t_cmd				*shell(void);
 void				ft_signal_handler(int signum);
@@ -96,11 +98,10 @@ char				**ft_split_str(char *str, char *charset);
 char				**ft_split(char *s, char c, t_node **gc);
 void				ft_lstadd_back(t_node **lst, t_node *new);
 void				ft_exc_cmd(t_node *cmd, t_node **gc, t_cmd *env);
-t_node				*ft_lstnew(void *ptr);
+t_node	*ft_lstnew(void *ptr, t_node **gc);
 char				*ft_strchr_hlber(char *s, int c, int *n);
 char				*ft_check_path(char *str, t_node **gc, t_cmd *env);
-void				ft_access_to_path(t_node **gc, char **str, char *path_cmd);
-void				ft_lstclear(t_node **lst);
+void				ft_access_to_path(t_node **gc, char **str, char *path_cmd);;
 char				*ft_check_space(char *av, t_node **gc);
 char				*ft_strjoin(t_node **gc, char *s1, char *s2);
 void				ft_first_child(int i, t_node **gc, t_cmd *token,
@@ -175,7 +176,7 @@ int					input_validation(char *line);
 // ##expand
 void				toggle_quotes(char current_char,
 						t_quote_state *quote_state);
-char				*concatenate_char(char *str, char c);
+char				*concatenate_char(char *str, char c, t_node **gc);
 void				check_env(t_cmd *env, char *var_name, char **ret);
 void				handle_exit(char **ret, t_cmd *env);
 char				*handle_dollar_sign_heredoc(char *line, t_cmd *env,
@@ -226,4 +227,4 @@ void				*ft_memcpy(void *dst, const void *src, size_t n);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);
-char				*handle_single_dollar(char *line, char **ret);
+char				*handle_single_dollar(char *line, char **ret, t_node **gc);
