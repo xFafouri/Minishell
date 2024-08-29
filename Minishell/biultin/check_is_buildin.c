@@ -74,7 +74,7 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 	else if (ft_strcmp((env->cmd)[0], "echo") == 0)
 		ft_echo(line, env);
 	else if (ft_strcmp((env->cmd)[0], "export") == 0)
-		ft_export(env, line, gc);
+		ft_export(env, line);
 	else if (ft_strcmp((env->cmd)[0], "cd") == 0)
 		ft_cd(line, env);
 	else if (ft_strcmp((env->cmd)[0], "exit") == 0)

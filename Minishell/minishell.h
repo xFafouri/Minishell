@@ -141,7 +141,7 @@ void				ft_putchar_fd(char c, int fd);
 int					ft_check_buldin1(t_cmd *env, char *line, t_node **gc);
 int					ft_strlen_untile_char(char *str, char c);
 char				*ft_strdup(t_node **gc, char *s1);
-void				ft_export(t_cmd *token, char *line, t_node **gc);
+void				ft_export(t_cmd *token, char *line);
 void				ft_sort_env_list(t_cmd *token);
 int					find_char(char *str, char c);
 int					ft_isalpha1(char *str);
