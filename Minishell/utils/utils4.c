@@ -43,7 +43,6 @@ int	check_dollars(char *line)
 	}
 	return (0);
 }
-
 t_node	*ft_lstnew1(void *ptr)
 {
 	t_node	*str;

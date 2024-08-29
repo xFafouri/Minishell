@@ -82,51 +82,54 @@ void	ft_env_exec(t_cmd *token, t_node **gc, int i)
 	}
 }
 
-void	ft_env(t_cmd *token, t_node **gc)
+void ft_env_fork(t_cmd *token, t_node **gc, int i)
 {
-	int	i;
-	int	has_args;
-	int	pid;
-	int	status;
-
-	i = 0;
-	has_args = 0;
-	while (token->cmd[i] != NULL)
-	{
-		if (ft_strcmp(token->cmd[i], "env") != 0)
-		{
-			has_args = 1;
-			break ;
-		}
-		i++;
-	}
-	if (!has_args)
-	{
-		ft_env_no_args(token);
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		token->status = 1;
-		return ;
-	}
-	else if (pid == 0)
-	{
-		ft_env_exec(token, gc, i);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			token->status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			token->status = 128 + WTERMSIG(status);
-		else
-			token->status = 1;
-	}
+    int pid = fork();
+    if (pid == -1)
+    {
+        perror("fork");
+        token->status = 1;
+        return;
+    }
+    else if (pid == 0)
+    {
+        ft_env_exec(token, gc, i);
+    }
+    else
+    {
+        int status;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+            token->status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            token->status = 128 + WTERMSIG(status);
+        else
+            token->status = 1;
+    }
 }
+
+void ft_env(t_cmd *token, t_node **gc)
+{
+    int i = 0;
+    int has_args = 0;
+
+    while (token->cmd[i] != NULL)
+    {
+        if (ft_strcmp(token->cmd[i], "env") != 0)
+        {
+            has_args = 1;
+            break;
+        }
+        i++;
+    }
+    if (!has_args)
+    {
+        ft_env_no_args(token);
+        return;
+    }
+    ft_env_fork(token, gc, i);
+}
+
 void	ft_add_env_existing(char *value, char *name, t_cmd *token, int i,
 		t_node *ft)
 {
@@ -168,7 +171,6 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 	join = ft_strjoin(&ft, name, value);
 	token->env[i] = ft_strdup(&ft, join);
 	token->env[i + 1] = NULL;
-	// free(join);
 }
 
 void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
@@ -178,8 +180,6 @@ void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
 
 	env_copy_name = ft_strdup(&ft, current->name);
 	env_copy_value = ft_strdup(&ft, current->value);
-	// free(current->name);
-	// free(current->value);
 	current->name = next->name;
 	current->value = next->value;
 	next->name = env_copy_name;
@@ -294,52 +294,79 @@ int	ft_serch_rid(char *line)
 	return (1);
 }
 
-void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
+// Function to process the name of the environment variable
+void ft_process_env_name(char **name, char *env_copy, t_node *ft)
 {
-	char *name, *value;
-	t_env *new_node, *current, *prev;
-	name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), &ft);
-	if (ft_serch_rid(name) == 0)
-	{
-		name = ft_substr(name, 0, ft_strlen_untile_char(env_copy, '>'), &ft);
-		if ((name == NULL || name[0] == '\0'))
-			return ;
-		name = ft_substr(name, 0, ft_strlen_untile_char(env_copy, '<'), &ft);
-		if ((name == NULL || name[0] == '\0'))
-			return ;
-	}
-	value = ft_strchr(env_copy, '=');
-	name = expand_quotes(name, &ft, token);
-	value = expand_quotes(value, &ft, token);
-	if (!ft_validate_export_name(name, value))
-	{
-		token->status = 1;
-		return ;
-	}
-	new_node = (t_env *)gc_malloc(&ft, sizeof(t_env));
-	if (new_node == NULL)
-		return ;
-	new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
-	new_node->value = ft_strdup(&ft, value);
-	new_node->next = NULL;
-	current = token->addres_env;
-	prev = NULL;
-	while (current != NULL)
-	{
-		if (ft_strcmp(current->name, new_node->name) == 0)
-		{
-			ft_update_existing_env(current, new_node, name, value, ft);
-			break ;
-		}
-		prev = current;
-		current = current->next;
-	}
-	if (value != NULL && value[0] != '\0')
-		ft_add_env(value, name, token);
-	if (current == NULL)
-		ft_add_new_env(&token->addres_env, new_node, prev);
+    *name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), &ft);
+    if (ft_serch_rid(*name) == 0)
+    {
+        *name = ft_substr(*name, 0, ft_strlen_untile_char(env_copy, '>'), &ft);
+        if ((*name == NULL || (*name)[0] == '\0'))
+            return;
+        *name = ft_substr(*name, 0, ft_strlen_untile_char(env_copy, '<'), &ft);
+        if ((*name == NULL || (*name)[0] == '\0'))
+            return;
+    }
 }
 
+// Function to create a new environment node
+t_env *ft_create_env_node(char *name, char *value, t_node *ft)
+{
+    t_env *new_node = (t_env *)gc_malloc(&ft, sizeof(t_env));
+    if (new_node == NULL)
+        return NULL;
+    new_node->name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
+    new_node->value = ft_strdup(&ft, value);
+    new_node->next = NULL;
+    return new_node;
+}
+
+// Function to update or add an environment variable
+void ft_update_or_add_env(t_cmd *token, t_env *new_node, char *name, char *value, t_node *ft)
+{
+    t_env *current = token->addres_env;
+    t_env *prev = NULL;
+
+    while (current != NULL)
+    {
+        if (ft_strcmp(current->name, new_node->name) == 0)
+        {
+            ft_update_existing_env(current, new_node, name, value, ft);
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    if (value != NULL && value[0] != '\0')
+        ft_add_env(value, name, token);
+    if (current == NULL)
+        ft_add_new_env(&token->addres_env, new_node, prev);
+}
+
+// Main function to process environment variable
+void ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
+{
+    char *name, *value;
+
+    ft_process_env_name(&name, env_copy, ft);
+    value = ft_strchr(env_copy, '=');
+
+    name = expand_quotes(name, &ft, token);
+    value = expand_quotes(value, &ft, token);
+
+    if (!ft_validate_export_name(name, value))
+    {
+        token->status = 1;
+        return;
+    }
+
+    t_env *new_node = ft_create_env_node(name, value, ft);
+    if (new_node == NULL)
+        return;
+
+    ft_update_or_add_env(token, new_node, name, value, ft);
+}
 void	ft_add_value_to_export(t_cmd *token, char *line)
 {
 	t_node	*ft;

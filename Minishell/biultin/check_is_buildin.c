@@ -103,7 +103,5 @@ int	ft_check_buldin1(t_cmd *env, char *line, t_node **gc)
 		n = 0;
 	else if (ft_strcmp((env->cmd)[0], "unset") == 0)
 		n = 0;
-	else if (ft_strcmp((env->cmd)[0], "history") == 0)
-		n = 0;
 	return (n);
 }

@@ -23,7 +23,7 @@ void	parse_commands(char *line1, t_node **gc, t_cmd *token)
 	token->cmd = gc_malloc(gc, (token->cmd_count + 1) * sizeof(char *));
 	while (line1[i])
 	{
-		while (line1[i] == ' ' || line1[i] == '\t')
+		while (line1[i] == ' ' || line1[i] == '\t' || line1[i] == '\n')
 			i++;
 		if (line1[i] == '>' || line1[i] == '<')
 			help_one(line1, &i, token);
@@ -51,7 +51,7 @@ void	init_variable_tokens(t_cmd *token)
 
 void	check_commands(char *line1, int *i, t_cmd *token)
 {
-	while (line1[*i] == ' ' || line1[*i] == '\t')
+	while (line1[*i] == ' ' || line1[*i] == '\t' || line1[*i] == '\n')
 		(*i)++;
 	if (line1[*i] == '\"')
 	{
@@ -61,7 +61,7 @@ void	check_commands(char *line1, int *i, t_cmd *token)
 		if (line1[*i] == '\"')
 			(*i)++;
 	}
-	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'
+	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t' && line1[*i] != '\n'
 		&& line1[*i] != '>' && line1[*i] != '<')
 		(*i)++;
 	token->cmd_count++;
@@ -77,7 +77,7 @@ void	tokenisation(void *line, t_node **gc, t_cmd *token)
 	line1 = ft_strtrim((char *)line, " ", gc);
 	while (line1[i])
 	{
-		while (line1[i] == ' ' || line1[i] == '\t')
+		while (line1[i] == ' ' || line1[i] == '\t' || line1[i] == '\n')
 			i++;
 		if (line1[i] == '>' && line1[i + 1] == '>')
 			handle_append(line1, &i, gc, token);

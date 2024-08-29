@@ -72,6 +72,8 @@ void	ft_lstclear(t_node **lst)
 	}
 }
 
+
+
 void	*gc_malloc(t_node **gc, int size)
 {
 	void	*ptr;

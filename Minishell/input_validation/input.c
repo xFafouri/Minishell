@@ -12,10 +12,11 @@
 
 #include "../minishell.h"
 
-void	syntax_error(int fd, int *ero)
+void	syntax_error(int fd, int *ero, t_cmd *token)
 {
 	write(fd, "syntax error\n", 13);
 	*ero = 1;
+	token->status = 2;
 }
 
 int	handle_q(char c, t_input_v *input)
@@ -27,7 +28,7 @@ int	handle_q(char c, t_input_v *input)
 	return (input->in_dq || input->in_sq);
 }
 
-void	handle_redirection(char *line, int *i, t_input_v *input)
+void	handle_redirection(char *line, int *i, t_input_v *input, t_cmd *token)
 {
 	char	redir;
 
@@ -39,10 +40,10 @@ void	handle_redirection(char *line, int *i, t_input_v *input)
 		(*i)++;
 	if (line[*i] == '\0' || line[*i] == '>' || line[*i] == '<'
 		|| line[*i] == '|')
-		syntax_error(2, &input->ero);
+		syntax_error(2, &input->ero, token);
 }
 
-void	help_validation(char *line, int *i, t_input_v *input)
+void	help_validation(char *line, int *i, t_input_v *input, t_cmd *token)
 {
 	while (line[*i] != '\0' && !input->ero)
 	{
@@ -54,22 +55,22 @@ void	help_validation(char *line, int *i, t_input_v *input)
 				while (line[*i] == ' ' || line[*i] == '\t')
 					(*i)++;
 				if (line[*i] == '\0' || line[*i] == '|')
-					syntax_error(2, &input->ero);
+					syntax_error(2, &input->ero, token);
 				continue ;
 			}
 			else if (line[*i] == '>' || line[*i] == '<')
 			{
-				handle_redirection(line, i, input);
+				handle_redirection(line, i, input, token);
 				continue ;
 			}
 			else if (line[*i] == '&' || line[*i] == '|' || line[*i] == ';'
 				|| line[*i] == '(' || line[*i] == ')')
-				syntax_error(2, &input->ero);
+				syntax_error(2, &input->ero, token);
 		}
 		(*i)++;
 	}
 }
-int	input_validation(char *line)
+int	input_validation(char *line, t_cmd *token)
 {
 	t_input_v	input;
 	int			i;
@@ -81,9 +82,9 @@ int	input_validation(char *line)
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	if (line[i] == '|')
-		syntax_error(2, &input.ero);
-	help_validation(line, &i, &input);
+		syntax_error(2, &input.ero,token);
+	help_validation(line, &i, &input, token);
 	if (input.in_dq || input.in_sq)
-		syntax_error(2, &input.ero);
+		syntax_error(2, &input.ero, token);
 	return (input.ero);
 }
