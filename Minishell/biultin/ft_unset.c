@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:26:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:26:01 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:12:56 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	ft_remove_key_env(t_cmd *token, char *str)
 			token->env[i] = NULL;
 			return ;
 		}
-		//free(key);
 		i++;
 	}
 }
@@ -56,9 +55,6 @@ void	ft_remove_key_export(t_cmd *token, char *str)
 				token->addres_env = head->next;
 			else
 				prev->next = head->next;
-			//free(head->name);
-			//free(head->value);
-			//free(head);
 			return ;
 		}
 		prev = head;

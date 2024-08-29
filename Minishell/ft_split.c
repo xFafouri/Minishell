@@ -42,15 +42,6 @@ static int	ft_count(char *s, char c)
 	return (count);
 }
 
-static char	**ft_checknull(char **str, int n)
-{
-	while (n > 0)
-	{
-		free(str[--n]);
-	}
-	free(str);
-	return (0);
-}
 
 char	**ft_split(char *s, char c, t_node **gc)
 {
@@ -74,8 +65,6 @@ char	**ft_split(char *s, char c, t_node **gc)
 		while (s[i] != c && s[i] != '\0' && j++ > -1)
 			i++;
 		str[n++] = ft_substr(s, i - j, j, gc);
-		// if (!str[n - 1])
-		// 	return (ft_checknull(str, n));
 	}
 	str[n] = NULL;
 	return (str);

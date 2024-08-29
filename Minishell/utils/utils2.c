@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 15:52:45 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:54:58 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:34:36 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,16 @@ static int	count(long long nb)
 	return (i);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n, t_node **gc)
 {
 	char		*str;
 	long long	nbr;
-	t_cmd *head;
 	int			i;
 	int			nb;
 
 	nbr = n;
 	nb = count(n);
-	head = shell();
-	str = (char *)gc_malloc(head->gc_comand, nb + 1);
+	str = gc_malloc(gc, nb + 1);
 	if (str == NULL)
 		return (NULL);
 	if (nbr < 0)

@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:28:34 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:53:36 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:46:13 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ char	*process_var_name(char *line, char **ret, t_cmd *env)
 	ft_strncpy(var_name, line, var_name_len);
 	var_name[var_name_len] = '\0';
 	check_env(env, var_name, ret);
-	//free(var_name);
 	return (line + var_name_len - 1);
 }
 
@@ -39,7 +38,7 @@ char	*handle_variable_help(char *line, char **ret, t_cmd *env, t_node **gc)
 		return (line);
 	}
 	if (*(line + 1) == '?')
-		return (handle_exit(ret, env), line + 1);
+		return (handle_exit(ret, env, gc), line + 1);
 	if (ft_isdigit(*(line + 1)))
 	{
 		line += 2;
@@ -53,11 +52,11 @@ char	*handle_variable_help(char *line, char **ret, t_cmd *env, t_node **gc)
 	return (process_var_name(line + 1, ret, env));
 }
 
-char	*handle_variable(char *line, char **ret,
-		t_cmd *env, t_node **gc)
+char	*handle_variable(char *line, char **ret, t_cmd *env, t_node **gc)
 {
 	if (*line == '$' && (!env->quote_state->in_single_quotes
-			|| (env->quote_state->in_double_quotes && !env->quote_state->nested_quotes)))
+			|| (env->quote_state->in_double_quotes
+				&& !env->quote_state->nested_quotes)))
 	{
 		return (handle_variable_help(line, ret, env, gc));
 	}
@@ -65,14 +64,13 @@ char	*handle_variable(char *line, char **ret,
 	return (line);
 }
 
-void	handle_help(char *line, char **result,
-		t_cmd *env, t_node **gc)
+void	handle_help(char *line, char **result, t_cmd *env, t_node **gc)
 {
 	while (*line)
 	{
 		if (*line == '\'' || *line == '\"')
 		{
-			toggle_quotes(*line, env->quote_state);
+			toggle_quotes(*line, env);
 			*result = concatenate_char(*result, *line, gc);
 		}
 		else if (*line == '$')
@@ -97,11 +95,13 @@ void	handle_help(char *line, char **result,
 char	*handle_dollar_sign(char *line, t_cmd *env, t_node **gc)
 {
 	char			*result;
-	t_quote_state	quote_state;
+	t_quote_state	*quote_state;
 
-	quote_state.in_single_quotes = 0;
-	quote_state.in_double_quotes = 0;
-	quote_state.nested_quotes = 0;
+	quote_state = gc_malloc(gc, sizeof(t_quote_state));
+	quote_state->in_single_quotes = 0;
+	quote_state->in_double_quotes = 0;
+	quote_state->nested_quotes = 0;
+	env->quote_state = quote_state;
 	result = gc_malloc(gc, 1);
 	if (!result)
 		return (NULL);

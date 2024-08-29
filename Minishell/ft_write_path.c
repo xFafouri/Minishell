@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:39:04 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:39:05 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:50:09 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	ft_strlen(char *s1)
 	int	i;
 
 	i = 0;
-	if(s1 == NULL)
-		return(0);
+	if (s1 == NULL)
+		return (0);
 	while (s1[i] != '\0')
 		i++;
 	return (i);
@@ -29,8 +29,8 @@ char	*ft_strdup(t_node **gc, char *s1)
 	int		i;
 	char	*str;
 
-	if(!s1)
-		return(NULL);
+	if (!s1)
+		return (NULL);
 	str = gc_malloc(gc, ft_strlen(s1) * sizeof(char) + 1);
 	if (str == NULL)
 		return (NULL);
@@ -62,7 +62,7 @@ static void	ft_loops2(char *str, char *s2, int count, int i)
 	}
 }
 
-char	*ft_strjoin(t_node **gc, char  *s1, char  *s2)
+char	*ft_strjoin(t_node **gc, char *s1, char *s2)
 {
 	int		i;
 	int		count;

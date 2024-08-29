@@ -6,25 +6,25 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:26:03 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:26:16 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:15:14 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_remove_quotes(t_cmd *token)
+void	ft_remove_quotes(t_cmd *token, t_node **gc)
 {
 	t_env	*head;
-	t_node	*gc;
 
 	head = token->addres_env;
-	gc = token->addres_fd;
+	*gc = token->addres_fd;
 	while (head != NULL)
 	{
-		head->value = expand_quotes(head->value);
+		head->value = expand_quotes(head->value, gc, token);
 		head = head->next;
 	}
 }
+
 void	ft_add_qiotes(t_cmd *token)
 {
 	t_env	*head;
@@ -46,6 +46,7 @@ void	ft_add_qiotes(t_cmd *token)
 		head = head->next;
 	}
 }
+
 void	ft_env_no_args(t_cmd *token)
 {
 	int	i;
@@ -113,9 +114,7 @@ void	ft_env(t_cmd *token, t_node **gc)
 		return ;
 	}
 	else if (pid == 0)
-	{
 		ft_env_exec(token, gc, i);
-	}
 	else
 	{
 		waitpid(pid, &status, 0);
@@ -127,6 +126,7 @@ void	ft_env(t_cmd *token, t_node **gc)
 			token->status = 1;
 	}
 }
+
 void	ft_add_env_existing(char *value, char *name, t_cmd *token, int i,
 		t_node *ft)
 {
@@ -161,14 +161,12 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 			ft_add_env_existing(value, name, token, i, ft);
 			return ;
 		}
-		// free(key);
 		i++;
 	}
 	name = ft_substr(name, 0, ft_strlen_untile_char(name, '+'), &ft);
 	join = ft_strjoin(&ft, name, value);
 	token->env[i] = ft_strdup(&ft, join);
 	token->env[i + 1] = NULL;
-	// free(join);
 }
 
 void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
@@ -178,8 +176,6 @@ void	ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft)
 
 	env_copy_name = ft_strdup(&ft, current->name);
 	env_copy_value = ft_strdup(&ft, current->value);
-	// free(current->name);
-	// free(current->value);
 	current->name = next->name;
 	current->value = next->value;
 	next->name = env_copy_name;
@@ -294,7 +290,8 @@ int	ft_serch_rid(char *line)
 	return (1);
 }
 
-void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
+void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft,
+		t_node **gc)
 {
 	char *name, *value;
 	t_env *new_node, *current, *prev;
@@ -309,8 +306,8 @@ void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
 			return ;
 	}
 	value = ft_strchr(env_copy, '=');
-	name = expand_quotes(name);
-	value = expand_quotes(value);
+	name = expand_quotes(name, gc, token);
+	value = expand_quotes(value, gc, token);
 	if (!ft_validate_export_name(name, value))
 	{
 		token->status = 1;
@@ -340,37 +337,36 @@ void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
 		ft_add_new_env(&token->addres_env, new_node, prev);
 }
 
-void ft_add_value_to_export(t_cmd *token, char *line)
+void	ft_add_value_to_export(t_cmd *token, char *line, t_node **gc)
 {
-    t_node *ft;
-    char **str;
-    int i;
+	t_node	*ft;
+	char	**str;
+	int		i;
 
-    ft = token->addres_fd;
-    str = ft_split_qoute(line, ' ', &ft);
-    ft_remove_quotes(token);
-    i = 1;
-    while (str[i] != NULL)
-    {
-        // Check for redirection operators
-        if (ft_strcmp(str[i], ">") == 0 || ft_strcmp(str[i], "<") == 0 ||
-            ft_strcmp(str[i], ">>") == 0 || ft_strcmp(str[i], "<<") == 0)
-        {
-            i = i + 2;
-            continue;
-        }
-
-        ft_process_env_variable(token, str[i], ft);
-        i++;
-    }
-    ft_add_qiotes(token);
+	ft = token->addres_fd;
+	str = ft_split_qoute(line, ' ', &ft);
+	ft_remove_quotes(token, gc);
+	i = 1;
+	while (str[i] != NULL)
+	{
+		if (ft_strcmp(str[i], ">") == 0 || ft_strcmp(str[i], "<") == 0
+			|| ft_strcmp(str[i], ">>") == 0 || ft_strcmp(str[i], "<<") == 0)
+		{
+			i = i + 2;
+			continue ;
+		}
+		ft_process_env_variable(token, str[i], ft, gc);
+		i++;
+	}
+	ft_add_qiotes(token);
 }
-void	ft_print_export(t_cmd *token)
+
+void	ft_print_export(t_cmd *token, t_node **gc)
 {
 	t_env	*temp;
 
 	temp = token->addres_env;
-	ft_remove_quotes(token);
+	ft_remove_quotes(token, gc);
 	ft_add_qiotes(token);
 	while (temp != NULL)
 	{
@@ -381,12 +377,13 @@ void	ft_print_export(t_cmd *token)
 		temp = temp->next;
 	}
 }
-void	ft_export(t_cmd *token, char *line)
+
+void	ft_export(t_cmd *token, char *line, t_node **gc)
 {
 	if (token->cmd[1] == NULL)
 	{
-		ft_print_export(token);
+		ft_print_export(token, gc);
 		return ;
 	}
-	ft_add_value_to_export(token, line);
+	ft_add_value_to_export(token, line, gc);
 }

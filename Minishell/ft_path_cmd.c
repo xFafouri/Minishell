@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_path_cmd.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:49:47 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/28 23:49:50 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_strncmp(char *str, char *path, int line)
@@ -46,7 +58,7 @@ void	ft_empty(char *av, t_node **gc)
 	}
 	if (av[0] == '\0')
 	{
-		//write(2, ":command not found\n", 19);
+		// write(2, ":command not found\n", 19);
 		(ft_lstclear(gc), exit(127));
 	}
 }

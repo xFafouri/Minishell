@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 12:45:34 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:25:06 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:10:15 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 void	parse_commands(char *line1, t_node **gc, t_cmd *token)
 {
 	int		i;
-	int		len;
-	char	*cmd;
 
 	i = 0;
 	token->k = 0;

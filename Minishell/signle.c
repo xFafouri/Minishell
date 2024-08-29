@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signle.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:46:57 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/28 23:46:58 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_signal_back_slash(int signum)
@@ -27,6 +39,7 @@ void	ft_signal_handler_herdoc(int signum)
 		exit(130);
 	}
 }
+
 void	ft_signal_handler_cmd(int signum)
 {
 	(void)signum;

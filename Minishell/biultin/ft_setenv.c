@@ -6,15 +6,15 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:25:57 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:25:58 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:12:49 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *ft_find_old_pwd(char *pwd, t_cmd *token)
+char	*ft_find_old_pwd(char *pwd, t_cmd *token)
 {
-    t_env	*head;
+	t_env	*head;
 	t_node	*ft;
 	char	*new_value;
 
@@ -23,10 +23,10 @@ char *ft_find_old_pwd(char *pwd, t_cmd *token)
 	while (head != NULL)
 	{
 		if (ft_strcmp(head->name, pwd) == 0)
-			return(head->value);
+			return (head->value);
 		head = head->next;
 	}
-    return (NULL);
+	return (NULL);
 }
 
 void	ft_set_old(char *pwd, char *cwd, t_cmd *token)
@@ -51,7 +51,6 @@ void	ft_set_old(char *pwd, char *cwd, t_cmd *token)
 			token->env[i] = ft_strdup(&ft, join);
 			break ;
 		}
-		//free(key);
 		i++;
 	}
 }
@@ -77,38 +76,36 @@ void	ft_setenv(char *pwd, char *cwd, t_cmd *token)
 			tmp = ft_strjoin(&ft, pwd, "=");
 			join = ft_strjoin(&ft, tmp, cwd);
 			token->env[i] = ft_strdup(&ft, join);
-			//free(tmp);
 			break ;
 		}
-		//free(key);
 		i++;
 	}
 }
 
 void	ft_set_old_pwd(char *pwd, t_cmd *token)
 {
-    t_env	*head;
+	t_env	*head;
 	t_node	*ft;
 	char	*new_value;
-    char *old_pwd;
+	char	*old_pwd;
 
 	head = token->addres_env;
 	ft = token->addres_fd;
-    old_pwd = ft_find_old_pwd("PWD",token);
-    if(old_pwd == NULL)
-        return;
+	old_pwd = ft_find_old_pwd("PWD", token);
+	if (old_pwd == NULL)
+		return ;
 	while (head != NULL)
 	{
 		if (ft_strcmp(head->name, pwd) == 0)
 		{
-			head->value = ft_strdup(&ft,old_pwd);
-             ft_set_old(pwd, head->value, token);
+			head->value = ft_strdup(&ft, old_pwd);
+			ft_set_old(pwd, head->value, token);
 			break ;
 		}
 		head = head->next;
 	}
-
 }
+
 void	ft_setexport(char *pwd, char *cwd, t_cmd *token)
 {
 	t_env	*head;
@@ -117,14 +114,13 @@ void	ft_setexport(char *pwd, char *cwd, t_cmd *token)
 
 	head = token->addres_env;
 	ft = token->addres_fd;
-    ft_set_old_pwd("OLDPWD", token);
+	ft_set_old_pwd("OLDPWD", token);
 	while (head != NULL)
 	{
 		if (ft_strcmp(head->name, pwd) == 0)
 		{
 			new_value = ft_strjoin(&ft, "=", cwd);
 			head->value = ft_strdup(&ft, new_value);
-			//free(new_value);
 			break ;
 		}
 		head = head->next;

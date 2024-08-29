@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:28:32 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:52:22 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:47:03 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ char	*process_var_name_here(char *line, char **ret, t_cmd *env)
 	ft_strncpy(var_name, line, var_name_len);
 	var_name[var_name_len] = '\0';
 	check_env(env, var_name, ret);
-	//free(var_name);
 	return (line + var_name_len);
 }
 
@@ -63,7 +62,8 @@ char	*handle_digit_case(char *line, char **ret, t_node **gc)
 	return (line);
 }
 
-char	*handle_variable_heredoc(char *line, char **ret, t_cmd *env, t_node **gc)
+char	*handle_variable_heredoc(char *line, char **ret, t_cmd *env,
+		t_node **gc)
 {
 	count_dollars(env, line, 1, ret, gc);
 	if (env->dollar_count == 1 && *(line + 1) != '?' && !ft_isalnum(*(line + 1))
@@ -76,9 +76,9 @@ char	*handle_variable_heredoc(char *line, char **ret, t_cmd *env, t_node **gc)
 		{
 			count_dollars(env, line - env->dollar_count, 2, ret, gc);
 			if (*line == '?')
-				return (handle_exit(ret, env), line + 1);
+				return (handle_exit(ret, env, gc), line + 1);
 			if (ft_isdigit(*line))
-				return (handle_digit_case(line + 1, ret,gc));
+				return (handle_digit_case(line + 1, ret, gc));
 			return (process_var_name_here(line, ret, env));
 		}
 		count_dollars(env, line - env->dollar_count, 2, ret, gc);

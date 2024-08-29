@@ -1,105 +1,89 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_quote.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:48:35 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/29 02:39:14 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+static int	handle_quote(const char **s, int *in_quote, char *quote_char)
+{
+	if (**s == '"' || **s == '\'')
+	{
+		if (*in_quote && **s == *quote_char)
+			*in_quote = 0;
+		else if (!*in_quote)
+			*in_quote = 1, *quote_char = **s;
+		return (1);
+	}
+	return (0);
+}
 
 static int	ft_count_tokens(const char *s, char c)
 {
-	int		count;
-	int		i;
-	int		in_quote;
+	int		count = 0, in_quote;
 	char	quote_char;
 
-	count = 0;
-	i = 0;
-	in_quote = 0;
+	count = 0, in_quote = 0;
 	quote_char = 0;
 	if (!s)
 		return (0);
-	while (s[i])
+	while (*s)
 	{
-		if (s[i] == '"' || s[i] == '\'')
-		{
-			if (in_quote && s[i] == quote_char)
-			{
-				in_quote = 0;
-				quote_char = 0;
-			}
-			else if (!in_quote)
-			{
-				in_quote = 1;
-				quote_char = s[i];
-			}
-		}
-		else if (s[i] == c && !in_quote)
+		if (!handle_quote(&s, &in_quote, &quote_char) && *s == c && !in_quote)
 		{
 			count++;
-			while (s[i] == c)
-				i++;
+			while (*s == c)
+				s++;
 			continue ;
 		}
-		i++;
+		s++;
 	}
-	if (i > 0 && s[i - 1] != c)
-		count++;
-	return (count);
+	return (count + (*s != c));
 }
 
-static char	**ft_checknull(char **str, int n)
+static char	*ft_get_token(char **s, char c, t_node **gc)
 {
-	while (n-- > 0)
-		free(str[n]);
-	free(str);
-	return (NULL);
+	char	*start;
+	int		in_quote;
+	char	quote_char;
+
+	start = *s;
+	in_quote = 0;
+	quote_char = 0;
+	while (**s)
+	{
+		if (!handle_quote((const char **)s, &in_quote, &quote_char) && **s == c
+			&& !in_quote)
+			break ;
+		(*s)++;
+	}
+	return (ft_substr(start, 0, *s - start, gc));
 }
 
 char	**ft_split_qoute(char *s, char c, t_node **gc)
 {
 	char	**tokens;
 	int		i;
-	int		n;
-	int		start;
-	int		in_quote;
-	char	quote_char;
 
-	if (!s)
-		return (NULL);
 	i = 0;
-	n = 0;
-	in_quote = 0;
-	quote_char = 0;
-	tokens = (char **)gc_malloc(gc, (ft_count_tokens(s, c) + 1)
-			* sizeof(char *));
-	if (!tokens)
+	if (!s || !(tokens = gc_malloc(gc, (ft_count_tokens(s, c) + 1)
+				* sizeof(char *))))
 		return (NULL);
-	while (s[i])
+	while (*s)
 	{
-		while (s[i] == c)
-			i++;
-		if (!s[i])
+		while (*s == c)
+			s++;
+		if (!*s)
 			break ;
-		start = i;
-		while (s[i])
-		{
-			if (s[i] == '"' || s[i] == '\'')
-			{
-				if (!in_quote)
-				{
-					in_quote = 1;
-					quote_char = s[i];
-				}
-				else if (in_quote && s[i] == quote_char)
-				{
-					in_quote = 0;
-					quote_char = 0;
-				}
-			}
-			else if (s[i] == c && !in_quote)
-				break ;
-			i++;
-		}
-		tokens[n] = ft_substr(s, start, i - start, gc);
-		// if (!tokens[n])
-		// 	return (ft_checknull(tokens, n));
-		n++;
+		tokens[i++] = ft_get_token(&s, c, gc);
 	}
-	tokens[n] = NULL;
+	tokens[i] = NULL;
 	return (tokens);
 }

@@ -6,27 +6,27 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 13:17:52 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:53:40 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 02:22:23 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	toggle_quotes(char current_char, t_quote_state *quote_state)
+void	toggle_quotes(char current_char, t_cmd *env)
 {
 	if (current_char == '\'')
 	{
-		if (!quote_state->in_double_quotes)
-			quote_state->in_single_quotes = !quote_state->in_single_quotes;
+		if (!env->quote_state->in_double_quotes)
+			env->quote_state->in_single_quotes = !env->quote_state->in_single_quotes;
 		else
-			quote_state->nested_quotes = !quote_state->nested_quotes;
+			env->quote_state->nested_quotes = !env->quote_state->nested_quotes;
 	}
 	else if (current_char == '\"')
 	{
-		if (!quote_state->in_single_quotes)
-			quote_state->in_double_quotes = !quote_state->in_double_quotes;
+		if (!env->quote_state->in_single_quotes)
+			env->quote_state->in_double_quotes = !env->quote_state->in_double_quotes;
 		else
-			quote_state->nested_quotes = !quote_state->nested_quotes;
+			env->quote_state->nested_quotes = !env->quote_state->nested_quotes;
 	}
 }
 
@@ -40,7 +40,6 @@ char	*concatenate_char(char *str, char c, t_node **gc)
 	ft_strcpy1(new_str, str);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
-	//free(str);
 	return (new_str);
 }
 
@@ -59,25 +58,22 @@ void	check_env(t_cmd *env, char *var_name, char **ret)
 			return ;
 		ft_strcpy1(new_ret, *ret);
 		ft_strcat(new_ret, env->env_line);
-		//free(*ret);
 		*ret = new_ret;
 	}
 }
 
-void	handle_exit(char **ret, t_cmd *env)
+void	handle_exit(char **ret, t_cmd *env, t_node **gc)
 {
 	size_t	new_len;
 	char	*new_ret;
 	char	*exit_status_str;
 
-	exit_status_str = ft_itoa(WIFEXITED(env->status));
+	exit_status_str = ft_itoa((env->status), gc);
 	new_len = ft_strlen(*ret) + ft_strlen(exit_status_str) + 1;
 	new_ret = gc_malloc(env->gc_comand, new_len);
 	ft_strcpy1(new_ret, *ret);
 	ft_strcat(new_ret, exit_status_str);
-	//free(*ret);
 	*ret = new_ret;
-	//free(exit_status_str);
 }
 
 char	*handle_single_dollar(char *line, char **ret, t_node **gc)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_read_file.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:49:53 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/28 23:49:54 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	count_herdoc(t_node *herdoc)
@@ -47,7 +59,7 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 					str = handle_dollar_sign_heredoc(str, env, gc);
 				temp = str;
 				str = ft_strjoin(gc, str, "\n");
-				//free(temp);
+				// free(temp);
 				if (env->heredoc->next == NULL)
 					write((env->fd)[*i][1], str, ft_strlen(str));
 			}

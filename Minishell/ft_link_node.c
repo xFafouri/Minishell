@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_link_node.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:47:58 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/28 23:48:15 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_node	*ft_lstlast(t_node *lst)
@@ -7,21 +19,6 @@ t_node	*ft_lstlast(t_node *lst)
 	while (lst->next != NULL)
 		lst = lst->next;
 	return (lst);
-}
-
-t_node	*ft_lstnew1(void *ptr)
-{
-	t_node	*str;
-
-	str = (t_node *)malloc(sizeof(t_node));
-	if (str == NULL || ptr == NULL)
-	{
-		free(str);
-		return (NULL);
-	}
-	str->data = ptr;
-	str->next = NULL;
-	return (str);
 }
 
 t_node	*ft_lstnew(void *ptr, t_node **gc)
@@ -38,7 +35,6 @@ t_node	*ft_lstnew(void *ptr, t_node **gc)
 	str->next = NULL;
 	return (str);
 }
-
 
 void	ft_lstadd_back(t_node **lst, t_node *new)
 {
@@ -78,7 +74,7 @@ void	ft_lstclear(t_node **lst)
 
 void	*gc_malloc(t_node **gc, int size)
 {
-	void *ptr;
+	void	*ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL)

@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:28:10 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:55:05 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/28 23:52:24 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ char	*ft_strcpy1(char *s1, char *s2)
 	return (s1);
 }
 
-char *ft_strcat(char *dest, char *src)
+char	*ft_strcat(char *dest, char *src)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (dest[i] != '\0')
@@ -48,7 +48,6 @@ int	ft_isalpha(int c)
 {
 	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
 }
-
 
 int	ft_isdigit(int c)
 {

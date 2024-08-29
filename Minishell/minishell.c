@@ -1,10 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/29 01:51:21 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/29 02:17:51 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_cmd	*shell(void)
-{
-	static t_cmd	shell;
-	return (&shell);
-}
+#include "minishell.h"
 
 int	count_heredocs(const char *line)
 {
@@ -15,7 +21,7 @@ int	count_heredocs(const char *line)
 	ptr = (char *)line;
 	while ((ptr = strstr(ptr, "<<")) != NULL)
 	{
-		if (ptr == line || !isalnum(*(ptr - 1)))
+		if (ptr == line || !ft_isalnum(*(ptr - 1)))
 		{
 			count++;
 		}
@@ -51,14 +57,14 @@ t_env	*init_env_list(char **envp, t_node **gc)
 		new_node = gc_malloc(gc, sizeof(t_env));
 		if (!new_node)
 		{
-			//free(env_copy);
+			// free(env_copy);
 			return (NULL);
 		}
 		new_node->name = ft_strdup(gc, name);
 		new_node->value = ft_strdup(gc, value);
 		new_node->next = head;
 		head = new_node;
-		//free(env_copy);
+		// free(env_copy);
 		i++;
 	}
 	return (head);
@@ -73,7 +79,7 @@ void	split_pipe(char *cmd, t_cmd *env, t_node **gc)
 	if (count_heredocs(cmd) >= 16)
 	{
 		printf("minishell: maximum here-document count exceeded\n");
-		return ;
+		exit(2);
 	}
 	all_cmd = ft_split_qoute(cmd, '|', gc);
 	env->gc_comand = gc;
@@ -133,16 +139,17 @@ void	process_input(char *line, t_cmd *ev)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_node *gc = NULL;
-	t_node *fd = NULL;
-	t_cmd ev = {0};
-	char *line;
+	t_node	*gc;
+	t_node	*fd;
+	t_cmd	ev = {0};
+	char	*line;
 
+	gc = NULL;
+	fd = NULL;
 	ev.env = envp;
 	ev.addres_env = init_environment(&envp, &fd);
 	ev.addres_fd = fd;
 	setup_signals();
-
 	while (1)
 	{
 		ev.falg_to_exit = 0;
@@ -154,14 +161,11 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 		else
-		{
 			break ;
-		}
 	}
-
 	printf("exit\n");
 	ft_lstclear(&fd);
-	ft_lstclear(shell()->gc_comand);
+	// ft_lstclear(shell()->gc_comand);
 	rl_clear_history();
-	return (0);
+	return (ev.status);
 }

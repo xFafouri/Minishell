@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_helper.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 23:47:50 by hfafouri          #+#    #+#             */
+/*   Updated: 2024/08/28 23:47:53 by hfafouri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_strchr_hlber(char *s, int c, int *n)
@@ -21,9 +33,9 @@ char	*ft_strchr_hlber(char *s, int c, int *n)
 
 char	*ft_check_space(char *av, t_node **gc)
 {
-	int i;
-	int j;
-	char *str;
+	int		i;
+	int		j;
+	char	*str;
 
 	i = 0;
 	j = 0;
