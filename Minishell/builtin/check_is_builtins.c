@@ -83,6 +83,11 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 		ft_env(env, gc);
 	else if (ft_strcmp((env->cmd)[0], "unset") == 0)
 		ft_unset(env, line);
+	if (env->flag_file == 1)
+	{
+		ft_lstclear(gc);
+		exit(0);
+	}
 }
 int	ft_check_buldin1(t_cmd *env, char *line, t_node **gc)
 {

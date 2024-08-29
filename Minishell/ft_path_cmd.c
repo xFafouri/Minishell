@@ -29,22 +29,6 @@ int	ft_strncmp(char *str, char *path, int line)
 	return (0);
 }
 
-char	*ft_strchr(char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0' && s[i] != ' ' && s[i] != 9)
-	{
-		if (s[i] == (char)c)
-			return ((char *)(s + i));
-		else
-			i++;
-	}
-	if (s[i] == (char)c)
-		return ((char *)(s + i));
-	return (NULL);
-}
 
 void	ft_empty(char *av, t_node **gc)
 {

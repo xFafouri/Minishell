@@ -12,44 +12,6 @@
 
 #include "minishell.h"
 
-int	count_herdoc(t_node *herdoc)
-{
-	int	number;
-	int	i;
-
-	number = 0;
-	i = 0;
-	while (herdoc != NULL)
-	{
-		while (((char *)(herdoc->data))[i] != '\0')
-		{
-			if ((((char *)(herdoc->data))[i] == '<')
-				&& (((char *)(herdoc->data))[i + 1] == '<'))
-			{
-				number++;
-				break ;
-			}
-			i++;
-		}
-		i = 0;
-		herdoc = herdoc->next;
-	}
-	return (number);
-}
-
-// Function to handle the child process of the heredoc
-void	ft_handle_heredoc_child(t_cmd *env, int *i, t_node **gc)
-{
-	char	*str;
-	char	*temp;
-
-	str = NULL;
-	close((env->fd)[*i][0]);
-	signal(SIGINT, ft_signal_handler_herdoc);
-	ft_process_heredoc(env, i, &str, gc);
-	(ft_lstclear(gc), exit(0));
-}
-
 // Function to process the heredoc input
 void	ft_process_heredoc(t_cmd *env, int *i, char **str, t_node **gc)
 {
@@ -112,25 +74,4 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 		ft_handle_heredoc_parent(env, i, id);
 	}
 	(*i)++;
-}
-
-int	ft_file(char *str)
-{
-	int	i;
-	int	nb;
-
-	i = 0;
-	nb = 0;
-	while (str[i])
-	{
-		if (str[i] == '<' && str[i + 1] == '<')
-		{
-			nb = 2;
-			++i;
-		}
-		else if (str[i] == '<')
-			nb = 1;
-		i++;
-	}
-	return (nb);
 }

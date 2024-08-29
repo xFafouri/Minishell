@@ -56,3 +56,66 @@ char	*ft_check_space(char *av, t_node **gc)
 	str[i] = '\0';
 	return (str);
 }
+
+char	*ft_strchr(char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0' && s[i] != ' ' && s[i] != 9)
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		else
+			i++;
+	}
+	if (s[i] == (char)c)
+		return ((char *)(s + i));
+	return (NULL);
+}
+
+int	count_herdoc(t_node *herdoc)
+{
+	int	number;
+	int	i;
+
+	number = 0;
+	i = 0;
+	while (herdoc != NULL)
+	{
+		while (((char *)(herdoc->data))[i] != '\0')
+		{
+			if ((((char *)(herdoc->data))[i] == '<')
+				&& (((char *)(herdoc->data))[i + 1] == '<'))
+			{
+				number++;
+				break ;
+			}
+			i++;
+		}
+		i = 0;
+		herdoc = herdoc->next;
+	}
+	return (number);
+}
+
+int	ft_file(char *str)
+{
+	int	i;
+	int	nb;
+
+	i = 0;
+	nb = 0;
+	while (str[i])
+	{
+		if (str[i] == '<' && str[i + 1] == '<')
+		{
+			nb = 2;
+			++i;
+		}
+		else if (str[i] == '<')
+			nb = 1;
+		i++;
+	}
+	return (nb);
+}

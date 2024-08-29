@@ -49,3 +49,9 @@ void	ft_signal_handler_cmd(int signum)
 	rl_redisplay();
 	exit(130);
 }
+
+void	ft_setup_child_signals(void)
+{
+	signal(SIGINT, ft_signal_handler_cmd);
+	signal(SIGQUIT, ft_signal_back_slash);
+}

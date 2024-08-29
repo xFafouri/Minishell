@@ -238,3 +238,57 @@ void				ft_process_heredoc_line(t_cmd *env, char **str,
 void				ft_process_heredoc(t_cmd *env, int *i, char **str,
 						t_node **gc);
 char				*ft_strstr(char *haystack, char *needle);
+
+int					ft_handle_infile_error(t_cmd *token, t_node **gc);
+int					ft_handle_dollar_append(t_cmd *token, t_node **gc);
+int					ft_handle_dollar_outfile(t_cmd *token, t_node **gc);
+int					ft_handle_dollar_infile(t_cmd *token, t_node **gc);
+void				ft_handle_outfile_error(t_cmd *token, t_node **gc);
+int					ft_check_last_infile(t_cmd *token, int file, int her,
+						t_node **gc);
+int					ft_process_single_infile(t_cmd *token, int file,
+						t_node **gc);
+int					ft_process_single_outfile(t_cmd *token, t_node **gc);
+int					ft_process_single_append(t_cmd *token, int file,
+						t_node **gc);
+void				ft_init_file_descriptors(t_cmd *token, t_node **gc);
+int					ft_check_infile_loop(t_cmd *token, int file, t_node **gc);
+void				ft_process_last_outfile(t_cmd *token, t_node **gc);
+void				ft_process_outfiles(t_cmd *token, t_node **gc);
+void				ft_handle_append_error(t_cmd *token, t_node **gc);
+void				ft_process_last_append(t_cmd *token, int file, t_node **gc);
+void				handle_exit_status(int exit_status);
+void				handle_signal(int signal_num);
+void				wait_and_handle_signals(int count, t_cmd *env);
+int					handle_single_command(t_cmd *env, char *line_data,
+						t_node **gc);
+void				restore_io(t_cmd *env);
+void				close_pipes(t_cmd *env, int i);
+void				ft_fork_and_pipe(t_cmd *env, pid_t *id, int i, t_node **gc,
+						int count, char *line_data);
+void				ft_handle_heredoc_child(t_cmd *env, int *i, t_node **gc);
+t_env				*create_env_node(char *env_copy, t_node **gc);
+void				add_env_node(t_env **head, t_env *new_node);
+t_env				*init_env_list(char **envp, t_node **gc);
+void				split_pipe(char *cmd, t_cmd *env, t_node **gc);
+void				ft_add_env_existing(char *value, char *name, t_cmd *token,
+						int i, t_node *ft);
+void				ft_env_fork(t_cmd *token, t_node **gc, int i);
+void				ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft);
+void				ft_env_exec(t_cmd *token, t_node **gc, int i);
+void				ft_env_no_args(t_cmd *token);
+void				ft_add_qiotes(t_cmd *token);
+void				ft_remove_quotes(t_cmd *token);
+t_env				*ft_create_env_node(char *name, char *value, t_node *ft);
+void				ft_update_or_add_env(t_cmd *token, t_env *new_node,
+						char *name, char *value, t_node *ft);
+void				ft_process_env_variable(t_cmd *token, char *env_copy,
+						t_node *ft);
+void				ft_add_value_to_export(t_cmd *token, char *line);
+void				ft_update_existing_env(t_env *current, t_env *new_node,
+						char *name, char *value, t_node *ft);
+void				ft_add_new_env(t_env **head, t_env *new_node, t_env *prev);
+void				ft_process_env_name(char **name, char *env_copy,
+						t_node *ft);
+int					ft_validate_export_name(char *name, char *value);
+int					ft_serch_rid(char *line);
