@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:26:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 15:04:57 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:41:58 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,9 @@ void	ft_remove_key_export(t_cmd *token, char *str)
 
 void	ft_unset(t_cmd *token, char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
-
 	while (token->cmd[i] != NULL)
 	{
 		ft_remove_key_export(token, token->cmd[i]);

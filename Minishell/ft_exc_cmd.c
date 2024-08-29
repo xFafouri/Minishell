@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:47:44 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:15:54 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:39:01 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	print_last_redirection(char *input, t_cmd *head)
 {
 	int	i;
 
-	i = strlen(input) - 1;
+	i = ft_strlen(input) - 1;
 	while (i >= 0)
 	{
 		if (i >= 1 && input[i] == '>' && input[i - 1] == '>')

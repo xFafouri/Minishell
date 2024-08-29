@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:14:18 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/23 18:07:21 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:49:06 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	handle_redirection(char *line, int *i, t_input_v *input, t_cmd *token)
 	(*i)++;
 	if (line[*i] == redir)
 		(*i)++;
-	while (line[*i] == ' ' || line[*i] == '\t')
+	while (line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
 		(*i)++;
 	if (line[*i] == '\0' || line[*i] == '>' || line[*i] == '<'
 		|| line[*i] == '|')
@@ -52,7 +52,7 @@ void	help_validation(char *line, int *i, t_input_v *input, t_cmd *token)
 			if (line[*i] == '|' && line[*i + 1] != '\0' && line[*i + 1] != '|')
 			{
 				(*i)++;
-				while (line[*i] == ' ' || line[*i] == '\t')
+				while (line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
 					(*i)++;
 				if (line[*i] == '\0' || line[*i] == '|')
 					syntax_error(2, &input->ero, token);
@@ -79,10 +79,10 @@ int	input_validation(char *line, t_cmd *token)
 	input.in_dq = 0;
 	input.ero = 0;
 	i = 0;
-	while (line[i] == ' ' || line[i] == '\t')
+	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\n')
 		i++;
 	if (line[i] == '|')
-		syntax_error(2, &input.ero,token);
+		syntax_error(2, &input.ero, token);
 	help_validation(line, &i, &input, token);
 	if (input.in_dq || input.in_sq)
 		syntax_error(2, &input.ero, token);

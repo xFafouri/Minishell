@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 01:51:21 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:17:51 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:49:33 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	count_heredocs(const char *line)
 
 	count = 0;
 	ptr = (char *)line;
-	while ((ptr = strstr(ptr, "<<")) != NULL)
+	while ((ptr = ft_strstr(ptr, "<<")) != NULL)
 	{
 		if (ptr == line || !ft_isalnum(*(ptr - 1)))
 		{
@@ -28,12 +28,6 @@ int	count_heredocs(const char *line)
 		ptr += 2;
 	}
 	return (count);
-}
-int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	return (0);
 }
 
 t_env *create_env_node(char *env_copy, t_node **gc)

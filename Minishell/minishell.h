@@ -232,6 +232,9 @@ int					ft_isalnum(int c);
 int					ft_isalpha(int c);
 char				*handle_single_dollar(char *line, char **ret, t_node **gc);
 t_node				*ft_lstnew1(void *ptr);
-void ft_close_heredoc_if_last(t_cmd *env, int *i);
-void ft_process_heredoc_line(t_cmd *env, char **str, t_node **gc);
-void ft_process_heredoc(t_cmd *env, int *i, char **str, t_node **gc);
+void				ft_close_heredoc_if_last(t_cmd *env, int *i);
+void				ft_process_heredoc_line(t_cmd *env, char **str,
+						t_node **gc);
+void				ft_process_heredoc(t_cmd *env, int *i, char **str,
+						t_node **gc);
+char				*ft_strstr(char *haystack, char *needle);

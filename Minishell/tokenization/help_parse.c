@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:19:29 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 03:56:46 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:45:11 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	help_three(char *line1, int *i, t_cmd *token)
 {
 	token->cmd_count++;
 	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'
-		&& line1[*i] != '>' && line1[*i] != '<')
+		&& line1[*i] != '\n' && line1[*i] != '>' && line1[*i] != '<')
 	{
 		if (line1[*i] == '"' || line1[*i] == '\'')
 		{
@@ -44,7 +44,7 @@ void	count_commands(char *line1, t_cmd *token)
 	i = 0;
 	while (line1[i])
 	{
-		while (line1[i] == ' ' || line1[i] == '\t')
+		while (line1[i] == ' ' || line1[i] == '\t' || line1[i] == '\n')
 			i++;
 		if (line1[i] == '>' || line1[i] == '<')
 			help_one(line1, &i, token);
@@ -58,7 +58,7 @@ void	help_one(char *line1, int *i, t_cmd *token)
 	if (line1[*i + 1] == '>' || line1[*i + 1] == '<')
 		(*i)++;
 	(*i)++;
-	while (line1[*i] == ' ' || line1[*i] == '\t')
+	while (line1[*i] == ' ' || line1[*i] == '\t' || line1[*i] == '\n')
 		(*i)++;
 	if (line1[*i] == '"' || line1[*i] == '\'')
 	{
@@ -71,7 +71,7 @@ void	help_one(char *line1, int *i, t_cmd *token)
 	else
 	{
 		while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'
-			&& line1[*i] != '>' && line1[*i] != '<')
+			&& line1[*i] != '\n' && line1[*i] != '>' && line1[*i] != '<')
 			(*i)++;
 	}
 }
@@ -84,7 +84,7 @@ void	help_two(char *line1, int *i, t_cmd *token, t_node **gc)
 	len = 0;
 	cmd = gc_malloc(gc, ft_strlen(line1) + 1);
 	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'
-		&& line1[*i] != '>' && line1[*i] != '<')
+		&& line1[*i] != '\n' && line1[*i] != '>' && line1[*i] != '<')
 	{
 		if (line1[*i] == '"' || line1[*i] == '\'')
 		{

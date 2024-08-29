@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:23:10 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/27 21:23:21 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:49:01 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	help_skip_spaces(char *line, int *i)
 {
-	while (line[*i] == ' ' || line[*i] == '\t')
+	while (line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
 		(*i)++;
 }
 
@@ -33,7 +33,7 @@ void	help_handle_quotes(char *line, int *i, int *in_quotes, char *quote_char)
 			*quote_char = 0;
 		}
 		else if (!*in_quotes && (line[*i] == ' ' || line[*i] == '\t'
-				|| line[*i] == '>' || line[*i] == '<'))
+				|| line[*i] == '\n' || line[*i] == '>' || line[*i] == '<'))
 			break ;
 		(*i)++;
 	}

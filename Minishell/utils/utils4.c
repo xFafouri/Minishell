@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:36:10 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:05:41 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:51:17 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,24 @@ t_node	*ft_lstnew1(void *ptr)
 	return (str);
 }
 
-char	*ft_strstr(char *haystack, char *needle)
+char	*ft_strstr(char *str, char *to_find)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	if (*needle == 0)
-		return ((char *)haystack);
-	while (haystack[i] != '\0')
+	if (to_find[0] == '\0')
+		return (str);
+	while (str[i] != '\0')
 	{
 		j = 0;
-		while (haystack[i + j] == needle[j] && needle[j] != '\0')
-			j++;
-		if (j == ft_strlen(needle))
+		while (str[i + j] != '\0' && str[i + j] == to_find[j])
 		{
-			while (haystack[i] != '=')
-				i++;
-			return ((char *)&haystack[i]);
+			if (to_find[j + 1] == '\0')
+				return (&str[i]);
+			++j;
 		}
-		i++;
+		++i;
 	}
-	return (NULL);
+	return (0);
 }

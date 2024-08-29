@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:47:58 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 23:48:15 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:50:55 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ void	ft_lstclear(t_node **lst)
 		*lst = NULL;
 	}
 }
-
-
 
 void	*gc_malloc(t_node **gc, int size)
 {

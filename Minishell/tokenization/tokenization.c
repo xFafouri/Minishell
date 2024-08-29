@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 12:45:34 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:10:15 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:49:14 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	parse_commands(char *line1, t_node **gc, t_cmd *token)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	token->k = 0;
@@ -61,8 +61,8 @@ void	check_commands(char *line1, int *i, t_cmd *token)
 		if (line1[*i] == '\"')
 			(*i)++;
 	}
-	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t' && line1[*i] != '\n'
-		&& line1[*i] != '>' && line1[*i] != '<')
+	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'
+		&& line1[*i] != '\n' && line1[*i] != '>' && line1[*i] != '<')
 		(*i)++;
 	token->cmd_count++;
 }
