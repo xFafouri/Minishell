@@ -27,7 +27,7 @@ char	*ft_strtrim1(char *s1, char *set, t_node **gc)
 	j = ft_strlen(s1);
 	if (j == 0)
 	{
-		str = (char *)gc_malloc(gc,1);
+		str = (char *)gc_malloc(gc, 1);
 		if (!str)
 			return (NULL);
 		str[0] = '\0';
@@ -86,7 +86,7 @@ void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 }
 int	ft_check_buldin1(t_cmd *env, char *line, t_node **gc)
 {
-	int n;
+	int	n;
 
 	n = 1;
 	if (ft_strcmp((env->cmd)[0], "pwd") == 0)

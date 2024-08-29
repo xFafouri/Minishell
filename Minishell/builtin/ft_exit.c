@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:28:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:29:42 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:48:48 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,10 @@ void	ft_exit_too_many_args(t_cmd *token)
 
 void	ft_exit(t_node **gc, t_cmd *token)
 {
-	long nb = 0;
-	char *endptr;
+	long	nb;
+	char	*endptr;
 
+	nb = 0;
 	endptr = NULL;
 	ft_putendl_fd("exit", 2);
 	if (token->cmd[1] == NULL)

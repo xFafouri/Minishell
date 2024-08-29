@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:42:49 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:41:51 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:49:28 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	ft_env_exec(t_cmd *token, t_node **gc, int i)
 void	ft_env_fork(t_cmd *token, t_node **gc, int i)
 {
 	int	pid;
-		int status;
+	int	status;
 
 	pid = fork();
 	if (pid == -1)
@@ -371,6 +371,7 @@ void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
 		return ;
 	ft_update_or_add_env(token, new_node, name, value, ft);
 }
+
 void	ft_add_value_to_export(t_cmd *token, char *line)
 {
 	t_node	*ft;
@@ -395,6 +396,7 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	}
 	ft_add_qiotes(token);
 }
+
 void	ft_print_export(t_cmd *token)
 {
 	t_env	*temp;
@@ -411,6 +413,7 @@ void	ft_print_export(t_cmd *token)
 		temp = temp->next;
 	}
 }
+
 void	ft_export(t_cmd *token, char *line)
 {
 	if (token->cmd[1] == NULL)
