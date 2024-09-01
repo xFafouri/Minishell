@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 18:49:06 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 18:49:10 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:10:07 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ void	toggle_quotes(char current_char, t_cmd *env)
 {
 	if (current_char == '\'')
 	{
-		if (!env->quote_state->in_double_quotes)
-			env->quote_state->in_single_quotes = !env->quote_state->in_single_quotes;
+		if (!env->quote_state->in_double)
+			env->quote_state->in_single = !env->quote_state->in_single;
 		else
-			env->quote_state->nested_quotes = !env->quote_state->nested_quotes;
+			env->quote_state->nested = !env->quote_state->nested;
 	}
 	else if (current_char == '\"')
 	{
-		if (!env->quote_state->in_single_quotes)
-			env->quote_state->in_double_quotes = !env->quote_state->in_double_quotes;
+		if (!env->quote_state->in_single)
+			env->quote_state->in_double = !env->quote_state->in_double;
 		else
-			env->quote_state->nested_quotes = !env->quote_state->nested_quotes;
+			env->quote_state->nested = !env->quote_state->nested;
 	}
 }
 

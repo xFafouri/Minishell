@@ -8,7 +8,7 @@ ft_file_export.c ft_process_env_variable.c ft_error_export.c main_nor.c
 OBJC=$(SOR:.c=.o)
 NAME = minishell
 RM = rm -f
-CC = cc  -fsanitize=address -g3
+CC = cc  #-fsanitize=address -g3
 LDLIBS = -lreadline
 CFLAGS = -Wall -Wextra -Werror
 

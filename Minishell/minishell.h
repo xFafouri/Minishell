@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 00:40:04 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 23:24:32 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:11:41 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ typedef struct s_env
 
 typedef struct s_quote_state
 {
-	int				in_single_quotes;
-	int				in_double_quotes;
-	int				nested_quotes;
+	int				in_single;
+	int				in_double;
+	int				nested;
 }					t_quote_state;
 
 typedef struct s_cmd
@@ -308,4 +308,4 @@ void				main_loop(t_cmd *ev);
 void				cleanup(t_node *fd);
 void				initialize_env(t_cmd *ev, char **envp, t_node **fd);
 void				process_input(char *line, t_cmd *ev);
-t_env	*init_environment(char ***envp, t_node **fd);
+t_env				*init_environment(char ***envp, t_node **fd, t_cmd *ev);

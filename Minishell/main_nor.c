@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_nor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 23:07:02 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 23:35:09 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 15:55:25 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	initialize_env(t_cmd *ev, char **envp, t_node **fd)
 {
-	ev->env = envp;
 	ev->status = 0;
-	ev->addres_env = init_environment(&envp, fd);
+	ev->addres_env = init_environment(&envp, fd, ev);
+	ev->env = envp;
 	ev->addres_fd = *fd;
 }
 

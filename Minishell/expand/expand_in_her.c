@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_in_her.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 18:45:34 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 18:45:37 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:04:24 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ char	*process_var_name_here(char *line, char **ret, t_cmd *env)
 	return (line + var_name_len);
 }
 
-void	count_dollars(t_cmd *env, char *line, int j, char **ret, t_node **gc)
+void	count_dollars(t_cmd *env, char *line, int j, char **ret)
 {
-	int	i;
+	int		i;
+	t_node	**gc;
 
 	i = 0;
+	gc = env->gc_comand;
 	if (j == 1)
 	{
 		env->dollar_count = 0;
@@ -65,7 +67,7 @@ char	*handle_digit_case(char *line, char **ret, t_node **gc)
 char	*handle_variable_heredoc(char *line, char **ret, t_cmd *env,
 		t_node **gc)
 {
-	count_dollars(env, line, 1, ret, gc);
+	count_dollars(env, line, 1, ret);
 	if (env->dollar_count == 1 && *(line + 1) != '?' && !ft_isalnum(*(line + 1))
 		&& *(line + 1) != '_')
 		return (handle_single_dollar(line, ret, gc));
@@ -74,14 +76,14 @@ char	*handle_variable_heredoc(char *line, char **ret, t_cmd *env,
 		line += env->dollar_count;
 		if (*line != '\0')
 		{
-			count_dollars(env, line - env->dollar_count, 2, ret, gc);
+			count_dollars(env, line - env->dollar_count, 2, ret);
 			if (*line == '?')
 				return (handle_exit(ret, env, gc), line + 1);
 			if (ft_isdigit(*line))
 				return (handle_digit_case(line + 1, ret, gc));
 			return (process_var_name_here(line, ret, env));
 		}
-		count_dollars(env, line - env->dollar_count, 2, ret, gc);
+		count_dollars(env, line - env->dollar_count, 2, ret);
 		return (line);
 	}
 	*ret = concatenate_char(*ret, *line, gc);

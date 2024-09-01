@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_path_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 18:35:53 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 18:37:55 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 15:40:55 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char	**ft_helper_find_path(t_node **gc, t_cmd *ptr)
 
 	i = 0;
 	commond_path = NULL;
+	printf("my data is %d\n", ptr->flag);
 	if (ptr->flag == 1)
 	{
 		commond_path = ft_split("/nfs/homes/sbourziq/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",

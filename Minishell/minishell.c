@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 01:51:21 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/31 23:08:17 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 15:44:49 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,14 @@ int	has_non_space_chars(const char *str)
 	return (0);
 }
 
-t_env	*init_environment(char ***envp, t_node **fd)
+t_env	*init_environment(char ***envp, t_node **fd, t_cmd *ev)
 {
 	t_env	*env_list;
 
+	ev->flag = 0;
 	if (*envp == NULL || (*envp)[0] == NULL)
 	{
+		ev->flag = 1;
 		*envp = gc_malloc(fd, 4 * sizeof(char *));
 		(*envp)[0] = ft_strdup(fd, "PWD=/nfs/homes/sbourziq");
 		(*envp)[1] = ft_strdup(fd, "SHLVL=1");

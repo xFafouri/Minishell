@@ -6,7 +6,7 @@
 /*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:28:34 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 23:46:13 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:11:08 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ char	*handle_variable_help(char *line, char **ret, t_cmd *env, t_node **gc)
 
 char	*handle_variable(char *line, char **ret, t_cmd *env, t_node **gc)
 {
-	if (*line == '$' && (!env->quote_state->in_single_quotes
-			|| (env->quote_state->in_double_quotes
-				&& !env->quote_state->nested_quotes)))
+	if (*line == '$' && (!env->quote_state->in_single
+			|| (env->quote_state->in_double
+				&& !env->quote_state->nested)))
 	{
 		return (handle_variable_help(line, ret, env, gc));
 	}
@@ -76,9 +76,9 @@ void	handle_help(char *line, char **result, t_cmd *env, t_node **gc)
 		else if (*line == '$')
 		{
 			if (env->only_dollar || *(line + 1) == '$' || *(line + 1) == '\0'
-				|| env->quote_state->in_single_quotes)
+				|| env->quote_state->in_single)
 				*result = concatenate_char(*result, '$', gc);
-			else if (!env->quote_state->in_double_quotes)
+			else if (!env->quote_state->in_double)
 				line = handle_variable(line, result, env, gc);
 			else if (!ft_isalpha(*(line + 1)) && *(line + 1) != '_' && *(line
 					+ 1) != '?')
@@ -98,9 +98,9 @@ char	*handle_dollar_sign(char *line, t_cmd *env, t_node **gc)
 	t_quote_state	*quote_state;
 
 	quote_state = gc_malloc(gc, sizeof(t_quote_state));
-	quote_state->in_single_quotes = 0;
-	quote_state->in_double_quotes = 0;
-	quote_state->nested_quotes = 0;
+	quote_state->in_single = 0;
+	quote_state->in_double = 0;
+	quote_state->nested = 0;
 	env->quote_state = quote_state;
 	result = gc_malloc(gc, 1);
 	if (!result)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 18:54:15 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 18:55:39 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 16:12:48 by hfafouri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ char	**ft_split_qoute(char *s, char c, t_node **gc)
 	char	**tokens;
 
 	i = 0;
-	if (!s || !(tokens = gc_malloc(gc, (ft_count_tokens(s, c) + 1)
-				* sizeof(char *))))
+	if (!s)
+		return (NULL);
+	tokens = gc_malloc(gc, (ft_count_tokens(s, c) + 1) * sizeof(char *));
+	if (!s || !tokens)
 		return (NULL);
 	while (*s)
 	{
