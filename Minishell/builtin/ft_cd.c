@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:28:50 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:29:31 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:10:49 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	check_home_key_export(t_cmd *token, char *str)
 {
 	t_env	*head;
-	t_node	*ft;
 
 	head = token->addres_env;
 	while (head != NULL)
@@ -74,7 +73,7 @@ static void	change_directory(char *path, t_cmd *token)
 	}
 }
 
-void	ft_cd(char *line, t_cmd *token)
+void	ft_cd(t_cmd *token)
 {
 	int		i;
 	char	*path;

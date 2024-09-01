@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 23:54:01 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 20:48:29 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:47:18 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:48:32 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,14 @@ void	ft_pwd(char *line, t_node **gc, t_cmd *token)
 
 void	search_env(char *line, t_cmd *env)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
+	char	*start;
+	char	*end;
 
-	char *start, *end;
 	i = 0;
+	start = NULL;
+	end = NULL;
 	env->env_line = NULL;
 	while (env->env[i])
 	{

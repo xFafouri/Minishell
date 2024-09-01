@@ -1,66 +1,80 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   nor_line.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:40:11 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:24:57 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	count_heredocs(const char *line)
+int	count_heredocs(char *line)
 {
 	int		count;
 	char	*ptr;
+	char	*next_heredoc;
 
 	count = 0;
-	ptr = (char *)line;
-	while ((ptr = ft_strstr(ptr, "<<")) != NULL)
+	ptr = line;
+	while (ptr && *ptr)
 	{
-		if (ptr == line || !ft_isalnum(*(ptr - 1)))
-		{
+		next_heredoc = ft_strstr(ptr, "<<");
+		if (!next_heredoc)
+			break ;
+		if (next_heredoc == line || !ft_isalnum(*(next_heredoc - 1)))
 			count++;
-		}
-		ptr += 2;
+		ptr = next_heredoc + 2;
 	}
 	return (count);
 }
 
-t_env *create_env_node(char *env_copy, t_node **gc)
+t_env	*create_env_node(char *env_copy, t_node **gc)
 {
-    t_env *new_node;
-    char *name;
-    char *value;
+	t_env	*new_node;
+	char	*name;
+	char	*value;
 
-    name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), gc);
-    value = ft_strchr(env_copy, '=');
-    new_node = gc_malloc(gc, sizeof(t_env));
-    if (!new_node)
-        return NULL;
-    new_node->name = ft_strdup(gc, name);
-    new_node->value = ft_strdup(gc, value);
-    return new_node;
+	name = ft_substr(env_copy, 0, ft_strlen_untile_char(env_copy, '='), gc);
+	value = ft_strchr(env_copy, '=');
+	new_node = gc_malloc(gc, sizeof(t_env));
+	if (!new_node)
+		return (NULL);
+	new_node->name = ft_strdup(gc, name);
+	new_node->value = ft_strdup(gc, value);
+	return (new_node);
 }
 
-// Function to add a new node to the environment list
-void add_env_node(t_env **head, t_env *new_node)
+void	add_env_node(t_env **head, t_env *new_node)
 {
-    new_node->next = *head;
-    *head = new_node;
+	new_node->next = *head;
+	*head = new_node;
 }
 
-// Function to initialize the environment list
-t_env *init_env_list(char **envp, t_node **gc)
+t_env	*init_env_list(char **envp, t_node **gc)
 {
-    t_env *head = NULL;
-    t_env *new_node;
-    char *env_copy;
-    int i = 0;
+	t_env	*head;
+	t_env	*new_node;
+	char	*env_copy;
+	int		i;
 
-    while (envp[i] != NULL)
-    {
-        env_copy = ft_strdup(gc, envp[i]);
-        if (!env_copy)
-            return NULL;
-        new_node = create_env_node(env_copy, gc);
-        if (!new_node)
-            return NULL;
-        add_env_node(&head, new_node);
-        i++;
-    }
-    return head;
+	head = NULL;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		env_copy = ft_strdup(gc, envp[i]);
+		if (!env_copy)
+			return (NULL);
+		new_node = create_env_node(env_copy, gc);
+		if (!new_node)
+			return (NULL);
+		add_env_node(&head, new_node);
+		i++;
+	}
+	return (head);
 }
 
 void	split_pipe(char *cmd, t_cmd *env, t_node **gc)

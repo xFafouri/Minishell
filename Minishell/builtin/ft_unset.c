@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:26:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:41:58 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:17:14 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	ft_remove_key_export(t_cmd *token, char *str)
 	}
 }
 
-void	ft_unset(t_cmd *token, char *line)
+void	ft_unset(t_cmd *token)
 {
 	int	i;
 

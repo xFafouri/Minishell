@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_process_env_variable.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:38:38 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:25:21 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_env	*ft_create_env_node(char *name, char *value, t_node *ft)
@@ -15,12 +27,14 @@ t_env	*ft_create_env_node(char *name, char *value, t_node *ft)
 
 // Function to update or add an environment variable
 void	ft_update_or_add_env(t_cmd *token, t_env *new_node, char *name,
-		char *value, t_node *ft)
+		char *value)
 {
 	t_env	*current;
 	t_env	*prev;
+	t_node	*ft;
 
 	current = token->addres_env;
+	ft = token->addres_fd;
 	prev = NULL;
 	while (current != NULL)
 	{
@@ -42,8 +56,11 @@ void	ft_update_or_add_env(t_cmd *token, t_env *new_node, char *name,
 void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
 {
 	t_env	*new_node;
+	char	*name;
+	char	*value;
 
-	char *name, *value;
+	name = NULL;
+	value = NULL;
 	ft_process_env_name(&name, env_copy, ft);
 	value = ft_strchr(env_copy, '=');
 	name = expand_quotes(name, &ft, token);
@@ -56,7 +73,7 @@ void	ft_process_env_variable(t_cmd *token, char *env_copy, t_node *ft)
 	new_node = ft_create_env_node(name, value, ft);
 	if (new_node == NULL)
 		return ;
-	ft_update_or_add_env(token, new_node, name, value, ft);
+	ft_update_or_add_env(token, new_node, name, value);
 }
 
 void	ft_add_value_to_export(t_cmd *token, char *line)
@@ -71,7 +88,6 @@ void	ft_add_value_to_export(t_cmd *token, char *line)
 	i = 1;
 	while (str[i] != NULL)
 	{
-		// Check for redirection operators
 		if (ft_strcmp(str[i], ">") == 0 || ft_strcmp(str[i], "<") == 0
 			|| ft_strcmp(str[i], ">>") == 0 || ft_strcmp(str[i], "<<") == 0)
 		{

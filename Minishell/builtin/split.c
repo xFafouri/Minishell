@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_quote.c                                      :+:      :+:    :+:   */
+/*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 23:48:35 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:39:14 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:54:15 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:55:39 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ static int	handle_quote(const char **s, int *in_quote, char *quote_char)
 		if (*in_quote && **s == *quote_char)
 			*in_quote = 0;
 		else if (!*in_quote)
-			*in_quote = 1, *quote_char = **s;
+		{
+			*in_quote = 1;
+			*quote_char = **s;
+		}
 		return (1);
 	}
 	return (0);
@@ -27,10 +30,13 @@ static int	handle_quote(const char **s, int *in_quote, char *quote_char)
 
 static int	ft_count_tokens(const char *s, char c)
 {
-	int		count = 0, in_quote;
+	int		count;
+	int		in_quote;
 	char	quote_char;
 
-	count = 0, in_quote = 0;
+	count = 0;
+	count = 0;
+	in_quote = 0;
 	quote_char = 0;
 	if (!s)
 		return (0);
@@ -69,8 +75,8 @@ static char	*ft_get_token(char **s, char c, t_node **gc)
 
 char	**ft_split_qoute(char *s, char c, t_node **gc)
 {
-	char	**tokens;
 	int		i;
+	char	**tokens;
 
 	i = 0;
 	if (!s || !(tokens = gc_malloc(gc, (ft_count_tokens(s, c) + 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 21:36:10 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:51:17 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:46:45 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:46:59 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	check_dollars(char *line)
 	}
 	return (0);
 }
+
 t_node	*ft_lstnew1(void *ptr)
 {
 	t_node	*str;

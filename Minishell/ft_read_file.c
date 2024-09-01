@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_read_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:49:53 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:50:44 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:07:01 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 // Function to process the heredoc input
 void	ft_process_heredoc(t_cmd *env, int *i, char **str, t_node **gc)
 {
-	char	*temp;
-
 	while (env->heredoc)
 	{
 		while (1)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:40:04 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:24:32 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -129,16 +141,16 @@ char				*ft_strchr(char *s, int c);
 void				ft_check_file(t_cmd *token, t_node **gc, int her);
 int					ft_check_infile(t_cmd *token, int file, int her,
 						t_node **gc);
-void				ft_one_child(int i, t_node **gc, t_cmd *token);
+void				ft_one_child(t_node **gc, t_cmd *token);
 void				ft_pwd(char *line, t_node **gc, t_cmd *token);
-void				ft_echo(char *line, t_cmd *token);
-void				ft_cd(char *line, t_cmd *token);
+void				ft_echo(t_cmd *token);
+void				ft_cd(t_cmd *token);
 void				ft_exit(t_node **gc, t_cmd *token);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_check_buldin(t_cmd *env, char *line, t_node **gc);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putchar_fd(char c, int fd);
-int					ft_check_buldin1(t_cmd *env, char *line, t_node **gc);
+int					ft_check_buldin1(t_cmd *env);
 int					ft_strlen_untile_char(char *str, char c);
 char				*ft_strdup(t_node **gc, char *s1);
 void				ft_export(t_cmd *token, char *line);
@@ -191,15 +203,15 @@ int					in_double_quote(char *line, int index);
 void				handle_quotes(t_cmd *cmd, t_node **gc);
 
 char				*ft_strcpy(char *s1, char *s2, int len);
-static char			check(const char *set, char c);
+// static char			check(const char *set, char c);
 char				*ft_strtrim(char *s1, char *set, t_node **gc);
 
 void				ft_remove_key_env(t_cmd *token, char *str);
 void				ft_remove_key_export(t_cmd *token, char *str);
-void				ft_unset(t_cmd *token, char *line);
+void				ft_unset(t_cmd *token);
 char				**ft_split_qoute(char *s, char c, t_node **gc);
 
-int					count_heredocs(const char *line);
+int					count_heredocs(char *line);
 int					checkchar(char a, char *b);
 char				*ft_strtrim1(char *s1, char *set, t_node **gc);
 char				*expand_quotes(char *line, t_node **gc, t_cmd *token);
@@ -264,15 +276,15 @@ int					handle_single_command(t_cmd *env, char *line_data,
 						t_node **gc);
 void				restore_io(t_cmd *env);
 void				close_pipes(t_cmd *env, int i);
-void				ft_fork_and_pipe(t_cmd *env, pid_t *id, int i, t_node **gc,
-						int count, char *line_data);
+void				ft_fork_and_pipe(t_cmd *env, int i, int count,
+						char *line_data);
 void				ft_handle_heredoc_child(t_cmd *env, int *i, t_node **gc);
 t_env				*create_env_node(char *env_copy, t_node **gc);
 void				add_env_node(t_env **head, t_env *new_node);
 t_env				*init_env_list(char **envp, t_node **gc);
 void				split_pipe(char *cmd, t_cmd *env, t_node **gc);
 void				ft_add_env_existing(char *value, char *name, t_cmd *token,
-						int i, t_node *ft);
+						int i);
 void				ft_env_fork(t_cmd *token, t_node **gc, int i);
 void				ft_swap_env_nodes(t_env *current, t_env *next, t_node *ft);
 void				ft_env_exec(t_cmd *token, t_node **gc, int i);
@@ -281,7 +293,7 @@ void				ft_add_qiotes(t_cmd *token);
 void				ft_remove_quotes(t_cmd *token);
 t_env				*ft_create_env_node(char *name, char *value, t_node *ft);
 void				ft_update_or_add_env(t_cmd *token, t_env *new_node,
-						char *name, char *value, t_node *ft);
+						char *name, char *value);
 void				ft_process_env_variable(t_cmd *token, char *env_copy,
 						t_node *ft);
 void				ft_add_value_to_export(t_cmd *token, char *line);
@@ -292,3 +304,8 @@ void				ft_process_env_name(char **name, char *env_copy,
 						t_node *ft);
 int					ft_validate_export_name(char *name, char *value);
 int					ft_serch_rid(char *line);
+void				main_loop(t_cmd *ev);
+void				cleanup(t_node *fd);
+void				initialize_env(t_cmd *ev, char **envp, t_node **fd);
+void				process_input(char *line, t_cmd *ev);
+t_env	*init_environment(char ***envp, t_node **fd);

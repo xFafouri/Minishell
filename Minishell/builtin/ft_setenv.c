@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_setenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:25:57 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:12:49 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:15:01 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	*ft_find_old_pwd(char *pwd, t_cmd *token)
 {
 	t_env	*head;
 	t_node	*ft;
-	char	*new_value;
 
 	head = token->addres_env;
 	ft = token->addres_fd;
@@ -35,7 +34,6 @@ void	ft_set_old(char *pwd, char *cwd, t_cmd *token)
 	char	*key;
 	t_node	*ft;
 	char	*join;
-	char	*tmp;
 
 	i = 0;
 	ft = token->addres_fd;
@@ -86,7 +84,6 @@ void	ft_set_old_pwd(char *pwd, t_cmd *token)
 {
 	t_env	*head;
 	t_node	*ft;
-	char	*new_value;
 	char	*old_pwd;
 
 	head = token->addres_env;

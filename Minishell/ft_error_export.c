@@ -1,33 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_error_export.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:37:39 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:33:14 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	ft_validate_export_name(char *name, char *value)
+void	print_error_message(char *name, char *value, char *message)
+{
+	ft_putstr_fd("export: ", 2);
+	if (name != NULL)
+		ft_putstr_fd(name, 2);
+	if (value != NULL)
+		ft_putstr_fd(value, 2);
+	ft_putstr_fd(message, 2);
+}
+
+int	validate_empty_value(char *name, char *value)
 {
 	if (value == NULL || value[0] == '\0')
 	{
 		if (name[ft_strlen(name) - 1] == '+')
 		{
-			ft_putstr_fd("export: ", 2);
-			if (name != NULL)
-				ft_putstr_fd(name, 2);
-			if (value != NULL)
-				ft_putstr_fd(value, 2);
-			ft_putstr_fd(": not a valid identifier\n", 2);
+			print_error_message(name, value, ": not a valid identifier\n");
 			return (0);
 		}
 	}
-	if ((name == NULL || name[0] == '\0' || (ft_isalpha1(name) == 0)))
+	return (1);
+}
+
+int	validate_name(char *name, char *value)
+{
+	if (name == NULL || name[0] == '\0' || (ft_isalpha1(name) == 0))
 	{
-		ft_putstr_fd("export: ", 2);
-		if (name != NULL)
-			ft_putstr_fd(name, 2);
-		if (value != NULL)
-			ft_putstr_fd(value, 2);
 		if (name[0] == '-')
-			ft_putstr_fd(": invalid option\n", 2);
+			print_error_message(name, value, ": invalid option\n");
 		else
-			ft_putstr_fd(": not a valid identifier\n", 2);
+			print_error_message(name, value, ": not a valid identifier\n");
 		return (0);
 	}
+	return (1);
+}
+
+int	ft_validate_export_name(char *name, char *value)
+{
+	if (!validate_empty_value(name, value))
+		return (0);
+	if (!validate_name(name, value))
+		return (0);
 	return (1);
 }
 

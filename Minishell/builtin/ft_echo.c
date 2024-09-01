@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:30:45 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:31:22 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:09:37 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	help_echo(t_cmd *token, int *i, int *j)
 	}
 }
 
-void	ft_echo(char *line, t_cmd *token)
+void	ft_echo(t_cmd *token)
 {
 	int	i;
 	int	j;

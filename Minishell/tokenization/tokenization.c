@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/07 12:45:34 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:49:14 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:43:13 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:43:32 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,14 @@ void	check_commands(char *line1, int *i, t_cmd *token)
 		while (line1[*i] != '\"' && line1[*i])
 			(*i)++;
 		if (line1[*i] == '\"')
+			(*i)++;
+	}
+	else if (line1[*i] == '\'')
+	{
+		(*i)++;
+		while (line1[*i] != '\'' && line1[*i])
+			(*i)++;
+		if (line1[*i] == '\'')
 			(*i)++;
 	}
 	while (line1[*i] && line1[*i] != ' ' && line1[*i] != '\t'

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:37:49 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:19:33 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_env_fork(t_cmd *token, t_node **gc, int i)
@@ -51,11 +63,13 @@ void	ft_env(t_cmd *token, t_node **gc)
 	}
 	ft_env_fork(token, gc, i);
 }
-void	ft_add_env_existing(char *value, char *name, t_cmd *token, int i,
-		t_node *ft)
+
+void	ft_add_env_existing(char *value, char *name, t_cmd *token, int i)
 {
 	char	*join;
+	t_node	*ft;
 
+	ft = token->addres_fd;
 	if (name[ft_strlen(name) - 1] == '+')
 		token->env[i] = ft_strjoin(&ft, token->env[i], value + 1);
 	else
@@ -82,7 +96,7 @@ void	ft_add_env(char *value, char *name, t_cmd *token)
 					'='), &ft);
 		if (ft_strcmp(key, new_node) == 0)
 		{
-			ft_add_env_existing(value, name, token, i, ft);
+			ft_add_env_existing(value, name, token, i);
 			return ;
 		}
 		i++;

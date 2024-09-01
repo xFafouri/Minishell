@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 18:50:38 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:50:39 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:39:56 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:40:32 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,12 @@ static int	ft_count(char *s, char c)
 	return (count);
 }
 
-
 char	**ft_split(char *s, char c, t_node **gc)
 {
-	int i;
-	int n;
-	int j;
-	char **str;
+	int		i;
+	int		n;
+	int		j;
+	char	**str;
 
 	str = (char **)gc_malloc(gc, (ft_count(s, c) + 1) * sizeof(char *));
 	if (str == NULL)

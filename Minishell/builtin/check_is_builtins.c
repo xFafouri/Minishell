@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_is_builtins.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/31 18:49:51 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 22:26:25 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	checkchar(char a, char *b)
@@ -13,6 +25,7 @@ int	checkchar(char a, char *b)
 	}
 	return (0);
 }
+
 char	*ft_strtrim1(char *s1, char *set, t_node **gc)
 {
 	char	*str;
@@ -67,29 +80,32 @@ int	ft_isalpha1(char *str)
 		return (1);
 	return (0);
 }
+
 void	ft_check_buldin(t_cmd *env, char *line, t_node **gc)
 {
 	if (ft_strcmp((env->cmd)[0], "pwd") == 0)
 		ft_pwd(line, gc, env);
 	else if (ft_strcmp((env->cmd)[0], "echo") == 0)
-		ft_echo(line, env);
+		ft_echo(env);
 	else if (ft_strcmp((env->cmd)[0], "export") == 0)
 		ft_export(env, line);
 	else if (ft_strcmp((env->cmd)[0], "cd") == 0)
-		ft_cd(line, env);
+		ft_cd(env);
 	else if (ft_strcmp((env->cmd)[0], "exit") == 0)
 		ft_exit(gc, env);
 	else if (ft_strcmp((env->cmd)[0], "env") == 0)
 		ft_env(env, gc);
 	else if (ft_strcmp((env->cmd)[0], "unset") == 0)
-		ft_unset(env, line);
+		ft_unset(env);
 	if (env->flag_file == 1)
 	{
-		ft_lstclear(gc);
-		exit(0);
+		// printf("hello wolrd %d\n\n", env->flag_file);
+		// ft_lstclear(gc);
+		exit(5);
 	}
 }
-int	ft_check_buldin1(t_cmd *env, char *line, t_node **gc)
+
+int	ft_check_buldin1(t_cmd *env)
 {
 	int	n;
 

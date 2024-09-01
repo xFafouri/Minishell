@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_path_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 23:49:47 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 23:49:50 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:35:53 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:37:55 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	ft_strncmp(char *str, char *path, int line)
 	return (0);
 }
 
-
 void	ft_empty(char *av, t_node **gc)
 {
 	if (av == NULL)
@@ -42,7 +41,6 @@ void	ft_empty(char *av, t_node **gc)
 	}
 	if (av[0] == '\0')
 	{
-		// write(2, ":command not found\n", 19);
 		(ft_lstclear(gc), exit(127));
 	}
 }
@@ -98,9 +96,9 @@ int	ft_find_path(char **path, t_cmd *ptr, char *cmd, t_node **gc)
 
 char	*ft_check_path(char *str, t_node **gc, t_cmd *env)
 {
-	int i;
-	char *cmd;
-	char *path;
+	char	*cmd;
+	char	*path;
+	int		i;
 
 	i = 0;
 	ft_empty(str, gc);

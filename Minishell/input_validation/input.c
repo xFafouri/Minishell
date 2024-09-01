@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 15:14:18 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:49:06 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:44:52 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:45:02 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	help_validation(char *line, int *i, t_input_v *input, t_cmd *token)
 		(*i)++;
 	}
 }
+
 int	input_validation(char *line, t_cmd *token)
 {
 	t_input_v	input;

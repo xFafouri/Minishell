@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_file_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:38:15 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:30:57 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_remove_quotes(t_cmd *token)
@@ -13,6 +25,7 @@ void	ft_remove_quotes(t_cmd *token)
 		head = head->next;
 	}
 }
+
 void	ft_add_qiotes(t_cmd *token)
 {
 	t_env	*head;
@@ -34,6 +47,7 @@ void	ft_add_qiotes(t_cmd *token)
 		head = head->next;
 	}
 }
+
 void	ft_env_no_args(t_cmd *token)
 {
 	int	i;

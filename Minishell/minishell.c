@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 01:51:21 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:49:33 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 23:08:17 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,30 +62,19 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_node	*gc;
 	t_node	*fd;
-	t_cmd	ev = {0};
-	char	*line;
+	t_cmd	ev;
 
 	gc = NULL;
 	fd = NULL;
-	ev.env = envp;
-	ev.addres_env = init_environment(&envp, &fd);
-	ev.addres_fd = fd;
-	setup_signals();
-	while (1)
+	if (argc > 1)
 	{
-		ev.falg_to_exit = 0;
-		ft_sort_env_list(&ev);
-		line = readline(FG_YELLOW "$ " FG_GREEN);
-		if (line != NULL)
-		{
-			process_input(line, &ev);
-			free(line);
-		}
-		else
-			break ;
+		write(1, argv[1], ft_strlen(argv[1]));
+		write(2, ": No such file or directory\n", 29);
+		exit(127);
 	}
-	printf("exit\n");
-	ft_lstclear(&fd);
-	rl_clear_history();
+	initialize_env(&ev, envp, &fd);
+	setup_signals();
+	main_loop(&ev);
+	cleanup(fd);
 	return (ev.status);
 }

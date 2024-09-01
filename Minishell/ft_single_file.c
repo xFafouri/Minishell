@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_single_file.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:39:39 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:39:37 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_check_last_infile(t_cmd *token, int file, int her, t_node **gc)
@@ -48,7 +60,7 @@ int	ft_process_single_outfile(t_cmd *token, t_node **gc)
 	if (token->file < 0)
 	{
 		ft_handle_outfile_error(token, gc);
-		return 1;
+		return (1);
 	}
 	close(token->file);
 	return (0);
@@ -67,7 +79,7 @@ int	ft_process_single_append(t_cmd *token, int file, t_node **gc)
 		return (1);
 	}
 	close(file);
-	return(0);
+	return (0);
 }
 
 void	ft_init_file_descriptors(t_cmd *token, t_node **gc)

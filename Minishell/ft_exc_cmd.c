@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exc_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 23:47:44 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 18:39:01 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:14:24 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:10:31 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 int	count_cmd(t_node *cmd)
 {
@@ -62,9 +61,11 @@ void	print_last_redirection(char *input, t_cmd *head)
 	head->flag_appned = 0;
 }
 
-
-void	process_line(t_node *line, t_cmd *env, t_node **gc, int *i, int count)
+void	process_line(t_node *line, t_cmd *env, int *i, int count)
 {
+	t_node	**gc;
+
+	gc = env->gc_comand;
 	print_last_redirection((char *)line->data, env);
 	tokenisation(line->data, gc, env);
 	line->data = handle_dollar_sign((char *)line->data, env, gc);
@@ -81,7 +82,7 @@ void	process_line(t_node *line, t_cmd *env, t_node **gc, int *i, int count)
 		if (handle_single_command(env, line->data, gc) == 0)
 			return ;
 	}
-	ft_fork_and_pipe(env, env->id, *i, gc, count, line->data);
+	ft_fork_and_pipe(env, *i, count, line->data);
 }
 
 void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
@@ -97,7 +98,7 @@ void	ft_exc_cmd(t_node *line, t_node **gc, t_cmd *env)
 	signal(SIGQUIT, SIG_IGN);
 	while (line != NULL)
 	{
-		process_line(line, env, gc, &i, count);
+		process_line(line, env, &i, count);
 		line = line->next;
 		i++;
 	}

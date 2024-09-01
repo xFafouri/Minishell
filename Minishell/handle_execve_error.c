@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_execve_error.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:39:54 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:13:07 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_handle_command_not_found(t_cmd *token, t_node **gc)
@@ -67,4 +79,3 @@ void	ft_setup_last_child_io(int i, t_cmd *token, t_node **gc)
 	}
 	close((token->fd)[i - 1][0]);
 }
-

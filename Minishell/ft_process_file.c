@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_process_file.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:39:29 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 18:12:19 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_check_infile_loop(t_cmd *token, int file, t_node **gc)
@@ -60,8 +72,8 @@ void	ft_process_outfiles(t_cmd *token, t_node **gc)
 		return ;
 	while (token->outfile->next != NULL)
 	{
-		if(ft_process_single_outfile(token, gc) != 0)
-			return;
+		if (ft_process_single_outfile(token, gc) != 0)
+			return ;
 		token->outfile = token->outfile->next;
 	}
 	ft_process_last_outfile(token, gc);

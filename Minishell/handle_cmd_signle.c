@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_cmd_signle.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/30 00:39:50 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 23:17:33 by sbourziq         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	handle_exit_status(int exit_status)
@@ -24,7 +36,8 @@ void	wait_and_handle_signals(int count, t_cmd *env)
 
 	i = -1;
 	while (++i < count)
-		waitpid(env->id[i], &(env->status), 0);
+		if (env->id[i] > 0)
+			waitpid(env->id[i], &(env->status), 0);
 	signal(SIGINT, ft_signal_handler);
 	if (WIFEXITED(env->status))
 	{
@@ -42,7 +55,7 @@ void	wait_and_handle_signals(int count, t_cmd *env)
 
 int	handle_single_command(t_cmd *env, char *line_data, t_node **gc)
 {
-	if (ft_check_buldin1(env, line_data, gc) == 0)
+	if (ft_check_buldin1(env) == 0)
 	{
 		ft_check_file(env, gc, env->her);
 		if (env->falg_to_exit == 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_access.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:47:32 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/28 23:47:33 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/08/31 19:09:01 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_access_to_path(t_node **gc, char **str, char *path_cmd)
 
 void	ft_all_bildin(int i, t_node **gc, t_cmd *token, char *line)
 {
-	if (ft_check_buldin1(token, line, gc) == 0)
+	if (ft_check_buldin1(token) == 0)
 	{
 		ft_setup_builtin_io(i, token, gc);
 		ft_check_file(token, gc, token->her);
@@ -50,7 +50,6 @@ void	ft_setup_builtin_io(int i, t_cmd *token, t_node **gc)
 void	ft_handle_heredoc_child(t_cmd *env, int *i, t_node **gc)
 {
 	char	*str;
-	char	*temp;
 
 	str = NULL;
 	close((env->fd)[*i][0]);

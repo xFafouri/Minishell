@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_creat_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 23:47:38 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 02:15:50 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:10:33 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 19:08:57 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_one_child(int i, t_node **gc, t_cmd *token)
+void	ft_one_child(t_node **gc, t_cmd *token)
 {
 	char	*path;
 
@@ -48,7 +48,6 @@ void	ft_first_child(int i, t_node **gc, t_cmd *token, char *line)
 	ft_execute_command(path, token, gc);
 }
 
-
 void	ft_midll_child(int i, t_node **gc, t_cmd *token, char *line)
 {
 	char	*path;
@@ -68,7 +67,7 @@ void	ft_last_child(int i, t_node **gc, t_cmd *token, char *line)
 
 	path = NULL;
 	ft_setup_child_signals();
-	if (ft_check_buldin1(token, line, gc) == 0)
+	if (ft_check_buldin1(token) == 0)
 	{
 		ft_check_file(token, gc, token->her);
 		ft_check_buldin(token, line, gc);

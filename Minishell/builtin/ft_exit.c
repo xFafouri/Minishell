@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 18:28:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/29 20:48:48 by hfafouri         ###   ########.fr       */
+/*   Created: 2024/08/31 18:56:28 by sbourziq          #+#    #+#             */
+/*   Updated: 2024/08/31 19:11:50 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-long	ft_strtol(char *str, char **endptr, t_node **gc)
+long	ft_strtol(char *str, char **endptr)
 {
 	long	result;
 	int		i;
@@ -20,7 +20,8 @@ long	ft_strtol(char *str, char **endptr, t_node **gc)
 
 	i = 0;
 	result = 0;
-	i = 0, sign = 1;
+	i = 0;
+	sign = 1;
 	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == 32))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
@@ -75,7 +76,7 @@ void	ft_exit(t_node **gc, t_cmd *token)
 		ft_lstclear(gc);
 		exit(token->status);
 	}
-	nb = ft_strtol(token->cmd[1], &endptr, gc);
+	nb = ft_strtol(token->cmd[1], &endptr);
 	if (*endptr != '\0')
 		ft_exit_numeric_error(token, gc);
 	if (token->cmd[2] != NULL)
