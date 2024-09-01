@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 00:40:04 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/09/01 16:11:41 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:26:52 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_quote_state
 typedef struct s_cmd
 {
 	int				**fd;
+	char			*temp;
 	int				falg_to_exit;
 	int				f_out;
 	int				f_append;
@@ -98,8 +99,7 @@ typedef struct s_input_v
 	int				in_dq;
 	int				in_sq;
 }					t_input_v;
-
-t_cmd				*shell(void);
+extern t_cmd glb;
 void				ft_signal_handler(int signum);
 void				ft_signal_back_slash(int signum);
 void				ft_signal_handler_herdoc(int signum);
@@ -297,8 +297,8 @@ void				ft_update_or_add_env(t_cmd *token, t_env *new_node,
 void				ft_process_env_variable(t_cmd *token, char *env_copy,
 						t_node *ft);
 void				ft_add_value_to_export(t_cmd *token, char *line);
-void				ft_update_existing_env(t_env *current, t_env *new_node,
-						char *name, char *value, t_node *ft);
+void	ft_update_existing_env(t_env *current, t_env *new_node, char *name,
+		t_cmd *token);
 void				ft_add_new_env(t_env **head, t_env *new_node, t_env *prev);
 void				ft_process_env_name(char **name, char *env_copy,
 						t_node *ft);

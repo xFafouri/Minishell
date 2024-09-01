@@ -6,7 +6,7 @@
 /*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 00:38:38 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/08/31 18:25:21 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:31:33 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ void	ft_update_or_add_env(t_cmd *token, t_env *new_node, char *name,
 	current = token->addres_env;
 	ft = token->addres_fd;
 	prev = NULL;
+	token->temp = ft_strdup(&ft, value);
 	while (current != NULL)
 	{
 		if (ft_strcmp(current->name, new_node->name) == 0)
 		{
-			ft_update_existing_env(current, new_node, name, value, ft);
+			ft_update_existing_env(current, new_node, name, token);
 			break ;
 		}
 		prev = current;

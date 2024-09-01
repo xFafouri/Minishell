@@ -6,7 +6,7 @@
 /*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:25:57 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/31 19:15:01 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:55:42 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 char	*ft_find_old_pwd(char *pwd, t_cmd *token)
 {
 	t_env	*head;
-	t_node	*ft;
 
 	head = token->addres_env;
-	ft = token->addres_fd;
 	while (head != NULL)
 	{
 		if (ft_strcmp(head->name, pwd) == 0)

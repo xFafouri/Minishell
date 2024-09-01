@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:42:49 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/09/01 16:03:15 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:13:31 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@ void	ft_handle_plus_sign(t_env *current, t_env *new_node, t_node *ft)
 }
 
 void	ft_update_existing_env(t_env *current, t_env *new_node, char *name,
-		char *value, t_node *ft)
+		t_cmd *token)
 {
+	t_node *ft;
+	char *value;
+
+	ft = token->addres_fd;
+	value = token->temp;
 	if (new_node->value == NULL || new_node->value[0] == '\0')
 	{
 		new_node->value = ft_strdup(&ft, current->value);

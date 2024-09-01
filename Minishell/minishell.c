@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 01:51:21 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/09/01 15:44:49 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:36:55 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	has_non_space_chars(const char *str)
+t_cmd glb;
+
+int has_non_space_chars(const char *str)
 {
 	while (*str)
 	{
@@ -23,9 +25,9 @@ int	has_non_space_chars(const char *str)
 	return (0);
 }
 
-t_env	*init_environment(char ***envp, t_node **fd, t_cmd *ev)
+t_env *init_environment(char ***envp, t_node **fd, t_cmd *ev)
 {
-	t_env	*env_list;
+	t_env *env_list;
 
 	ev->flag = 0;
 	if (*envp == NULL || (*envp)[0] == NULL)
@@ -41,32 +43,32 @@ t_env	*init_environment(char ***envp, t_node **fd, t_cmd *ev)
 	return (env_list);
 }
 
-void	setup_signals(void)
+void setup_signals(void)
 {
 	signal(SIGINT, ft_signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	process_input(char *line, t_cmd *ev)
+void process_input(char *line, t_cmd *ev)
 {
-	t_node	*command_gc;
+	t_node *command_gc;
 
 	command_gc = NULL;
 	ev->flag_signle = 0;
-	if (input_validation(line, ev) != 1)
-		split_pipe(line, ev, &command_gc);
 	if (has_non_space_chars(line))
+	{
+		if (input_validation(line, ev) != 1)
+			split_pipe(line, ev, &command_gc);
 		add_history(line);
+	}
 	ft_lstclear(&command_gc);
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	t_node	*gc;
-	t_node	*fd;
-	t_cmd	ev;
+	t_node *fd;
+	t_cmd ev;
 
-	gc = NULL;
 	fd = NULL;
 	if (argc > 1)
 	{

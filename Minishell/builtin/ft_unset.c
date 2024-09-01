@@ -6,7 +6,7 @@
 /*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 21:26:00 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/31 19:17:14 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:56:19 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,8 @@ void	ft_remove_key_export(t_cmd *token, char *str)
 {
 	t_env	*head;
 	t_env	*prev;
-	t_node	*ft;
 
 	head = token->addres_env;
-	ft = token->addres_fd;
 	prev = NULL;
 	while (head != NULL)
 	{

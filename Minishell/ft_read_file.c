@@ -6,7 +6,7 @@
 /*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:49:53 by hfafouri          #+#    #+#             */
-/*   Updated: 2024/08/31 19:07:01 by sbourziq         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:29:50 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,8 @@ void	ft_process_heredoc(t_cmd *env, int *i, char **str, t_node **gc)
 // Function to process a single line of heredoc input
 void	ft_process_heredoc_line(t_cmd *env, char **str, t_node **gc)
 {
-	char	*temp;
-
 	if (env->flag_her != 1)
 		*str = handle_dollar_sign_heredoc(*str, env, gc);
-	temp = *str;
 	*str = ft_strjoin(gc, *str, "\n");
 }
 
@@ -68,8 +65,6 @@ void	ft_find_herdoc(t_cmd *env, int *i, int *id, t_node **gc)
 	if (id[*i] == 0)
 		ft_handle_heredoc_child(env, i, gc);
 	else
-	{
 		ft_handle_heredoc_parent(env, i, id);
-	}
 	(*i)++;
 }

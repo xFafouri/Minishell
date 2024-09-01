@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_path_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfafouri <hfafouri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbourziq <sbourziq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 18:35:53 by sbourziq          #+#    #+#             */
-/*   Updated: 2024/09/01 15:40:55 by hfafouri         ###   ########.fr       */
+/*   Updated: 2024/09/01 12:22:59 by sbourziq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	ft_empty(char *av, t_node **gc)
 	}
 	if (av[0] == '\0')
 	{
+		write(2, ": command not found\n", 21);
 		(ft_lstclear(gc), exit(127));
 	}
 }
@@ -99,9 +100,7 @@ char	*ft_check_path(char *str, t_node **gc, t_cmd *env)
 {
 	char	*cmd;
 	char	*path;
-	int		i;
 
-	i = 0;
 	ft_empty(str, gc);
 	path = NULL;
 	cmd = ft_check_space(str, gc);
