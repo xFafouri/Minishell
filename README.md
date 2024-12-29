@@ -8,6 +8,17 @@ Minishell is a project from 42 designed to challenge students by recreating a si
 
 ## **How to Use?**
 -------------------------------------
+### Prerequisites
+* Before running Minishell, ensure that your system meets the following requirements:
+
+* Operating System: Linux (tested on Debian-based distributions like Ubuntu).
+ Required Library: libreadline-dev
+ Installing libreadline-dev
+* On Debian-based systems (e.g., Ubuntu), you can install the required library using apt:
+نسخ الكود
+sudo apt-get install libreadline-dev
+
+This library is essential for providing command-line editing and history functionality in Minishell.
 ### **Installation**
 -------------------------------------------
 1. Clone the repository:
