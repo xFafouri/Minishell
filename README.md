@@ -8,21 +8,26 @@ Minishell is a project from 42 designed to challenge students by recreating a si
 
 ## **How to Use?**
 -------------------------------------
-### Prerequisites
-* Before running Minishell, ensure that your system meets the following requirements:
+## **Prerequisites**
 
-* Operating System: Linux (tested on Debian-based distributions like Ubuntu).
- Required Library: libreadline-dev
- Installing libreadline-dev
-* On Debian-based systems (e.g., Ubuntu), you can install the required library using apt:
-نسخ الكود
-sudo apt-get install libreadline-dev
+Before running Minishell, ensure that your system meets the following requirements:
+
+- **Operating System**: Linux (tested on Debian-based distributions like Ubuntu).
+- **Required Library**: `libreadline-dev`
+
+### **Installing libreadline-dev**
+
+On Debian-based systems (e.g., Ubuntu), you can install the required library using `apt`:
+
+```
+`sudo apt-get install libreadline-dev`
+```
 
 This library is essential for providing command-line editing and history functionality in Minishell.
 ### **Installation**
 -------------------------------------------
 1. Clone the repository:
-    `git clone https://github.com/xFafouri/Minishell.git`
+    `git clone https://github.com/yourusername/minishell.git cd minishell`
     
 2. Compile the program using `make`:
 
@@ -32,13 +37,10 @@ This library is essential for providing command-line editing and history functio
 
     `./minishell`
     
-
----
-
 ## **Key Features**
 -----------------------------------------
 ### **1. Command Execution**
------------------------------------------
+
 - Supports both absolute and relative paths for executables (`/bin/ls` or `ls`).
 - Handles command-line arguments and options seamlessly.
 - Implements single (`'`) and double (`"`) quotes with behavior similar to Bash, except for multiline commands.
