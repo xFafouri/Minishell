@@ -11,7 +11,7 @@ Minishell is a project from 42 designed to challenge students by recreating a si
 ### **Installation**
 -------------------------------------------
 1. Clone the repository:
-    `git clone https://github.com/yourusername/minishell.git cd minishell`
+    `git clone https://github.com/xFafouri/Minishell.git`
     
 2. Compile the program using `make`:
 
