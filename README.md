@@ -47,7 +47,6 @@ This library is essential for providing command-line editing and history functio
 
 ### **2. Command Separators and Redirections**
 --------------------------------------------
-- Use `;` to separate multiple commands on the same line.
 - Implements redirection operators:
     - Output redirection: `>` and `>>`
     - Input redirection: `<`
